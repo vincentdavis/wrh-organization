@@ -3,7 +3,8 @@
     <full-calendar ref="calendarRef" :options="calendarOptions">
       <template #eventContent="item">
         <v-tooltip bottom z-index="9999">
-          <template v-slot:activator="{ on, attrs }" class="text-truncate">
+          <template  v-slot:activator="{ on, attrs }" class="text-truncate">
+            <router-link :to="{name: routeNames.PUBLIC_EVENT_PROFILE, params: {record_id: item.event.id}}">
             <div v-bind="attrs" v-on="on" class="fc-event-main text-truncate">
               <div class="fc-event-main-frame">
                 <div class="fc-event-title-container">
@@ -11,10 +12,12 @@
                     <span v-if="item.event.extendedProps.record.source"
                           class="pa-1 mr-1 rounded-circle d-inline-block rounded-circle"
                           :class="($const.EVENT_SOURCE_MAP[item.event.extendedProps.record.source] || {}).css"></span>
-                    {{ item.event.title }}</div>
+                    {{ item.event.title }}
+                    </div>
                 </div>
               </div>
             </div>
+            </router-link>
           </template>
           <div>
             <div class="mb-1 font-weight-bold">
@@ -59,6 +62,8 @@ import {notifyDefaultServerError, formatDate, refineVTableOptions} from "@/compo
 import axios from "@/axios";
 import { mdiMapMarker, mdiCalendar, mdiHomeOutline } from '@mdi/js'
 import moment from "moment";
+import {routeNames} from "@/router";
+
 
 export default {
   components: {
@@ -163,6 +168,7 @@ export default {
       calendarOptions,
       refreshCalendar,
       refreshView,
+      routeNames,
       icons: {
         mdiMapMarker,
         mdiCalendar,
