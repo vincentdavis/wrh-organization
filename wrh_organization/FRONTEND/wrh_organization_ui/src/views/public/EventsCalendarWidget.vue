@@ -3,8 +3,8 @@
     <full-calendar ref="calendarRef" :options="calendarOptions">
       <template #eventContent="item">
         <v-tooltip bottom z-index="9999">
-          <template  v-slot:activator="{ on, attrs }" class="text-truncate">
-            <router-link :to="{name: routeNames.WIDGET_EVENT_PROFILE, params: {record_id: item.event.id}}">
+          <template v-slot:activator="{ on, attrs }" class="text-truncate">
+            <router-link :to="{name: eventClickRouteName || $rns.PUBLIC_EVENT_PROFILE, params: {record_id: item.event.id}}">
             <div v-bind="attrs" v-on="on" class="fc-event-main text-truncate">
               <div class="fc-event-main-frame">
                 <div class="fc-event-title-container">
@@ -62,8 +62,6 @@ import {notifyDefaultServerError, formatDate, refineVTableOptions} from "@/compo
 import axios from "@/axios";
 import { mdiMapMarker, mdiCalendar, mdiHomeOutline } from '@mdi/js'
 import moment from "moment";
-import {routeNames} from "@/router";
-
 
 export default {
   components: {
@@ -78,6 +76,9 @@ export default {
       type: Boolean,
       default: false
     },
+    eventClickRouteName: {
+      type: String
+    }
   },
   setup(props, context) {
     const calendarRef = ref(null);
@@ -168,7 +169,6 @@ export default {
       calendarOptions,
       refreshCalendar,
       refreshView,
-      routeNames,
       icons: {
         mdiMapMarker,
         mdiCalendar,
