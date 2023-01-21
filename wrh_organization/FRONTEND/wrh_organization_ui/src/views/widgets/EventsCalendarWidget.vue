@@ -1,6 +1,8 @@
 <template>
   <div class="widget-race-results">
-    <events-calendar-widget  :api-params="{organization: $route.params.org_id}"></events-calendar-widget>
+    <events-calendar-widget
+        :event-click-route-name="$rns.WIDGET_EVENT_PROFILE"
+        :api-params="{organization: $route.params.org_id}"></events-calendar-widget>
   </div>
 </template>
 
