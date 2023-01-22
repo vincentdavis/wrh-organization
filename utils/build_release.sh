@@ -1,12 +1,23 @@
 #!/bin/bash
 
-INC_VER_TYPE=patch
-if [ -n "$1" ]; then
-    INC_VER_TYPE=$1
-fi
+FE_INC_VER_TYPE=patch
+BE_INC_VER_TYPE=patch
+while [ "$1" != "" ]; do
+  PARAM=$(echo $1 | awk -F= '{print $1}')
+  VALUE=$(echo $1 | awk -F= '{print $2}')
+  case $PARAM in
+  --fe-inc-ver)
+    FE_INC_VER_TYPE=$VALUE
+    ;;
+  --be-inc-ver)
+    BE_INC_VER_TYPE=$VALUE
+    ;;
+  esac
+  shift
+done
 
 NAME="wrh_organization"
-CUR_DIR=`dirname -- "$0"`
+CUR_DIR=$(dirname -- "$0")
 
 cd ${CUR_DIR}
 cd ..
@@ -19,35 +30,41 @@ git pull
 cd ./wrh_organization
 
 BACKEND_VERSION=$(cat ./VERSION)
-NEW_BACKEND_VERSION=$(pysemver bump ${INC_VER_TYPE} ${BACKEND_VERSION})
-echo ${NEW_BACKEND_VERSION} > ./VERSION
+NEW_BACKEND_VERSION=${BACKEND_VERSION}
+if [ "${BE_INC_VER_TYPE}" != "ignore" ]; then
+  NEW_BACKEND_VERSION=$(pysemver bump ${BE_INC_VER_TYPE} ${BACKEND_VERSION})
+  echo ${NEW_BACKEND_VERSION} >./VERSION
+fi
 
 cd ${FRONTEND_DIR}
 FRONTEND_VERSION=$(node -p "require('./package.json').version")
-NEW_FRONTEND_VERSION=$(npm version ${INC_VER_TYPE})
-NEW_FRONTEND_VERSION=$(echo ${NEW_FRONTEND_VERSION} | sed 's/v//')  # remove v in start position(v1.2.3)
+NEW_FRONTEND_VERSION=${FRONTEND_VERSION}
+if [ "${FE_INC_VER_TYPE}" != "ignore" ]; then
+  NEW_FRONTEND_VERSION=$(npm version ${FE_INC_VER_TYPE} | sed 's/v//')
+fi
 
 RELEASE_NUMBER=${NEW_BACKEND_VERSION}-${NEW_FRONTEND_VERSION}
 echo "Building release #[${RELEASE_NUMBER}] ..."
 
+exit
 # we should put running tests here before build
 npm run build
 if [ $? -ne 0 ]; then
-  echo "Failed to build!";
-  npm version ${FRONTEND_VERSION};
-  echo ${BACKEND_VERSION} > ${BASE_DIR}/wrh_organization/VERSION
-  exit 1;
+  echo "Failed to build!"
+  npm version ${FRONTEND_VERSION}
+  echo ${BACKEND_VERSION} >${BASE_DIR}/wrh_organization/VERSION
+  exit 1
 fi
 
-git add -A && git commit -m "[RELEASE VERSION] ${RELEASE_NUMBER}";
+git add -A && git commit -m "[RELEASE VERSION] ${RELEASE_NUMBER}"
 
 git branch -D lastest-release 2>/dev/null
 git push origin --delete lastest-release 2>/dev/null
 
 ## Create a new branch to run the build under
 git checkout -b lastest-release
-newIgnore=`sed -e 's#dist##g' .gitignore`
-echo "$newIgnore" > .gitignore
+newIgnore=$(sed -e 's#dist##g' .gitignore)
+echo "$newIgnore" >.gitignore
 git add -A && git commit -m "[RELEASE] ${RELEASE_NUMBER}"
 
 git checkout master
