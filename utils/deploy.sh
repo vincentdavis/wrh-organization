@@ -21,6 +21,7 @@ mkdir -p ${PROJECTDIR}/tmp
 
 if [ -d "$DJANGODIR" ]; then
     cd ${DJANGODIR}
+    git checkout master
     git reset --hard HEAD
     git pull origin --tags
 else
