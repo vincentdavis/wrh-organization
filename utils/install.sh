@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -n "$1" ]; then
-    TAG=$1
+  TAG=$1
 fi
 
 echo "+++ installing required libs ..."
@@ -24,8 +24,8 @@ PROJECTDIR=${ROOTDIR}/${NAME}
 DJANGODIR=${PROJECTDIR}/${NAME}
 ENVDIR=${PROJECTDIR}/env
 DJANGO_SETTINGS_MODULE=wrh_organization.settings.main
-USER=appuser                                      # the user to run as
-GROUP=appuser                                     # the group to run as
+USER=appuser  # the user to run as
+GROUP=appuser # the group to run as
 
 echo "+++ creating project workspace in: $PROJECTDIR"
 sudo mkdir -p ${ROOTDIR}
@@ -37,12 +37,12 @@ mkdir -p ${PROJECTDIR}/etc
 mkdir -p ${PROJECTDIR}/tmp
 
 if [ -d "$DJANGODIR" ]; then
-    cd ${DJANGODIR}
-    git checkout master
-    git reset --hard HEAD
-    git pull origin --tags
+  cd ${DJANGODIR}
+  git checkout master
+  git reset --hard HEAD
+  git pull origin --tags
 else
-    git clone --tags ${GITURL} ${DJANGODIR}
+  git clone --tags ${GITURL} ${DJANGODIR}
 fi
 if [ -z "${TAG}" ]; then
   TAG=$(git tag --sort=committerdate | tail -1)

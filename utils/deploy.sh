@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -n "$1" ]; then
-    TAG=$1
+  TAG=$1
 fi
 
 NAME="wrh_organization"
@@ -12,7 +12,6 @@ DJANGODIR=${PROJECTDIR}/${NAME}
 ENVDIR=${PROJECTDIR}/env
 DJANGO_SETTINGS_MODULE=wrh_organization.settings.main
 
-
 mkdir -p ${PROJECTDIR}
 mkdir -p ${PROJECTDIR}/run
 mkdir -p ${PROJECTDIR}/logs
@@ -20,12 +19,12 @@ mkdir -p ${PROJECTDIR}/etc
 mkdir -p ${PROJECTDIR}/tmp
 
 if [ -d "$DJANGODIR" ]; then
-    cd ${DJANGODIR}
-    git checkout master
-    git reset --hard HEAD
-    git pull origin --tags
+  cd ${DJANGODIR}
+  git checkout master
+  git reset --hard HEAD
+  git pull origin --tags
 else
-    git clone --tags ${GITURL} ${DJANGODIR}
+  git clone --tags ${GITURL} ${DJANGODIR}
 fi
 if [ -z "${TAG}" ]; then
   TAG=$(git tag --sort=committerdate | tail -1)
@@ -37,7 +36,7 @@ sudo supervisorctl stop ${NAME}
 sudo supervisorctl stop ${NAME}-huey
 sleep 1
 if [ ! -d "$ENVDIR" ]; then
-    virtualenv -p python3 ${ENVDIR}
+  virtualenv -p python3 ${ENVDIR}
 fi
 source ${ENVDIR}/bin/activate
 cp ${DJANGODIR}/utils/daphne_start.sh ${ENVDIR}/bin/
