@@ -1,8 +1,8 @@
 #!/bin/bash
 
-inc_ver_type=patch
+INC_VER_TYPE=patch
 if [ -n "$1" ]; then
-    inc_ver_type=$1
+    INC_VER_TYPE=$1
 fi
 
 NAME="wrh_organization"
@@ -19,17 +19,18 @@ git pull
 cd ./wrh_organization
 
 BACKEND_VERSION=$(cat ./VERSION)
-NEW_BACKEND_VERSION=$(pysemver bump ${inc_ver_type} ${BACKEND_VERSION})
+NEW_BACKEND_VERSION=$(pysemver bump ${INC_VER_TYPE} ${BACKEND_VERSION})
 echo ${NEW_BACKEND_VERSION} > ./VERSION
 
 cd ${FRONTEND_DIR}
 FRONTEND_VERSION=$(node -p "require('./package.json').version")
-NEW_FRONTEND_VERSION=$(npm version ${inc_ver_type})
-NEW_FRONTEND_VERSION=$(echo ${NEW_FRONTEND_VERSION} | sed 's/v//')
+NEW_FRONTEND_VERSION=$(npm version ${INC_VER_TYPE})
+NEW_FRONTEND_VERSION=$(echo ${NEW_FRONTEND_VERSION} | sed 's/v//')  # remove v in start position(v1.2.3)
 
 RELEASE_NUMBER=${NEW_BACKEND_VERSION}-${NEW_FRONTEND_VERSION}
 echo "Building release #[${RELEASE_NUMBER}] ..."
 
+# we should put running tests here before build
 npm run build
 if [ $? -ne 0 ]; then
   echo "Failed to build!";
