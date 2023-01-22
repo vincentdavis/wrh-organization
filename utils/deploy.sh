@@ -1,8 +1,7 @@
 #!/bin/bash
 
-BRANCH=master
 if [ -n "$1" ]; then
-    BRANCH=$1
+    TAG=$1
 fi
 
 NAME="wrh_organization"
@@ -13,7 +12,6 @@ DJANGODIR=${PROJECTDIR}/${NAME}
 ENVDIR=${PROJECTDIR}/env
 DJANGO_SETTINGS_MODULE=wrh_organization.settings.main
 
-echo "+++ Deploying $NAME: BRANCH=$BRANCH PROJECTDIR=$PROJECTDIR ..."
 
 mkdir -p ${PROJECTDIR}
 mkdir -p ${PROJECTDIR}/run
@@ -24,12 +22,16 @@ mkdir -p ${PROJECTDIR}/tmp
 if [ -d "$DJANGODIR" ]; then
     cd ${DJANGODIR}
     git reset --hard HEAD
-    git pull origin --recurse-submodules
-    git checkout ${BRANCH}
-    git pull --recurse-submodules
+    git pull origin --tags
 else
-    git clone --recursive ${GITURL} -b ${BRANCH} ${DJANGODIR}
+    git clone --tags ${GITURL} ${DJANGODIR}
 fi
+if [ -z "${TAG}" ]; then
+  TAG=$(git tag --sort=committerdate | tail -1)
+fi
+
+git checkout ${TAG}
+echo "+++ Deploying $NAME: TAG=$TAG PROJECTDIR=$PROJECTDIR ..."
 sudo supervisorctl stop ${NAME}
 sudo supervisorctl stop ${NAME}-huey
 sleep 1

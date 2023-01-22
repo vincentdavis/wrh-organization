@@ -1,8 +1,7 @@
 #!/bin/bash
 
-BRANCH=master
 if [ -n "$1" ]; then
-    BRANCH=$1
+    TAG=$1
 fi
 
 echo "+++ installing required libs ..."
@@ -40,12 +39,15 @@ mkdir -p ${PROJECTDIR}/tmp
 if [ -d "$DJANGODIR" ]; then
     cd ${DJANGODIR}
     git reset --hard HEAD
-    git pull origin --recurse-submodules
-    git checkout ${BRANCH}
-    git pull
+    git pull origin --tags
 else
-    git clone --recursive ${GITURL} -b ${BRANCH} ${DJANGODIR}
+    git clone --tags ${GITURL} ${DJANGODIR}
 fi
+if [ -z "${TAG}" ]; then
+  TAG=$(git tag --sort=committerdate | tail -1)
+fi
+git checkout ${TAG}
+
 cp ${DJANGODIR}/wrh_organization/wrh_organization/settings/external_config_sample.py ${PROJECTDIR}/etc/external_config.py
 
 virtualenv -p python3 ${ENVDIR}
