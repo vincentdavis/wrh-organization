@@ -1,7 +1,25 @@
 #!/bin/bash
 
+NAME="wrh_organization"
+CUR_DIR=$(dirname -- "$0")
+
+cd ${CUR_DIR}
+cd ..
+BASE_DIR=$(pwd)
+FRONTEND_DIR=${BASE_DIR}/wrh_organization/FRONTEND/wrh_organization_ui
+
 FE_INC_VER_TYPE=patch
 BE_INC_VER_TYPE=patch
+PREV_RELEASE_COMMIT=$(git log master --grep "\[RELEASE VERSION\]" -1 --format=format:"%H")
+FE_HAS_COMMIT=$(git diff --quiet ${PREV_RELEASE_COMMIT} -- ${FRONTEND_DIR}  || echo changed)
+BE_HAS_COMMIT=$(git diff --quiet ${PREV_RELEASE_COMMIT} -- ${BASE_DIR} ':!wrh_organization/FRONTEND/wrh_organization_ui'  || echo changed)
+if [ -z "${FE_HAS_COMMIT}" ]; then
+  FE_INC_VER_TYPE="ignore"
+fi
+if [ -z "${BE_HAS_COMMIT}" ]; then
+  BE_INC_VER_TYPE="ignore"
+fi
+
 while [ "$1" != "" ]; do
   PARAM=$(echo $1 | awk -F= '{print $1}')
   VALUE=$(echo $1 | awk -F= '{print $2}')
@@ -16,14 +34,6 @@ while [ "$1" != "" ]; do
   shift
 done
 
-NAME="wrh_organization"
-CUR_DIR=$(dirname -- "$0")
-
-cd ${CUR_DIR}
-cd ..
-BASE_DIR=$(pwd)
-FRONTEND_DIR=${BASE_DIR}/wrh_organization/FRONTEND/wrh_organization_ui
-
 git checkout master
 git pull
 
@@ -31,7 +41,7 @@ cd ./wrh_organization
 
 BACKEND_VERSION=$(cat ./VERSION)
 NEW_BACKEND_VERSION=${BACKEND_VERSION}
-if [ "${BE_INC_VER_TYPE}" != "ignore" ]; then
+if [ "${BE_INC_VER_TYPE}" != 'ignore' ]; then
   NEW_BACKEND_VERSION=$(pysemver bump ${BE_INC_VER_TYPE} ${BACKEND_VERSION})
   echo ${NEW_BACKEND_VERSION} >./VERSION
 fi
@@ -43,10 +53,15 @@ if [ "${FE_INC_VER_TYPE}" != "ignore" ]; then
   NEW_FRONTEND_VERSION=$(npm version ${FE_INC_VER_TYPE} | sed 's/v//')
 fi
 
+if [ "${FE_INC_VER_TYPE}" = 'ignore' ] && [ "${BE_INC_VER_TYPE}" = 'ignore' ]; then
+  echo "No new commit after the last release!"
+  echo "Build Release: [CANCELED]"
+  exit 1
+fi
+
 RELEASE_NUMBER=${NEW_BACKEND_VERSION}-${NEW_FRONTEND_VERSION}
 echo "Building release #[${RELEASE_NUMBER}] ..."
 
-exit
 # we should put running tests here before build
 npm run build
 if [ $? -ne 0 ]; then
