@@ -10,3 +10,5 @@ Load USA Clubs:
 
 To Load USA Rider:
 Import CSV file directly into DB table
+
+### TODO: we have to complete this section
