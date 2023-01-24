@@ -43,6 +43,7 @@ if [ -d "$DJANGODIR" ]; then
   git pull origin --tags
 else
   git clone --tags ${GITURL} ${DJANGODIR}
+  cd ${DJANGODIR}
 fi
 if [ -z "${TAG}" ]; then
   TAG=$(git tag --sort=committerdate | tail -1)
@@ -64,7 +65,6 @@ sudo ln -sf /etc/nginx/sites-available/${NAME}.conf /etc/nginx/sites-enabled/${N
 cp ${DJANGODIR}/utils/daphne_start.sh ${ENVDIR}/bin/
 chmod +x ${ENVDIR}/bin/daphne_start.sh
 
-cd ${DJANGODIR}
 pip install -r requirements.txt
 pip install daphne
 cd ${DJANGODIR}/wrh_organization
