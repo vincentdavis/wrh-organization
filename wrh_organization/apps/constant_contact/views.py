@@ -1,8 +1,11 @@
 import requests
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 # Create your views here.
 from django.conf import settings
 import base64
+
+from django.shortcuts import redirect
+from rest_framework.response import Response
 
 
 def authorization_request(request):
@@ -25,11 +28,6 @@ def callback(request):
         },
         headers={'Authorization': f"Basic {base64_string}"}
         )
-        save_user_toek(request, res.json().get('access_token'))
+        request.session['cc_token'] = res.json().get('access_token')
         return HttpResponseRedirect("/#/dashboard/member-profile")
-
-def save_user_toek(request, token):
-    current_user = request.user
-    current_user.more_data['cc_token'] = token
-    current_user.save()
 
