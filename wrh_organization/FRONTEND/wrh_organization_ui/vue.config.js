@@ -58,6 +58,18 @@ module.exports = {
         target: BACKEND_URL,
         changeOrigin: true
       },
+      "/accounts/": {
+        target: BACKEND_URL,
+        changeOrigin: true
+      },
+      "/token/": {
+        target: BACKEND_URL,
+        changeOrigin: true
+      },
+      "/api-auth/": {
+        target: BACKEND_URL,
+        changeOrigin: true
+      },
       "/static/dj": {
         target: BACKEND_URL,
         changeOrigin: true

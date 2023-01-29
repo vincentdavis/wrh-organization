@@ -1,5 +1,5 @@
 #!/bin/bash
-git clone https://github.com/karthicksakkaravarti/wrh-organization.git /home/jenkins/wrh-organization
+git clone https://github.com/karthicksakkaravarti/wrh-organization-integration.git /home/jenkins/wrh-organization
 cd /home/jenkins/wrh-organization
 git checkout master
 mkdir -p media

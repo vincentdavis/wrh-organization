@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     # project apps
     'apps.account',
     'apps.cycling_org',
-    'apps.usacycling'
+    'apps.usacycling',
+    'apps.constant_contact'
 ]
 
 MIDDLEWARE = [
@@ -448,3 +449,7 @@ TURNSTILE_SITE_KEY = '<TURNSTILE_SITE_KEY>'
 
 # Google Map Api key
 GOOGLE_MAP_API_TOKEN = '<GOOGLE_MAP_API_TOKEN>'
+
+# ConstantContent
+CC_CLIENT_ID = '<CC_CLIENT_ID>'
+CC_CLIENT_SECRET = '<CC_CLIENT_SECRET>'
