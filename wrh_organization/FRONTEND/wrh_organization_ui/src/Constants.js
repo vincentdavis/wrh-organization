@@ -1,6 +1,7 @@
 import {countries} from "@/composables/countries";
 
 export const UI_VERSION_HEADER_NAME = "x-ui-version";
+export const BACKEND_VERSION_HEADER_NAME = "x-backend-version";
 
 export const GENDER_OPTIONS = [
   { value: "m", title: "Male" },

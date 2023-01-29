@@ -12,6 +12,7 @@ export default new Vuex.Store({
     currentMember: {},
     checkedAuthentication: false,
     sitePrefs: {},
+    backendVersion: null,
   },
   mutations: {
     currentUser: function(state, user) {

@@ -87,6 +87,19 @@ class InjectUiVersionInHeadersMiddleware(object):
         return response
 
 
+class InjectBackendVersionInHeadersMiddleware(object):
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        from wrh_organization import __version__ as VERSION
+
+        response = self.get_response(request)
+        response['X-Backend-Version'] = VERSION
+        return response
+
+
 class SqlQueryLogging:
     def __init__(self, get_response):
         self.get_response = get_response

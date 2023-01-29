@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'wrh_organization.helpers.middleware.InjectBackendVersionInHeadersMiddleware',
     'wrh_organization.helpers.middleware.InjectUiVersionInHeadersMiddleware',
     'wrh_organization.helpers.middleware.ThreadLocalMiddleware',
     'wrh_organization.helpers.middleware.CustomRollbarNotifierMiddleware',
