@@ -3,7 +3,6 @@ from .views import CCContactListView, CCContactListDetailView, CCStatusView, CCS
 
 app_name = 'constant_contact'
 
-
 urlpatterns = [
     # API's
     path('cc_status', CCStatusView.as_view()),
