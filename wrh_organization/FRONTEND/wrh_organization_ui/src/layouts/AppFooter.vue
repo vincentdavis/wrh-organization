@@ -10,7 +10,7 @@
     </span>
     <div class="align-center d-md-flex">
       <v-chip small label class="ml-1 v-chip-light-bg secondary--text" color="secondary">
-        Version: {{$appVersion}} - {{$store.state.backendVersion}}
+        Version: {{$store.state.backendVersion}} - {{$appVersion}}
       </v-chip>
     </div>
     <terms-of-service-dialog ref="termsOfServiceDialogRef"></terms-of-service-dialog>
