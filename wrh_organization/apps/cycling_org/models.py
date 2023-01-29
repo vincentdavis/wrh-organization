@@ -372,6 +372,7 @@ class Member(models.Model):
     more_data = models.JSONField(null=True, blank=True, encoder=JSONEncoder)
     is_verified = models.BooleanField(default=None, null=True)
     draft = models.BooleanField(default=False, null=False, editable=False)
+    usac_license_number = models.IntegerField(null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='member', null=True)
 
     @property
