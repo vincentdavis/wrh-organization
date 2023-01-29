@@ -22,13 +22,9 @@ class CCStatusView(APIView):
     permission_classes = [ConstantContentLoginRequired]
     def get(self, request , *args, **kwargs):
         try:
-            if request.session.get('cc_token'):
-                # User already authenticated
                 return Response({"is_singin": True}, status= status.HTTP_200_OK)
-            else:
-                return Response({"is_singin": False}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({})
+            return Response({"is_singin": False}, status= status.HTTP_400_BAD_REQUEST)
 
 class CCContactListView(APIView):
     permission_classes = [ConstantContentLoginRequired]
