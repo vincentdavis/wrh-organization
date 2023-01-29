@@ -11,6 +11,7 @@ from rest_framework import serializers
 
 from apps.cycling_org.models import Member, Organization, User, OrganizationMember, OrganizationMemberOrg, \
     FieldsTracking, Race, RaceResult, Category, RaceSeries, RaceSeriesResult, Event, EventAttachment
+from apps.usacycling.models import USACRiderLicense
 from wrh_organization.helpers.utils import DynamicFieldsSerializerMixin, Base64ImageField, get_random_upload_path, \
     verify_turnstile, get_client_ip, check_turnstile_request, SetCurrentUserDefaultSerializerMixin
 
@@ -36,7 +37,7 @@ class MemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer
     class Meta:
         model = Member
         fields = "__all__"
-        read_only_fields = ('user',)
+        read_only_fields = ('user', 'usac_license_number')
 
 
 class PublicMemberSerializer(MemberSerializer):
@@ -46,7 +47,7 @@ class PublicMemberSerializer(MemberSerializer):
         model = Member
         exclude = ('phone', 'phone_verified', 'email', 'email_verified', 'address1', 'address2', 'zipcode',
                    'more_data', 'birth_date')
-        read_only_fields = ('user',)
+        read_only_fields = ('user', 'usac_license_number')
 
 
 class UserMyMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
@@ -58,12 +59,19 @@ class UserMyMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSeri
         read_only_fields = ('id', 'username')
 
 
+class USACRiderLicenseSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = USACRiderLicense
+        fields = '__all__'
+
+
 class MyMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
     user = UserMyMemberSerializer(allow_null=True, required=False)
     email = serializers.EmailField(allow_null=True, required=False)
     summary = serializers.SerializerMethodField(read_only=True)
+    usac_licenses = serializers.SerializerMethodField(read_only=True)
     age = serializers.IntegerField(read_only=True)
-    extra_fields = ['summary', 'more_data']
+    extra_fields = ['summary', 'more_data', 'usac_licenses']
 
     def get_summary(self, obj):
         race_results_count = obj.race_results.count()
@@ -71,10 +79,16 @@ class MyMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializ
         events_count = obj.race_results.distinct('race__event').count()
         return {'races_count': races_count, 'events_count': events_count, 'race_results_count': race_results_count}
 
+    def get_usac_licenses(self, obj):
+        if not obj.usac_license_number:
+            return []
+        return [USACRiderLicenseSerializer(r).data for r in
+                USACRiderLicense.objects.filter(license_number=obj.usac_license_number)]
+
     class Meta:
         model = Member
         fields = "__all__"
-        read_only_fields = ('user', 'phone_verified', 'email_verified')
+        read_only_fields = ('user', 'phone_verified', 'email_verified', 'usac_license_number')
 
     @transaction.atomic()
     def update(self, instance, validated_data):
