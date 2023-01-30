@@ -210,10 +210,12 @@ class Organization(models.Model):
     TYPE_REGIONAL = 'regional'
     TYPE_TEAM = 'team'
     TYPE_ADVOCACY_VOLUNTEER = 'advocacy_volunteer'
+    TYPE_PROMOTER = 'promoter'
     TYPE_CHOICES = (
         (TYPE_REGIONAL, 'Regional'),
         (TYPE_TEAM, 'Team'),
         (TYPE_ADVOCACY_VOLUNTEER, 'Advocacy, Volunteer'),
+        (TYPE_PROMOTER, 'Promoter'),
     )
     name = models.CharField(max_length=256, unique=True)
     type = models.CharField(max_length=32, choices=TYPE_CHOICES)

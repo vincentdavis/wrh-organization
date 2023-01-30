@@ -24,6 +24,7 @@ export const ORGANIZATION_TYPE_OPTIONS = [
   { value: "regional", title: "Regional", css: "success" },
   { value: "team", title: "Team", css: "primary" },
   { value: "advocacy_volunteer", title: "Advocacy, Volunteer", css: "info" },
+  { value: "promoter", title: "Promoter", css: "error" },
 ];
 export const ORGANIZATION_TYPE_MAP = {};
 ORGANIZATION_TYPE_OPTIONS.forEach(function(v) {
