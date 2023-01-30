@@ -455,6 +455,7 @@ export default {
         members.value = [];
         return;
       }
+      email = email.toLowerCase();
       findingMembers.value = true;
       axios.get("cycling_org/member/find", {params: {email: email}}).then((response) => {
         findingMembers.value = false;
