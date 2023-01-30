@@ -285,6 +285,9 @@ class Organization(models.Model):
         return schema
 
     def save(self, *args, **kwargs):
+        if self.email:
+            self.email = self.email.lower()
+
         if self.member_fields_schema:
             v = Validator({'member_fields_schema': self.MEMBER_FIELDS_SCHEMA_VALIDATOR}, purge_unknown=True)
             if not v.validate({'member_fields_schema': self.member_fields_schema}):
@@ -409,6 +412,9 @@ class Member(models.Model):
             self.phone_verified = None
         if not self.is_verified:
             self.is_verified = None
+        if self.email:
+            self.email = self.email.lower()
+
         if self.social_media:
             v = Validator(self.SOCIAL_MEDIA_SCHEMA, allow_unknown=True)
             if not v.validate(self.social_media):
@@ -449,7 +455,7 @@ class Event(models.Model):
     description = models.TextField(null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
-    organizer_email = models.CharField(max_length=300, null=True, blank=True)
+    organizer_email = models.EmailField(max_length=300, null=True, blank=True)
     country = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=255, blank=True, null=True)
@@ -473,6 +479,9 @@ class Event(models.Model):
     location_lon = models.FloatField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
+        if self.organizer_email:
+            self.organizer_email = self.organizer_email.lower()
+
         if self.end_date and (self.end_date < self.start_date):
             raise ValidationError({'end_date': 'end_date should be greater than start_date'})
         return super().save(*args, **kwargs)

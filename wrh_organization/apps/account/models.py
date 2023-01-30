@@ -34,4 +34,6 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.prefs:
             self.prefs = {}
+        if self.email:
+            self.email = self.email.lower()
         return super().save(*args, **kwargs)
