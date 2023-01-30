@@ -10,7 +10,11 @@ from threading import local
 
 from rollbar.contrib.django.middleware import RollbarNotifierMiddleware
 
+from wrh_organization import __version__ as VERSION
+
 _thread_locals = local()
+
+settings.ROLLBAR['code_version'] = VERSION
 
 
 def get_current_request():
@@ -93,8 +97,6 @@ class InjectBackendVersionInHeadersMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        from wrh_organization import __version__ as VERSION
-
         response = self.get_response(request)
         response['X-Backend-Version'] = VERSION
         return response
@@ -108,7 +110,7 @@ class SqlQueryLogging:
         response = self.get_response(request)
         from sys import stdout
         if stdout.isatty() and settings.DEBUG:
-            for query in connection.queries :
+            for query in connection.queries:
                 print("\033[1;31m[%s]\033[0m \033[1m%s\033[0m" % (query['time'], " ".join(query['sql'].split())))
         return response
 
