@@ -36,18 +36,30 @@
             </v-tooltip>
           </div>
 
-          <div v-if="is_singin">
-            <v-autocomplete
+          <div class="d-flex align-center pb-5">
+            <v-text-field
+              v-model="search"
+              :prepend-inner-icon="icons.mdiMagnify"
+              single-line
               dense
+              class="mr-2"
+              placeholder="Search ..."
               hide-details="auto"
-              @change="loadCCListDetails"
-              v-model="ccListSelect"
-              v-if="ccList.length >= 1"
-              :items="ccList"
-              label="Choose List"
-              item-value="list_id"
-              item-text="name"
-            ></v-autocomplete>
+            ></v-text-field>
+
+            <div v-if="is_singin">
+              <v-autocomplete
+                dense
+                hide-details="auto"
+                @change="loadCCListDetails"
+                v-model="ccListSelect"
+                v-if="ccList.length >= 1"
+                :items="ccList"
+                label="Choose List"
+                item-value="list_id"
+                item-text="name"
+              ></v-autocomplete>
+            </div>
           </div>
         </div>
 
@@ -58,10 +70,13 @@
         :items="records"
         :loading="loading"
         class="text-no-wrap"
+        :search="search"
       >
-      <template #item.match_type="{item}">
-        <v-chip small :color="color_chip(item.match_type)">{{item.match_type}}</v-chip>
-      </template>
+        <template #item.match_type="{ item }">
+          <v-chip small :color="color_chip(item.match_type)">{{
+            item.match_type
+          }}</v-chip>
+        </template>
       </v-data-table>
     </v-card>
   </div>
@@ -70,6 +85,7 @@
 <script>
 import {
   mdiAccountPlus,
+  mdiMagnify,
   mdiPencilOutline,
   mdiEyeOutline,
   mdiAccountGroupOutline,
@@ -96,14 +112,15 @@ export default {
   props: {
     organization: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const records = ref([]);
     const is_singin = ref(false);
     const ccList = ref([]);
     const ccListSelect = ref();
+    const search = ref();
     const loading = ref(false);
     const tableColumns = [
       { text: "Member Name", value: "member_name" },
@@ -132,7 +149,9 @@ export default {
     const loadCCListDetails = () => {
       loading.value = true;
       axios
-        .get(`/constantcontact/contact_list_detail/${ccListSelect.value}/?organization=${props.organization.id}`)
+        .get(
+          `/constantcontact/contact_list_detail/${ccListSelect.value}/?organization=${props.organization.id}`
+        )
         .then(
           (response) => {
             loading.value = false;
@@ -157,10 +176,12 @@ export default {
         }
       );
     };
-    const color_chip =(match_type) => {
-      if (match_type == 'Matched'){return 'success'}
-      return 'error'
-    }
+    const color_chip = (match_type) => {
+      if (match_type == "Matched") {
+        return "success";
+      }
+      return "error";
+    };
     const getCCStatus = () => {
       loading.value = true;
       axios.get(`/constantcontact/cc_status`).then(
@@ -188,6 +209,7 @@ export default {
       ccListSelect,
       tableColumns,
       loading,
+      search,
       signOutFromCC,
       getCCStatus,
       loadCCListDetails,
@@ -196,6 +218,7 @@ export default {
       color_chip,
 
       icons: {
+        mdiMagnify,
         mdiAccountPlus,
         mdiPencilOutline,
         mdiEyeOutline,
