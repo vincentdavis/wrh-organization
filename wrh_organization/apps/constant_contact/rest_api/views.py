@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps.constant_contact.permission import ConstantContentLoginRequired
+from apps.cycling_org.models import OrganizationMember
 
 
 class CCSignOutView(APIView):
@@ -35,9 +36,22 @@ class CCContactListView(APIView):
 class CCContactListDetailView(APIView):
     permission_classes = [ConstantContentLoginRequired]
 
+    def cc_member_match(self, cc_list, org=None):
+        # Checking if CC user exists on ORG member list
+        if org:
+            for cc_user in cc_list.get('contacts', []):
+                if cc_user.get('email_address').get('address', None):
+                    member = OrganizationMember.objects.get(organization__id=org).member
+                    if cc_user.get('email_address').get('address') == member.email:
+                        cc_user['match_type'] = 'Matched'
+                        cc_user['member_name'] = str(member)
+                        cc_user['member_email'] = member.email
+                cc_user['match_type'] = 'Not Matched'
+        return cc_list
+
     def get(self, request, list_id, *args, **kwargs):
         url = f"https://api.cc.email/v3/contacts?lists={list_id}"
         res = requests.get(url, headers={
             'Authorization': f"Bearer {request.session.get('cc_token')}"
         })
-        return JsonResponse(res.json())
+        return Response(self.cc_member_match(res.json(), org=request.query_params.get("organization", None)))

@@ -59,6 +59,9 @@
         :loading="loading"
         class="text-no-wrap"
       >
+      <template #item.match_type="{item}">
+        <v-chip small :color="color_chip(item.match_type)">{{item.match_type}}</v-chip>
+      </template>
       </v-data-table>
     </v-card>
   </div>
@@ -90,7 +93,12 @@ import {
 
 export default {
   components: {},
-  props: {},
+  props: {
+    organization: {
+      type: Object,
+      required: true
+    }
+  },
   setup(props) {
     const records = ref([]);
     const is_singin = ref(false);
@@ -98,9 +106,9 @@ export default {
     const ccListSelect = ref();
     const loading = ref(false);
     const tableColumns = [
-      { text: "Member Name", value: "" },
-      { text: "Member Email", value: "" },
-      { text: "Match Type", value: "" },
+      { text: "Member Name", value: "member_name" },
+      { text: "Member Email", value: "member_email" },
+      { text: "Match Type", value: "match_type" },
       { text: "Contact Name", value: "first_name" },
       { text: "Contact Email", value: "email_address.address" },
     ];
@@ -124,7 +132,7 @@ export default {
     const loadCCListDetails = () => {
       loading.value = true;
       axios
-        .get(`/constantcontact/contact_list_detail/${ccListSelect.value}/`)
+        .get(`/constantcontact/contact_list_detail/${ccListSelect.value}/?organization=${props.organization.id}`)
         .then(
           (response) => {
             loading.value = false;
@@ -149,6 +157,10 @@ export default {
         }
       );
     };
+    const color_chip =(match_type) => {
+      if (match_type == 'Matched'){return 'success'}
+      return 'error'
+    }
     const getCCStatus = () => {
       loading.value = true;
       axios.get(`/constantcontact/cc_status`).then(
@@ -181,6 +193,7 @@ export default {
       loadCCListDetails,
       loadCCList,
       tableRowClass,
+      color_chip,
 
       icons: {
         mdiAccountPlus,
