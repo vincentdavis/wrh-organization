@@ -36,18 +36,30 @@
             </v-tooltip>
           </div>
 
-          <div v-if="is_singin">
-            <v-autocomplete
+          <div class="d-flex align-center pb-5">
+            <v-text-field
+              v-model="search"
+              :prepend-inner-icon="icons.mdiMagnify"
+              single-line
               dense
+              class="mr-2"
+              placeholder="Search ..."
               hide-details="auto"
-              @change="loadCCListDetails"
-              v-model="ccListSelect"
-              v-if="ccList.length >= 1"
-              :items="ccList"
-              label="Choose List"
-              item-value="list_id"
-              item-text="name"
-            ></v-autocomplete>
+            ></v-text-field>
+
+            <div v-if="is_singin">
+              <v-autocomplete
+                dense
+                hide-details="auto"
+                @change="loadCCListDetails"
+                v-model="ccListSelect"
+                v-if="ccList.length >= 1"
+                :items="ccList"
+                label="Choose List"
+                item-value="list_id"
+                item-text="name"
+              ></v-autocomplete>
+            </div>
           </div>
         </div>
 
@@ -58,7 +70,13 @@
         :items="records"
         :loading="loading"
         class="text-no-wrap"
+        :search="search"
       >
+        <template #item.match_type="{ item }">
+          <v-chip small :color="color_chip(item.match_type)">{{
+            item.match_type
+          }}</v-chip>
+        </template>
       </v-data-table>
     </v-card>
   </div>
@@ -67,6 +85,7 @@
 <script>
 import {
   mdiAccountPlus,
+  mdiMagnify,
   mdiPencilOutline,
   mdiEyeOutline,
   mdiAccountGroupOutline,
@@ -90,17 +109,23 @@ import {
 
 export default {
   components: {},
-  props: {},
+  props: {
+    organization: {
+      type: Object,
+      required: true,
+    },
+  },
   setup(props) {
     const records = ref([]);
     const is_singin = ref(false);
     const ccList = ref([]);
     const ccListSelect = ref();
+    const search = ref();
     const loading = ref(false);
     const tableColumns = [
-      { text: "Member Name", value: "" },
-      { text: "Member Email", value: "" },
-      { text: "Match Type", value: "" },
+      { text: "Member Name", value: "member_name" },
+      { text: "Member Email", value: "member_email" },
+      { text: "Match Type", value: "match_type" },
       { text: "Contact Name", value: "first_name" },
       { text: "Contact Email", value: "email_address.address" },
     ];
@@ -124,7 +149,9 @@ export default {
     const loadCCListDetails = () => {
       loading.value = true;
       axios
-        .get(`/constantcontact/contact_list_detail/${ccListSelect.value}/`)
+        .get(
+          `/constantcontact/contact_list_detail/${ccListSelect.value}/?organization=${props.organization.id}`
+        )
         .then(
           (response) => {
             loading.value = false;
@@ -148,6 +175,12 @@ export default {
           notifyDefaultServerError(error, true);
         }
       );
+    };
+    const color_chip = (match_type) => {
+      if (match_type == "Matched") {
+        return "success";
+      }
+      return "error";
     };
     const getCCStatus = () => {
       loading.value = true;
@@ -176,13 +209,16 @@ export default {
       ccListSelect,
       tableColumns,
       loading,
+      search,
       signOutFromCC,
       getCCStatus,
       loadCCListDetails,
       loadCCList,
       tableRowClass,
+      color_chip,
 
       icons: {
+        mdiMagnify,
         mdiAccountPlus,
         mdiPencilOutline,
         mdiEyeOutline,
