@@ -5,7 +5,7 @@ from django.db import migrations
 
 def forwards_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
-    User = apps.get_model("account", "User")
+    User = apps.get_model("wrh_account", "User")
     for o in User.objects.using(db_alias).all():
         if o.email:
             o.email = o.email.lower()
@@ -20,7 +20,7 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0004_user_draft'),
+        ('wrh_account', '0004_user_draft'),
     ]
 
     operations = [

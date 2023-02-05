@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'dynamic_preferences',
     'huey.contrib.djhuey',
     # project apps
-    'apps.account',
+    'apps.wrh_account',
     'apps.cycling_org',
     'apps.usacycling',
     'apps.constant_contact'
@@ -266,7 +266,7 @@ LOGGING = {
     }
 }
 
-AUTH_USER_MODEL='account.User'
+AUTH_USER_MODEL='wrh_account.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
