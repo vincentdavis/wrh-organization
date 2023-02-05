@@ -2,6 +2,7 @@
   <v-dialog
     v-model="isVisible"
     persistent
+    :retain-focus="false"
     max-width="1000px"
   >
     <v-card class="event-org-form">
