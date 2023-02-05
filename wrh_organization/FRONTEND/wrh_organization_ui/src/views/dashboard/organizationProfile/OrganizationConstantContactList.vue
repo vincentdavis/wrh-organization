@@ -195,7 +195,7 @@ export default {
         },
         (error) => {
           loading.value = false;
-          notifyDefaultServerError(error, true);
+          // notifyDefaultServerError(error, true); // Comended to hide error message
         }
       );
     };
