@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Adding to enable django all-auth
     # third party apps
     'django_ckeditor_5',
     'dbbackup',
@@ -47,6 +48,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'dynamic_preferences',
     'huey.contrib.djhuey',
+    # django all auth - for enabling Oauth service
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.stripe',
+    'allauth.socialaccount.providers.google',
+    # More can be found in : https://django-allauth.readthedocs.io/en/latest/providers.html
     # project apps
     'apps.account',
     'apps.cycling_org',
@@ -270,6 +278,8 @@ AUTH_USER_MODEL='account.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
+     # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # dbbackup settings
@@ -454,3 +464,7 @@ GOOGLE_MAP_API_TOKEN = '<GOOGLE_MAP_API_TOKEN>'
 # ConstantContent
 CC_CLIENT_ID = '<CC_CLIENT_ID>'
 CC_CLIENT_SECRET = '<CC_CLIENT_SECRET>'
+
+
+# Django All-auth Settings
+SITE_ID = 1
