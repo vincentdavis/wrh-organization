@@ -2,6 +2,7 @@
   <v-dialog
     v-model="isVisible"
     persistent
+    :retain-focus="false"
     max-width="800px"
   >
     <v-card class="profile-org-form">

@@ -479,7 +479,8 @@ class Event(models.Model):
     update_datetime = models.DateTimeField(auto_now=True)
     location_lat = models.FloatField(null=True, blank=True)
     location_lon = models.FloatField(null=True, blank=True)
-
+    permit_no = models.CharField(max_length=25, blank=True, null=True)
+    is_usac_permitted = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         if self.organizer_email:
             self.organizer_email = self.organizer_email.lower()
