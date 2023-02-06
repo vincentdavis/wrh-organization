@@ -4,7 +4,7 @@
       <v-card-text class="pb-0">
         <div class="d-flex justify-space-between pb-5">
           <div v-if="!loading">
-            <v-tooltip v-if="is_singin" bottom>
+            <v-tooltip v-if="isSingin" bottom>
               <template #activator="{ on, attrs }">
                 <v-btn
                   v-bind="attrs"
@@ -47,7 +47,7 @@
               hide-details="auto"
             ></v-text-field>
 
-            <div v-if="is_singin">
+            <div v-if="isSingin">
               <v-autocomplete
                 dense
                 hide-details="auto"
@@ -117,7 +117,7 @@ export default {
   },
   setup(props) {
     const records = ref([]);
-    const is_singin = ref(false);
+    const isSingin = ref(false);
     const ccList = ref([]);
     const ccListSelect = ref();
     const search = ref();
@@ -187,24 +187,26 @@ export default {
       axios.get(`/constantcontact/cc_status`).then(
         (response) => {
           loading.value = false;
-          is_singin.value = response.data.is_singin;
-          console.log(is_singin.value);
-          if (is_singin.value == true) {
-            loadCCList();
-          }
+          isSingin.value = true;
+          loadCCList();
         },
         (error) => {
           loading.value = false;
-          // notifyDefaultServerError(error, true); // Comended to hide error message
+          isSingin.value = false;
+          if (error.response.status !== 403 ) {
+            notifyDefaultServerError(error, true);
+          }
         }
       );
     };
 
-    onMounted(getCCStatus);
+    onMounted(() => {
+      getCCStatus();
+    });
 
     return {
       records,
-      is_singin,
+      isSingin,
       ccList,
       ccListSelect,
       tableColumns,
