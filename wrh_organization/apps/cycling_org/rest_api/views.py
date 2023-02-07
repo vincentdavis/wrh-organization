@@ -124,7 +124,7 @@ class AttachmentViewMixin(object):
 
 class GlobalPreferencesView(viewsets.ViewSet):
     PUBLIC_KEYS = [
-        'site_ui__terms_of_service', 'site_ui__banner_image', 'site_ui__default_event_banner_image', 'core_backend__event_tags',
+        'site_ui__terms_of_service', 'site_ui__banner_image', 'site_ui__default_event_banner_image', 'core_backend__event_tags', 'core_backend__global_race_template',
         'site_ui__signup_page_title', 'site_ui__signup_page_caption', 'site_ui__home_information_board', 'site_ui__default_event_logo',
         'rollbar_client__access_token', 'rollbar_client__environment', 'rollbar_client__enabled',
         'user_account__disabled_signup',
@@ -957,6 +957,18 @@ class RaceView(AdminOrganizationActionsViewMixin, viewsets.ModelViewSet):
     }
     search_fields = ['name', 'event__name']
 
+    @action(detail=False, methods=['POST'])
+    def create_from_race_template(self, request, **kwargs):
+        template =  global_pref.get('core_backend__global_race_template')
+        races = template.get(request.data.pop("race_template"))
+        for race in races:
+            Race.objects.get_or_create(
+                event= Event.objects.get(id=request.data.get("event")),
+                organization= Organization.objects.get(id=request.data.get("organization")),
+                name=race,
+                create_by=request.user
+            )
+        return Response(f"Race Created")
     def get_queryset(self):
         return super().get_queryset().select_related('event')
 

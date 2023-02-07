@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.stripe',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.strava',
     # More can be found in : https://django-allauth.readthedocs.io/en/latest/providers.html
     # project apps
     'apps.wrh_account',
@@ -213,6 +214,14 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+#  django-allauth
+# ---------------------------------------------------------------------------------------
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_LOGIN_ON_GET = True
+# https://django-allauth.readthedocs.io/en/latest/advanced.html?highlight=ACCOUNT_ADAPTER#custom-redirects
+ACCOUNT_ADAPTER = 'apps.wrh_account.allauth.AccountAdapter'
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=10),

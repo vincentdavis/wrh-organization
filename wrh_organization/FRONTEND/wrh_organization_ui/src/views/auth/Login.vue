@@ -106,6 +106,8 @@
         v-for="link in socialLink"
         :key="link.icon"
         icon
+        :title="link.text"
+        :href="link.redirect"
         class="ms-1"
       >
         <v-icon :color="$vuetify.theme.dark ? link.colorInDark : link.color">
@@ -140,28 +142,30 @@ export default {
     const loginForm = ref({});
 
     const socialLink = [
-      {
-        icon: mdiFacebook,
-        color: '#4267b2',
-        colorInDark: '#4267b2',
-      },
-      {
-        icon: mdiTwitter,
-        color: '#1da1f2',
-        colorInDark: '#1da1f2',
-      },
-      {
-        icon: mdiGithub,
-        color: '#272727',
-        colorInDark: '#fff',
-      },
+      // {
+      //   icon: mdiFacebook,
+      //   color: '#4267b2',
+      //   colorInDark: '#4267b2',
+      // },
+      // {
+      //   icon: mdiTwitter,
+      //   color: '#1da1f2',
+      //   colorInDark: '#1da1f2',
+      // },
+      // {
+      //   icon: mdiGithub,
+      //   color: '#272727',
+      //   colorInDark: '#fff',
+      // },
       {
         icon: mdiGoogle,
         color: '#db4437',
+        text: 'Login in using google',
         colorInDark: '#db4437',
+        redirect: "/accounts/google/login"
       },
     ];
-
+    
     const login = () => {
       logining.value = true;
       axios.post("account/session", loginForm.value).then((response) => {

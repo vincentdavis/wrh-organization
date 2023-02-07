@@ -80,6 +80,7 @@
             </v-icon>
             <span>New Race</span>
           </v-btn>
+          <organization-race-template  @save-successed="loadRecords(1)" :organization="organization" :event="selectedEvent" v-if="organization.my_level.is_admin && selectedEvent"></organization-race-template>
         </div>
 
         <v-spacer></v-spacer>
@@ -177,10 +178,11 @@ import { ref, reactive, watch, onMounted } from '@vue/composition-api'
 import axios from "@/axios";
 import {notifyDefaultServerError, notifySuccess, refineVTableOptions} from "@/composables/utils";
 import OrganizationRaceFormDialog from "./OrganizationRaceFormDialog";
+import OrganizationRaceTemplate from "./OrganizationRaceTemplate";
 import _ from "lodash";
 
 export default {
-  components: {OrganizationRaceFormDialog},
+  components: {OrganizationRaceFormDialog, OrganizationRaceTemplate},
   props: {
     organization: {
       type: Object,
