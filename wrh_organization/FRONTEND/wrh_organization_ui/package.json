@@ -1,7 +1,7 @@
 {
   "name": "wrh_organization_ui",
   "description": "WRH-Organization Frontend",
-  "version": "0.0.92",
+  "version": "0.0.90",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -43,6 +43,8 @@
     "vue-i18n": "^8.24.5",
     "vue-prism-component": "1",
     "vue-router": "^3.5.2",
+    "vue-rss-feed": "^0.2.4",
+    "vue-rss-parser": "^0.1.0",
     "vue-toastification": "^1.7.14",
     "vue-tweet": "^2.0.2",
     "vue2-leaflet": "^2.7.1",
