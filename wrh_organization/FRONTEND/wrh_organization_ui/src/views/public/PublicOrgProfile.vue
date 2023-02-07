@@ -182,7 +182,7 @@
 
       <v-col cols="6" v-if="organization.rss">
         <v-card class="d-flex px-4 pt-4">
-          <VueRssParser :feedUrl="`https://cors-anywhere.herokuapp.com/${organization.rss_url}`"/>
+          <VueRssParser :feedUrl="`/api/v1/cycling_org/rss?url=${organization.rss_url}`"/>
         </v-card>
       </v-col>
 
