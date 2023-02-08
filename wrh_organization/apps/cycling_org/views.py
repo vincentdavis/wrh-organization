@@ -11,9 +11,7 @@ from django_ckeditor_5.views import storage as ck_storage
 
 from wrh_organization.helpers.utils import get_random_upload_path
 
-import datetime
 from django_ical.views import ICalFeed
-from icalendar import vCalAddress, vText
 from .models import Event
 
 
