@@ -231,8 +231,6 @@
         v-for="link in socialLink"
         :key="link.icon"
         icon
-        :title="link.text"
-        :href="link.redirect"
         class="ms-1"
       >
         <v-icon :color="$vuetify.theme.dark ? link.colorInDark:link.color">
@@ -277,27 +275,25 @@ export default {
     const registerForm = ref({member: {country: "US"}, turnstile_token: null});
 
     const socialLink = [
-      // {
-      //   icon: mdiFacebook,
-      //   color: '#4267b2',
-      //   colorInDark: '#4267b2',
-      // },
-      // {
-      //   icon: mdiTwitter,
-      //   color: '#1da1f2',
-      //   colorInDark: '#1da1f2',
-      // },
-      // {
-      //   icon: mdiGithub,
-      //   color: '#272727',
-      //   colorInDark: '#fff',
-      // },
+      {
+        icon: mdiFacebook,
+        color: '#4267b2',
+        colorInDark: '#4267b2',
+      },
+      {
+        icon: mdiTwitter,
+        color: '#1da1f2',
+        colorInDark: '#1da1f2',
+      },
+      {
+        icon: mdiGithub,
+        color: '#272727',
+        colorInDark: '#fff',
+      },
       {
         icon: mdiGoogle,
-        text: 'Login in using google',
         color: '#db4437',
         colorInDark: '#db4437',
-        redirect: "/accounts/google/login"
       },
     ];
 
