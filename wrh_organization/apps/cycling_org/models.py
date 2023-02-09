@@ -239,8 +239,7 @@ class Organization(models.Model):
     prefs = models.JSONField(null=True, blank=True, encoder=JSONEncoder, editable=False)
     members = models.ManyToManyField('Member', related_name='organizations', through=OrganizationMember)
     member_orgs = models.ManyToManyField('Organization', related_name='organizations', through=OrganizationMemberOrg)
-    rss = models.BooleanField(default=False, null=True)
-    rss_url = models.TextField(default="", null=True)
+    rss_url = models.TextField(default=None, null=True, blank=True)
     _tracker = FieldTracker()
 
     @property

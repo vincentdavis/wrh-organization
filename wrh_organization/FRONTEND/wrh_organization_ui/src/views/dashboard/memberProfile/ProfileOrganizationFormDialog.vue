@@ -95,9 +95,9 @@
                     <v-textarea rows="2" v-model="record.about" label="About" dense></v-textarea>
                   </v-col>
 
-                  <v-col cols="12" md="6">
+                  <!-- <v-col cols="12" md="6">
                     <v-switch v-model="record.rss" label="RSS Turn On/Off"></v-switch>
-                  </v-col>
+                  </v-col> -->
 
                   <v-col cols="12" md="6">
                     <v-textarea rows="1" v-model="record.rss_url" label="RSS URL" dense></v-textarea>

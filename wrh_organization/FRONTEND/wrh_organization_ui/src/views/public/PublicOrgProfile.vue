@@ -180,7 +180,7 @@
         </v-card>
       </v-col>
 
-      <v-col cols="6" v-if="organization.rss">
+      <v-col cols="6" v-if="organization.rss_url && organization.rss_url != ''">
         <v-card class="d-flex px-4 pt-4">
           <VueRssParser :feedUrl="`/api/v1/cycling_org/rss?url=${organization.rss_url}`"/>
         </v-card>
