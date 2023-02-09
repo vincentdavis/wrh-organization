@@ -480,9 +480,6 @@ class Event(models.Model):
     location_lat = models.FloatField(null=True, blank=True)
     location_lon = models.FloatField(null=True, blank=True)
 
-    def get_absolute_url(self):
-        return self.name
-        # return reverse('issue_detail', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
         if self.organizer_email:

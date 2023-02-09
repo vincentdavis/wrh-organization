@@ -39,7 +39,7 @@ urlpatterns = [
     re_path(r'^token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     re_path(r'^accounts/constantcontact/', include('apps.constant_contact.urls')), # CC integration
     re_path(r'^{}/constantcontact/'.format(API_ENDPOINT), include('apps.constant_contact.rest_api.urls', namespace='constant_contact_rest_api')),
-    re_path(r'^feed', EventFeed()),
+    re_path(r'^feed/calendar/ics', EventFeed()),
 ]
 
 if settings.DEBUG:

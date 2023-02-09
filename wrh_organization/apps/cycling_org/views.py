@@ -69,5 +69,8 @@ class EventFeed(ICalFeed):
     def item_class(self, item):
         return "Public"
 
+    def item_link(self, item):
+        return item.website
+
     def item_guid(self, item):
         return str(item.id) + "@www.werachere.org"
