@@ -24,14 +24,14 @@
                 <v-text-field v-model="record.name" label="Race Name" dense></v-text-field>
               </v-col>
               <v-col cols="12">
-                <!-- <v-datetime-picker v-model="record.start_datetime" label="Start Date/Time">
+                <v-datetime-picker v-model="record.start_datetime" label="Start Date/Time">
                   <template #dateIcon>
                     <v-icon>{{icons.mdiCalendar}}</v-icon>
                   </template>
                   <template #timeIcon>
                     <v-icon>{{icons.mdiClock}}</v-icon>
                   </template>
-                </v-datetime-picker> -->
+                </v-datetime-picker>
               </v-col>
             </v-row>
           </v-container>

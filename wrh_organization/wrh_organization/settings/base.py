@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',  # Adding to enable django all-auth
     # third party apps
     'django_ckeditor_5',
     'dbbackup',
