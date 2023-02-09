@@ -102,6 +102,10 @@
                   <v-col cols="12" md="6">
                     <v-textarea rows="1" v-model="record.rss_url" label="RSS URL" dense></v-textarea>
                   </v-col>
+                  <v-col cols="12">
+                    <span class="mb-2">Waiver Text</span>
+                    <ckeditor :editor="editor" v-model="record.waiver_text" :config="$const.DEFAULT_CKEDITOR_CONFIG"></ckeditor>
+                  </v-col>
 
                 </v-row>
               </v-container>

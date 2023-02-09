@@ -101,6 +101,18 @@ class SiteUiTermsOfService(types.LongStringPreference):
     verbose_name = 'Terms of Service'
     default = ''
 
+@global_preferences_registry.register
+class SiteUiUserAgreementWaver(types.LongStringPreference):
+    field_kwargs = {
+        'required': False,
+        'help_text': 'user agreement and waver ',
+        'widget': CKEditor5Widget()
+    }
+    section = site_ui
+    name = 'user_agreement_waver'
+    verbose_name = 'User Agreement Waver'
+    default = ''
+
 
 @global_preferences_registry.register
 class SiteUiBannerImage(types.FilePreference):

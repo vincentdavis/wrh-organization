@@ -215,6 +215,9 @@
                                @element-ready="() => stripeElementIsReady=true"
           />
         </v-card-text>
+        <v-col cols="12" md="12">
+          <user-agrement-legal-waver-dialog ref="uglw" :userAgreementPropsText="organization.waiver_text"></user-agrement-legal-waver-dialog>
+        </v-col>
         <v-divider></v-divider>
 
         <v-card-actions>
@@ -260,9 +263,10 @@ import {routeNames} from "@/router";
 import EventBus from "@/EventBus";
 import TurnstileComponent from "@/components/TurnstileComponent.vue";
 import MemberFieldsSchemaCmp from "@/views/public/MemberFieldsSchemaCmp.vue";
+import UserAgrementLegalWaverDialog from "@/views/public/UserAgrementLegalWaverDialog.vue";
 
 export default {
-  components: {MemberFieldsSchemaCmp, TurnstileComponent, StripeElementCard},
+  components: {MemberFieldsSchemaCmp, TurnstileComponent, StripeElementCard, UserAgrementLegalWaverDialog},
   props: {
   },
   setup(props, context) {
@@ -290,6 +294,8 @@ export default {
     const loginForm = ref({});
     const registerForm = ref({});
     const turnstileSiteKey = ref(null);
+    const aggrementDialog = ref(false);
+    const aggrementAccept = ref(false);
 
     const orgId = route.value.params.record_id;
 
@@ -462,6 +468,8 @@ export default {
       loadOrganization,
       tokenCreated,
       isPasswordVisible,
+      aggrementDialog,
+      aggrementAccept,
       rules: {
         required, confirmedValidator, emailValidator
       },
