@@ -198,7 +198,7 @@
 
 <script>
 import { ref } from '@vue/composition-api'
-
+import VueRssParser from "vue-rss-parser";
 // eslint-disable-next-line object-curly-newline
 import {
   mdiFlagCheckered,
@@ -225,6 +225,7 @@ export default {
     UpcomingEventsWidget,
     RecentRaceResultsWidget,
     OrganizationRaceResultsTab,
+    VueRssParser
   },
   setup() {
     const { rootThemeClasses } = useVuetify();
