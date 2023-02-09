@@ -29,7 +29,7 @@ API_ENDPOINT = 'api/(?P<{}>v\d+)'.format(VERSION_PARAM)
 
 urlpatterns = [
     re_path(r'^$', RedirectView.as_view(url=settings.VUE_STATIC_INDEX), name='index'),
-    re_path(r'^{}/account/'.format(API_ENDPOINT), include('apps.account.urls', namespace='account_rest_api')),
+    re_path(r'^{}/account/'.format(API_ENDPOINT), include('apps.wrh_account.urls', namespace='account_rest_api')),
     re_path(r'^{}/cycling_org/'.format(API_ENDPOINT), include('apps.cycling_org.urls', namespace='cycling_org_rest_api')),
     re_path(r'^{}/usacycling/'.format(API_ENDPOINT), include('apps.usacycling.urls', namespace='usacycling_rest_api')),
     re_path(r'^admin/', admin.site.urls),
@@ -40,6 +40,8 @@ urlpatterns = [
     re_path(r'^accounts/constantcontact/', include('apps.constant_contact.urls')), # CC integration
     re_path(r'^{}/constantcontact/'.format(API_ENDPOINT), include('apps.constant_contact.rest_api.urls', namespace='constant_contact_rest_api')),
     re_path(r'^feed/calendar/ics', EventFeed()),
+    # Django allauth
+    re_path(r'accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

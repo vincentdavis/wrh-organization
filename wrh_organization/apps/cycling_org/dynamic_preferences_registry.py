@@ -160,7 +160,14 @@ class SiteUiHomeInfomationBoard(types.LongStringPreference):
     verbose_name = 'Home Information Board'
     default = ''
 
-
+@global_preferences_registry.register
+class RaceTemplate(JSONPreference):
+    section = core_backend
+    name = 'global_race_template'
+    verbose_name = 'Global Race Template'
+    default = [
+    {"Template 1" : ["Race 1"]}
+    ]
 # 138  Global setting to edit event tags
 @global_preferences_registry.register
 class CoreBackendEventTags(JSONPreference):

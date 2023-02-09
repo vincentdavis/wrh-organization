@@ -1,6 +1,6 @@
 from .rest_api import router
 
-app_name = 'account'
+app_name = 'wrh_account'
 
 urlpatterns = [
 ]

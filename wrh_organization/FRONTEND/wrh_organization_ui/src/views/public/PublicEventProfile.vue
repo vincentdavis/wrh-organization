@@ -37,6 +37,11 @@
                   <v-icon size="15" class="mr-1">{{icons.mdiMapMarker}}</v-icon>
                   <span>{{ event.country || '' }}{{ event.state? `, ${event.state}`:'' }}{{event.city? `, ${event.city}`:'' }}</span>
                 </v-card-subtitle>
+                <div class="mt-1 text-caption">
+                  <span>USAC Permitted: <span class="font-weight-bold">{{event.is_usac_permitted? 'Yes' : 'No'}}</span></span>
+                  <span v-if="event.permit_no" class="ml-1">(Permit #: <span class="font-weight-bold">{{event.permit_no}}</span>)</span>
+                </div>
+
               
               </div>
               <div class="d-flex me-8 mb-4">

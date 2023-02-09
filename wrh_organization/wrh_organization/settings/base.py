@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Adding to enable django all-auth
     # third party apps
     'django_ckeditor_5',
     'dbbackup',
@@ -47,8 +48,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'dynamic_preferences',
     'huey.contrib.djhuey',
+    # django all auth - for enabling Oauth service
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.stripe',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.strava',
+    # More can be found in : https://django-allauth.readthedocs.io/en/latest/providers.html
     # project apps
-    'apps.account',
+    'apps.wrh_account',
     'apps.cycling_org',
     'apps.usacycling',
     'apps.constant_contact'
@@ -206,6 +215,14 @@ REST_FRAMEWORK = {
     ),
 }
 
+#  django-allauth
+# ---------------------------------------------------------------------------------------
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_LOGIN_ON_GET = True
+# https://django-allauth.readthedocs.io/en/latest/advanced.html?highlight=ACCOUNT_ADAPTER#custom-redirects
+ACCOUNT_ADAPTER = 'apps.wrh_account.allauth.AccountAdapter'
+
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -266,10 +283,12 @@ LOGGING = {
     }
 }
 
-AUTH_USER_MODEL='account.User'
+AUTH_USER_MODEL='wrh_account.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
+     # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # dbbackup settings
@@ -454,3 +473,7 @@ GOOGLE_MAP_API_TOKEN = '<GOOGLE_MAP_API_TOKEN>'
 # ConstantContent
 CC_CLIENT_ID = '<CC_CLIENT_ID>'
 CC_CLIENT_SECRET = '<CC_CLIENT_SECRET>'
+
+
+# Django All-auth Settings
+SITE_ID = 1

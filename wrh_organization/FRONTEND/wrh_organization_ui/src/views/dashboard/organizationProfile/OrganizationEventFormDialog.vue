@@ -2,6 +2,7 @@
   <v-dialog
     v-model="isVisible"
     persistent
+    :retain-focus="false"
     max-width="1000px"
   >
     <v-card class="event-org-form">
@@ -96,6 +97,12 @@
                     <v-combobox v-model="record.tags" :items="$store.state.sitePrefs.core_backend__event_tags || []"
                                 dense outlined hide-details label="Tags" clearable multiple small-chips
                                 deletable-chips></v-combobox>
+                  </v-col>
+                  <v-col cols="12" md="2">
+                    <v-text-field v-model="record.permit_no"  outlined hide-details="auto" dense label="Permit #"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="4">
+                    <v-checkbox v-model="record.is_usac_permitted" class="mt-2" hide-details="auto" label="USAC permited"></v-checkbox>
                   </v-col>
                   <v-col cols="12" md="4">
                     <v-autocomplete v-model="record.country" dense outlined hide-details label="Country"
