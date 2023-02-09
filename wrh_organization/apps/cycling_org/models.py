@@ -482,6 +482,7 @@ class Event(models.Model):
     location_lon = models.FloatField(null=True, blank=True)
     permit_no = models.CharField(max_length=25, blank=True, null=True)
     is_usac_permitted = models.BooleanField(default=False)
+    featured_event = models.BooleanField(default=False)
 
 
     def save(self, *args, **kwargs):

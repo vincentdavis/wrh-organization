@@ -38,8 +38,9 @@
                   <span>{{ event.country || '' }}{{ event.state? `, ${event.state}`:'' }}{{event.city? `, ${event.city}`:'' }}</span>
                 </v-card-subtitle>
                 <div class="mt-1 text-caption">
-                  <span>USAC Permitted: <span class="font-weight-bold">{{event.is_usac_permitted? 'Yes' : 'No'}}</span></span>
-                  <span v-if="event.permit_no" class="ml-1">(Permit #: <span class="font-weight-bold">{{event.permit_no}}</span>)</span>
+                  <v-chip color="primary" small>USAC Permitted</v-chip>
+                  <v-chip color="primary" small v-if="event.permit_no" class="ml-1">Permit #: <span class="font-weight-bold">{{event.permit_no}}</span></v-chip>
+                  <v-chip color="primary" class="ml-1" small>Featured Event</v-chip>
                 </div>
 
               
