@@ -48,14 +48,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'dynamic_preferences',
     'huey.contrib.djhuey',
-    # django all auth - for enabling Oauth service
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.stripe',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.strava',
-    # More can be found in : https://django-allauth.readthedocs.io/en/latest/providers.html
     # project apps
     'apps.wrh_account',
     'apps.cycling_org',
@@ -215,12 +207,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-#  django-allauth
-# ---------------------------------------------------------------------------------------
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_LOGIN_ON_GET = True
-# https://django-allauth.readthedocs.io/en/latest/advanced.html?highlight=ACCOUNT_ADAPTER#custom-redirects
-ACCOUNT_ADAPTER = 'apps.wrh_account.allauth.AccountAdapter'
 
 
 SIMPLE_JWT = {
@@ -287,8 +273,6 @@ AUTH_USER_MODEL='wrh_account.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
-     # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # dbbackup settings
