@@ -4,7 +4,7 @@ import io
 import traceback
 from datetime import timedelta
 
-import stripe
+import stripe, requests
 from django.conf import settings
 from django.contrib.auth import login
 from django.core.mail import send_mail
@@ -160,6 +160,23 @@ class GlobalPreferencesView(viewsets.ViewSet):
         # this method is a trick to show this view in api-root
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
+class RSSFeedView(viewsets.ViewSet):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        headers = {
+            "Accept": "*/*", 
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+        }
+
+        content = requests.post(request.GET.get('url'), headers=headers)
+        return HttpResponse(content.text)
+
+    def create(self, request, *args, **kwargs):
+        # this method is a trick to show this view in api-root
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
 
 class GlobalConfView(viewsets.ViewSet):
     PUBLIC_KEYS = [
