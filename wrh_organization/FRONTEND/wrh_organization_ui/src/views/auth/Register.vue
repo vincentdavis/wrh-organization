@@ -202,7 +202,7 @@
           color="primary"
           class="mt-6"
           :loading="registering"
-          :disabled="!registerForm.agree_terms || !$refs.uglw.aggrementAccept || !registerForm.turnstile_token || !turnstileSiteKey || !formValid"
+          :disabled="!registerForm.agree_terms || !$refs.uglw.agreementAccept || !registerForm.turnstile_token || !turnstileSiteKey || !formValid"
         >
           Sign Up
         </v-btn>
