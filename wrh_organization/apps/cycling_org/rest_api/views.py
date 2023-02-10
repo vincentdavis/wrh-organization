@@ -170,7 +170,7 @@ class RSSFeedView(viewsets.ViewSet):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
         }
 
-        content = requests.post(request.GET.get('url'), headers=headers)
+        content = requests.get(request.GET.get('url'), headers=headers)
         return HttpResponse(content.text)
 
     def create(self, request, *args, **kwargs):
