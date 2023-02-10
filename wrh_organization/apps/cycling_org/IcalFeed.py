@@ -11,8 +11,13 @@ class WRHEventsIcalFeed(Events):
     A WRH Event Calender
     """
 
-    def items(self):
+    def get_object(self,request  ,*args, **kwargs):
+        if request.GET.get('event_id', None):
+            return Event.objects.filter(id=request.GET.get('event_id', None))
         return Event.objects.all().order_by('-create_datetime')
+
+    def items(self, obj):
+        return obj
 
     def filename(self, item):
         return "WRHEvent.ics"
