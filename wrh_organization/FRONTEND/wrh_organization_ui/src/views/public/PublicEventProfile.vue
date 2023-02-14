@@ -32,14 +32,16 @@
                   <v-icon size="15" class="mr-1">{{icons.mdiCalendar}}</v-icon>
                   <span>{{ $utils.formatDate(event.start_date, 'MMM D, YYYY') }}</span>
                   <span v-if="event.end_date"> - {{ $utils.formatDate(event.end_date, 'MMM D, YYYY') }}</span>
+                  <v-btn icon target="__blank__" :href="`/feed/calendar/ics?event_id=${event.id}`"><v-icon  title="Download Event Calendar" small color="primary" >{{icons.mdiDownload}}</v-icon></v-btn>
                 </v-card-subtitle>
                 <v-card-subtitle class="text-xs pa-0 pt-1">
                   <v-icon size="15" class="mr-1">{{icons.mdiMapMarker}}</v-icon>
                   <span>{{ event.country || '' }}{{ event.state? `, ${event.state}`:'' }}{{event.city? `, ${event.city}`:'' }}</span>
                 </v-card-subtitle>
                 <div class="mt-1 text-caption">
-                  <span>USAC Permitted: <span class="font-weight-bold">{{event.is_usac_permitted? 'Yes' : 'No'}}</span></span>
-                  <span v-if="event.permit_no" class="ml-1">(Permit #: <span class="font-weight-bold">{{event.permit_no}}</span>)</span>
+                  <v-chip color="primary" small>USAC Permitted</v-chip>
+                  <v-chip color="primary" small v-if="event.permit_no" class="ml-1">Permit #: <span class="font-weight-bold">{{event.permit_no}}</span></v-chip>
+                  <v-chip color="primary" class="ml-1" small>Featured Event</v-chip>
                 </div>
 
               

@@ -189,6 +189,7 @@
             </v-btn>
           </template>
         </v-checkbox>
+        <user-agrement-legal-waver-dialog ref="uglw"></user-agrement-legal-waver-dialog>
         <turnstile-component v-if="turnstileSiteKey" ref="turnstileCmpRef"
                              id="signup-turnstile-widget"
                              :sitekey="turnstileSiteKey"
@@ -201,7 +202,7 @@
           color="primary"
           class="mt-6"
           :loading="registering"
-          :disabled="!registerForm.agree_terms || !registerForm.turnstile_token || !turnstileSiteKey || !formValid"
+          :disabled="!registerForm.agree_terms || !$refs.uglw.agreementAccept || !registerForm.turnstile_token || !turnstileSiteKey || !formValid"
         >
           Sign Up
         </v-btn>
@@ -261,10 +262,11 @@ import { required, emailValidator, passwordValidator, confirmedValidator } from 
 import axios from "@/axios";
 import {notifyDefaultServerError, notifySuccess, notifyError, randomId} from "@/composables/utils";
 import TermsOfServiceDialog from "@/views/public/TermsOfServiceDialog.vue";
+import UserAgrementLegalWaverDialog from "@/views/public/UserAgrementLegalWaverDialog.vue";
 import TurnstileComponent from "@/components/TurnstileComponent.vue";
 
 export default {
-  components: {TurnstileComponent, TermsOfServiceDialog},
+  components: {TurnstileComponent, TermsOfServiceDialog, UserAgrementLegalWaverDialog},
   setup(props, context) {
     const birthDateActivePicker = ref(null);
     const isPasswordVisible = ref(false);

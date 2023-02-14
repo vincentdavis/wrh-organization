@@ -239,6 +239,8 @@ class Organization(models.Model):
     prefs = models.JSONField(null=True, blank=True, encoder=JSONEncoder, editable=False)
     members = models.ManyToManyField('Member', related_name='organizations', through=OrganizationMember)
     member_orgs = models.ManyToManyField('Organization', related_name='organizations', through=OrganizationMemberOrg)
+    rss_url = models.TextField(default=None, null=True, blank=True)
+    waiver_text = models.TextField(default=None, null=True, blank=True)
     _tracker = FieldTracker()
 
     @property
@@ -481,6 +483,9 @@ class Event(models.Model):
     location_lon = models.FloatField(null=True, blank=True)
     permit_no = models.CharField(max_length=25, blank=True, null=True)
     is_usac_permitted = models.BooleanField(default=False)
+    featured_event = models.BooleanField(default=False)
+
+
     def save(self, *args, **kwargs):
         if self.organizer_email:
             self.organizer_email = self.organizer_email.lower()

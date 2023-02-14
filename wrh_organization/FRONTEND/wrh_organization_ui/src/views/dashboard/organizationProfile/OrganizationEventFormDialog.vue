@@ -104,6 +104,9 @@
                   <v-col cols="12" md="4">
                     <v-checkbox v-model="record.is_usac_permitted" class="mt-2" hide-details="auto" label="USAC permited"></v-checkbox>
                   </v-col>
+                  <v-col cols="12" md="3">
+                    <v-checkbox v-model="record.featured_event" class="mt-2" hide-details="auto" label="Featured Event"></v-checkbox>
+                  </v-col>
                   <v-col cols="12" md="4">
                     <v-autocomplete v-model="record.country" dense outlined hide-details label="Country"
                                     :items="$const.COUNTRY_OPTIONS"

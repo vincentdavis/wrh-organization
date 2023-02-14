@@ -180,6 +180,12 @@
         </v-card>
       </v-col>
 
+<!--      <v-col cols="6" v-if="organization.rss_url">-->
+<!--        <v-card class="d-flex px-4 pt-4">-->
+<!--          <VueRssParser :feedUrl="`/api/v1/cycling_org/organization/${organization.id}/rss_feed`"/>-->
+<!--        </v-card>-->
+<!--      </v-col>-->
+
 <!--      <v-col cols="12" md="6">-->
 <!--        <recent-race-results-widget :api-params="{organization: organization.id}" class="home-widget"></recent-race-results-widget>-->
 <!--      </v-col>-->
@@ -192,7 +198,7 @@
 
 <script>
 import { ref } from '@vue/composition-api'
-
+import VueRssParser from "vue-rss-parser";
 // eslint-disable-next-line object-curly-newline
 import {
   mdiFlagCheckered,
@@ -219,6 +225,7 @@ export default {
     UpcomingEventsWidget,
     RecentRaceResultsWidget,
     OrganizationRaceResultsTab,
+    VueRssParser
   },
   setup() {
     const { rootThemeClasses } = useVuetify();

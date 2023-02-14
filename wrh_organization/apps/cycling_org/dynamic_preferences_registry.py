@@ -103,6 +103,19 @@ class SiteUiTermsOfService(types.LongStringPreference):
 
 
 @global_preferences_registry.register
+class SiteUiUserAgreementWaver(types.LongStringPreference):
+    field_kwargs = {
+        'required': False,
+        'help_text': 'user agreement and waver ',
+        'widget': CKEditor5Widget()
+    }
+    section = site_ui
+    name = 'user_agreement_waver'
+    verbose_name = 'User Agreement Waver'
+    default = ''
+
+
+@global_preferences_registry.register
 class SiteUiBannerImage(types.FilePreference):
     field_kwargs = {
         'required': False,
@@ -159,6 +172,14 @@ class SiteUiHomeInfomationBoard(types.LongStringPreference):
     name = 'home_information_board'
     verbose_name = 'Home Information Board'
     default = ''
+
+
+@global_preferences_registry.register
+class RaceTemplate(JSONPreference):
+    section = core_backend
+    name = 'global_race_template'
+    verbose_name = 'Global Race Template'
+    default = {"Template 1": ["Race 1"]}
 
 
 # 138  Global setting to edit event tags

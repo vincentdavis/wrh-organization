@@ -30,3 +30,5 @@ huey==2.4.4
 rollbar==0.16.3
 django-ckeditor-5==0.2.1
 semver==2.13.0
+django-cal==0.4.2
+django-allauth==0.52.0 # https://github.com/pennersr/django-allauth

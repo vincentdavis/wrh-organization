@@ -94,6 +94,19 @@
                   <v-col cols="12">
                     <v-textarea rows="2" v-model="record.about" label="About" dense></v-textarea>
                   </v-col>
+
+                  <!-- <v-col cols="12" md="6">
+                    <v-switch v-model="record.rss" label="RSS Turn On/Off"></v-switch>
+                  </v-col> -->
+
+                  <v-col cols="12">
+                    <v-textarea rows="1" v-model="record.rss_url" label="RSS URL" dense></v-textarea>
+                  </v-col>
+                  <v-col cols="12">
+                    <span class="mb-2">Waiver Text</span>
+                    <ckeditor :editor="editor" v-model="record.waiver_text" :config="$const.DEFAULT_CKEDITOR_CONFIG"></ckeditor>
+                  </v-col>
+
                 </v-row>
               </v-container>
             </v-card-text>
@@ -206,7 +219,7 @@ export default {
   setup(props, context) {
     const isVisible = ref(false);
     const tab = ref(0);
-    const record = ref({});
+    const record = ref({waiver_text: ''});
     const prefs = ref({});
     const saving = ref(false);
     const savingPrefs = ref(false);
@@ -325,8 +338,10 @@ export default {
 
     const loadRecord = () => {
       axios.get(`cycling_org/organization/${record.value.id}`).then((response) => {
-        record.value = response.data || {};
-        prefs.value = record.value.prefs || {};
+        const r = response.data || {};
+        r.waiver_text = r.waiver_text || '';
+        record.value = r;
+        prefs.value = r.prefs || {};
       }, (error) => {
         notifyDefaultServerError(error, true);
       });
@@ -338,6 +353,7 @@ export default {
     const show = (r) => {
       tab.value = 0;
       phoneMask.value = null;
+      r.waiver_text = r.waiver_text || '';
       record.value = Object.assign({}, r);
       prefs.value = Object.assign({}, record.value.prefs);
       if (isEditMode.value) {
