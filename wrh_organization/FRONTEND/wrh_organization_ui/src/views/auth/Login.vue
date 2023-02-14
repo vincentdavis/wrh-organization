@@ -161,7 +161,7 @@ export default {
         colorInDark: '#db4437',
       },
     ];
-    
+
     const login = () => {
       logining.value = true;
       axios.post("account/session", loginForm.value).then((response) => {

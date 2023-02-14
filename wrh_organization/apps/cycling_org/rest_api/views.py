@@ -161,23 +161,6 @@ class GlobalPreferencesView(viewsets.ViewSet):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class RSSFeedView(viewsets.ViewSet):
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        headers = {
-            "Accept": "*/*", 
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-        }
-
-        content = requests.get(request.GET.get('url'), headers=headers)
-        return HttpResponse(content.text)
-
-    def create(self, request, *args, **kwargs):
-        # this method is a trick to show this view in api-root
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-
 class GlobalConfView(viewsets.ViewSet):
     PUBLIC_KEYS = [
         'TIME_ZONE', 'TURNSTILE_SITE_KEY', 'STRIPE_PUBLISHABLE_KEY', 'GOOGLE_MAP_API_TOKEN'
@@ -732,6 +715,19 @@ class OrganizationView(viewsets.ModelViewSet):
         if not org:
             return Response({f'detail': f'Not found default organization # {org_id}'})
         return Response(self.get_serializer(instance=org).data)
+
+    @action(detail=True, methods=['GET'])
+    def rss_feed(self, request, *args, **kwargs):
+        org = self.get_object()
+        if not org.rss_url:
+            return Response({'detail': 'rss_url not set'}, status=status.HTTP_404_NOT_FOUND)
+        headers = {
+            "Accept": "*/*",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+        }
+
+        content = requests.get(org.rss_url, headers=headers)
+        return HttpResponse(content.text)
 
 
 class OrganizationMembershipMixin:

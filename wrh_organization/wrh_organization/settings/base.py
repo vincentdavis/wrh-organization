@@ -206,8 +206,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -456,4 +454,3 @@ GOOGLE_MAP_API_TOKEN = '<GOOGLE_MAP_API_TOKEN>'
 # ConstantContent
 CC_CLIENT_ID = '<CC_CLIENT_ID>'
 CC_CLIENT_SECRET = '<CC_CLIENT_SECRET>'
-
