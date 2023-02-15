@@ -66,6 +66,8 @@ MIDDLEWARE = [
     'wrh_organization.helpers.middleware.InjectBackendVersionInHeadersMiddleware',
     'wrh_organization.helpers.middleware.InjectUiVersionInHeadersMiddleware',
     'wrh_organization.helpers.middleware.ThreadLocalMiddleware',
+    # RequestLoggingRollbarNotifierMiddleware should be before than CustomRollbarNotifierMiddleware
+    'wrh_organization.helpers.middleware.RequestLoggingRollbarNotifierMiddleware',
     'wrh_organization.helpers.middleware.CustomRollbarNotifierMiddleware',
 ]
 

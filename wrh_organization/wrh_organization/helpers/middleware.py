@@ -1,15 +1,15 @@
-import os
+import re
 import sys
 import traceback
 import uuid
 import datetime
 import json
+import rollbar
 from django.conf import settings
+from django.core.exceptions import MiddlewareNotUsed
 from django.db import connection
 from threading import local
-
 from rollbar.contrib.django.middleware import RollbarNotifierMiddleware
-
 from wrh_organization import __version__ as VERSION
 
 _thread_locals = local()
@@ -187,9 +187,57 @@ class CustomRollbarNotifierMiddleware(RollbarNotifierMiddleware):
     def get_payload_data(self, request, exc):
         payload_data = {}
         if request.user.is_authenticated:
-            payload_data = {
-                'person': {
-                    'id': request.user.id, 'username': request.user.username, 'email': request.user.email
-                },
+            payload_data['person'] = {
+                'id': request.user.id, 'username': request.user.username, 'email': request.user.email
+            }
+        return payload_data
+
+
+class RequestLoggingRollbarNotifierMiddleware(object):
+    IGNORE_STATUSES = ['^[2|3][0-9]{2}$']
+
+    def __init__(self, get_response=None):
+        self.get_response = get_response
+        if getattr(settings, 'ROLLBAR_REQUEST_LOGGING_DISABLED', False):
+            raise MiddlewareNotUsed
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if self._check_logging_ignore_statuses(response.status_code):
+            return response
+
+        msg = f'[Request]: {request.method} {request.path_info}'
+        payload_data = self.get_payload_data(request, response)
+        extra_data = self.get_extra_data(request, response)
+        rollbar.report_message(message=msg, level='info', request=request, payload_data=payload_data,
+                               extra_data=extra_data)
+        return response
+
+    def _check_logging_ignore_statuses(self, status):
+        IGNORE_STATUSES = getattr(settings, 'ROLLBAR_REQUEST_LOGGING_IGNORE_STATUSES', None)
+        if IGNORE_STATUSES is None:
+            IGNORE_STATUSES = self.IGNORE_STATUSES
+        status = str(status)
+        for p in IGNORE_STATUSES:
+            p = str(p)
+            if (not p.startswith('^')) and (p == status):
+                return True
+            elif p.startswith('^') and re.match(p, status):
+                return True
+        return False
+
+    def get_extra_data(self, request, response):
+        return
+
+    def get_payload_data(self, request, response):
+        payload_data = {
+            'django_request_logging': True
+        }
+        payload_data['response'] = {
+            f: getattr(response, f, None) for f in ('data', 'status_code', 'status_text', 'cookies', 'exception')
+        }
+        if request.user.is_authenticated:
+            payload_data['person'] = {
+                'id': request.user.id, 'username': request.user.username, 'email': request.user.email
             }
         return payload_data
