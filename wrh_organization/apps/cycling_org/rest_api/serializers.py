@@ -109,11 +109,17 @@ class NestedUserAvatarSerializer(DynamicFieldsSerializerMixin, serializers.Model
 
 class NestedMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
     _user = NestedUserAvatarSerializer(source='user', read_only=True)
+    usac_licenses = serializers.SerializerMethodField(read_only=True)
 
+    def get_usac_licenses(self, obj):
+        if not obj.usac_license_number:
+            return []
+        return [USACRiderLicenseSerializer(r).data for r in
+                USACRiderLicense.objects.filter(license_number=obj.usac_license_number)]
     class Meta:
         model = Member
         fields = ('id', 'first_name', 'last_name', 'gender', 'email', 'phone', 'address1', 'address2', 'country',
-                  'city', 'state', 'zipcode', 'weight', 'height', '_user')
+                  'city', 'state', 'zipcode', 'weight', 'height', '_user', 'usac_licenses')
 
     def to_representation(self, instance):
         res = super().to_representation(instance)
