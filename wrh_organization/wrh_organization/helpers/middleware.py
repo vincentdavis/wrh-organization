@@ -206,7 +206,7 @@ class RequestLoggingRollbarNotifierMiddleware(object):
         if self._check_logging_ignore_statuses(response.status_code):
             return response
 
-        msg = f'[Request]: {request.method} {request.path_info}'
+        msg = f'Request: [{response.status_code}] {request.method} {request.path_info}'
         payload_data = self.get_payload_data(request, response)
         extra_data = self.get_extra_data(request, response)
         rollbar.report_message(message=msg, level='info', request=request, payload_data=payload_data,
