@@ -205,6 +205,8 @@ class RequestLoggingRollbarNotifierMiddleware(object):
         response = self.get_response(request)
         if self._check_logging_ignore_statuses(response.status_code):
             return response
+        if self._check_logging_ignore_urls(request):
+            return response
 
         msg = f'Request: [{response.status_code}] {request.method} {request.path_info}'
         payload_data = self.get_payload_data(request, response)
@@ -214,15 +216,26 @@ class RequestLoggingRollbarNotifierMiddleware(object):
         return response
 
     def _check_logging_ignore_statuses(self, status):
-        IGNORE_STATUSES = getattr(settings, 'ROLLBAR_REQUEST_LOGGING_IGNORE_STATUSES', None)
-        if IGNORE_STATUSES is None:
-            IGNORE_STATUSES = self.IGNORE_STATUSES
+        ignore_statuses = getattr(settings, 'ROLLBAR_REQUEST_LOGGING_IGNORE_STATUSES', None)
+        if ignore_statuses is None:
+            ignore_statuses = self.IGNORE_STATUSES
         status = str(status)
-        for p in IGNORE_STATUSES:
+        for p in ignore_statuses:
             p = str(p)
             if (not p.startswith('^')) and (p == status):
                 return True
             elif p.startswith('^') and re.match(p, status):
+                return True
+        return False
+
+    def _check_logging_ignore_urls(self, request):
+        url = request.path_info
+        ignore_not_resolved_url = getattr(settings, 'ROLLBAR_REQUEST_LOGGING_IGNORE_NOT_RESOLVED_URL', True)
+        if ignore_not_resolved_url and not getattr(request, 'resolver_match', None):
+            return True
+        ignore_urls = getattr(settings, 'ROLLBAR_REQUEST_LOGGING_IGNORE_URLS', None) or []
+        for p in ignore_urls:
+            if re.match(p, url):
                 return True
         return False
 
