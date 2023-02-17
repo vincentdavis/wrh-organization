@@ -144,7 +144,6 @@
           </v-col>
           <v-col cols="12" :sm="isEditMode ? 6 : 12">
             <v-form
-              @submit.prevent="save"
               v-model="formValid"
               :disabled="!organization.my_level.is_admin"
             >
@@ -551,6 +550,7 @@
           type="submit"
           :loading="saving"
           :disabled="!formValid"
+          @click="save"
           >Save</v-btn
         >
       </v-card-actions>
