@@ -11,6 +11,7 @@ from . import models
 class OrganizationMemberAdmin(admin.ModelAdmin):
     list_display = ('id', 'member', 'organization', 'status', 'is_active', 'datetime')
     list_filter = ('member', 'organization', 'status', 'is_active')
+    search_fields = ('member__first_name', 'member__last_name')
 
 
 class OrganizationMemberOrgAdmin(admin.ModelAdmin):
@@ -38,7 +39,7 @@ class RaceAdmin(admin.ModelAdmin):
 
 class RaceResultAdmin(admin.ModelAdmin):
     list_display = ('id', 'rider', 'race', 'place',)
-    search_fields = ('race__name',)
+    search_fields = ('race__name', 'rider__first_name', 'rider__last_name')
     list_filter = ('race',)
 
 
