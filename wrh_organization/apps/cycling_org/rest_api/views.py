@@ -477,7 +477,7 @@ class OrganizationView(viewsets.ModelViewSet):
     filterset_class = OrganizationFilter
     search_fields = ('name', 'about', 'type', 'website')
     ordering_fields = '__all__'
-    ordering = ('id',)
+    ordering = ('name',)
 
     def get_queryset(self):
         return super().get_queryset()
