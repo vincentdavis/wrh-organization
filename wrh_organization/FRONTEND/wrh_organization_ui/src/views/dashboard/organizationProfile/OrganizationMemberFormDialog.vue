@@ -126,19 +126,113 @@
                     record._member.address2 || "[NO ADDRESS2]"
                   }}</span>
                 </v-list-item>
-                <v-list-item
-                  v-bind:key="USACLicense"
-                  v-for="USACLicense in record._member.usac_licenses"
-                  class="ma-0 pa-0 ml-5"
-                >
-                  <span class="font-weight-medium text-no-wrap me-2"
-                    >USAC License
-                  </span>
-                  <span class="text--secondary"
-                    >{{ USACLicense.license_number || "[NO No]" }}
-                    {{ USACLicense.license_status || "[NO Stauts]" }}</span
-                  >
+              </v-list>
+            </v-card>
+            <!-- USAC License data -->
+            <v-card class="mt-2" v-bind:key="license.id" v-for=" license in record._member.usac_licenses">
+              <v-list >
+                <v-list-item>
+                  
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      USAC License: 
+
+                      {{
+                        `${license.first_name} ${license.last_name}`
+                      }}
+                    </v-list-item-title>
+                  </v-list-item-content>
                 </v-list-item>
+              </v-list>
+              <v-list dense class="member-info-list">
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >License Number:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.license_number || "[NO License No]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >License Type:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.license_type || "[NO License Type]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >License Status:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.license_status
+                      ? license.license_status
+                      : "[NO Status]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2">
+                    Race Age:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.race_age ||
+                    "[NO Race Age]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >Race Gender:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.race_gender ||
+                    "[NO Race Gender]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >Sex:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.sex ||
+                    "[NO Sex]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >License Expiration:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.license_expiration || "[NO License Expiration]"
+                  }}</span>
+                </v-list-item>
+                <v-list-item class="ma-0 pa-0 ml-5">
+                  <span class="font-weight-medium text-no-wrap me-2"
+                    >Association:</span
+                  >
+                  <span class="text--secondary">{{
+                    license.local_association || "[NO Association]"
+                  }}</span>
+                </v-list-item>
+                
+                <v-list-item v-if="license && license.data">
+                    <v-expansion-panels >
+                        <v-expansion-panel
+                        >
+                        <v-expansion-panel-header>
+                            Other Data
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <v-list dense class="member-info-list">
+                                <v-list-item class="ma-0 pa-0 ml-5" v-bind:key="key" v-for="[key, value] of Object.entries(license.data) ">
+                                    {{key.toUpperCase()}} : {{value}}
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-content>
+                        </v-expansion-panel>
+                </v-expansion-panels>
+                </v-list-item>
+
               </v-list>
             </v-card>
           </v-col>
