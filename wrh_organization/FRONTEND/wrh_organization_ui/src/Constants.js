@@ -150,6 +150,25 @@ EVENT_SOURCE_OPTIONS.forEach(function(v) {
   EVENT_SOURCE_MAP[v.value] = v;
 });
 
+export const EVENT_SHARED_ACCESS_OPTIONS = [
+  { value: "view", title: "View", css: "success" },
+  { value: "edit", title: "Edit", css: "error" },
+];
+export const EVENT_SHARED_ACCESS_MAP = {};
+EVENT_SHARED_ACCESS_OPTIONS.forEach(function(v) {
+  EVENT_SHARED_ACCESS_MAP[v.value] = v;
+});
+
+export const EVENT_PUBLISH_TYPE_OPTIONS = [
+  { value: "public", title: "Public", css: "success" },
+  { value: "org_public", title: "Org Public", css: "primary" },
+  { value: "org_private", title: "Org Private", css: "error" },
+];
+export const EVENT_PUBLISH_TYPE_MAP = {};
+EVENT_PUBLISH_TYPE_OPTIONS.forEach(function(v) {
+  EVENT_PUBLISH_TYPE_MAP[v.value] = v;
+});
+
 export const DEFAULT_CKEDITOR_CONFIG = {
   toolbar: {
     items: [

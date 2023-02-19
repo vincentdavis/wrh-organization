@@ -855,11 +855,26 @@ class IsAdminOrganizationOrReadOnlyPermission(IsAdminOrganizationPermission):
             return True
         return super().has_object_permission(request, view, obj)
 
-
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
         return super().has_permission(request, view)
+
+
+class OrganizationEventPermission(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        from apps.cycling_org.models import OrganizationMember, Event
+        member = getattr(request.user, 'member', None)
+        if not member:
+            return False
+        # if (obj.publish_type != Event.PUBLISH_TYPE_ORG_PRIVATE) and (not obj.organization_id):
+        #     return False
+        shared_organizations = list(obj.shared_organizations.values_list('id', flat=True))
+        if not shared_organizations:
+            return False
+        return OrganizationMember.objects.filter(member=member, organization__in=shared_organizations,
+                                                 is_active=True).filter(Q(is_admin=True) | Q(is_master_admin=True)
+                                                                        ).exists()
 
 
 class NestedMultipartParser(parsers.MultiPartParser):
