@@ -53,7 +53,7 @@
             </tr>
             <tr v-if="sharedOrgs.length == 0">
               <td colspan="5" class="text-center">
-                No Plan Defined!
+                No Record!
                 <v-btn @click="insertAfter(undefined, {access: 'view'})" plain small color="primary">
                   <v-icon small>{{icons.mdiPlusCircleOutline}}</v-icon> Add New
                 </v-btn>
