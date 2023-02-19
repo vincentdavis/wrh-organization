@@ -68,6 +68,10 @@ export default {
     FullCalendar
   },
   props: {
+    eventListUrl: {
+      type: String,
+      default: 'cycling_org/event'
+    },
     apiParams: {
       type: Object,
       required: false
@@ -92,7 +96,7 @@ export default {
     const loadEvents = (params) => {
       params = Object.assign({page_size: 0}, props.apiParams, params);
       loading.value = true;
-      axios.get("cycling_org/event/", {params: params}).then((response) => {
+      axios.get(props.eventListUrl, {params: params}).then((response) => {
         loading.value = false;
         var events = response.data.results.map(r => {
           var end_date = r.end_date;

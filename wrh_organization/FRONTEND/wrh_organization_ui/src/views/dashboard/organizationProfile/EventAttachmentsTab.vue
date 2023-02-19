@@ -94,6 +94,10 @@ export default {
       type: Object,
       required: true
     },
+    organization: {
+      type: Object,
+      required: true
+    }
   },
   setup(props) {
     const records = ref([]);
@@ -117,7 +121,7 @@ export default {
       }
       const params = Object.assign({}, refineVTableOptions(tableOptions.value));
       loading.value = true;
-      axios.get(`cycling_org/event/${props.event.id}/attachment`, {params: params}).then((response) => {
+      axios.get(`cycling_org/organization/${props.organization.id}/event/${props.event.id}/attachment`, {params: params}).then((response) => {
         loading.value = false;
         records.value = response.data.results;
         pagination.value = response.data.pagination;
@@ -129,7 +133,7 @@ export default {
     };
 
     const deleteRecord = (item) => {
-      axios.delete(`cycling_org/event/${props.event.id}/attachment/${item.id}`).then((response) => {
+      axios.delete(`cycling_org/organization/${props.organization.id}/event/${props.event.id}/attachment/${item.id}`).then((response) => {
         notifySuccess(`Attachment #${item.id} deleted.`);
         loadRecords();
       }, (error) => {
@@ -142,7 +146,7 @@ export default {
       var formData = convertModelToFormData(newRecord.value),
           headers = { headers: { "Content-Type": "multipart/form-data" } };
       uploading.value = true;
-      axios.post(`cycling_org/event/${props.event.id}/attachment`, formData, headers).then((response) => {
+      axios.post(`cycling_org/organization/${props.organization.id}/event/${props.event.id}/attachment`, formData, headers).then((response) => {
         uploading.value = false;
         loadRecords(0);
         newRecord.value = {};

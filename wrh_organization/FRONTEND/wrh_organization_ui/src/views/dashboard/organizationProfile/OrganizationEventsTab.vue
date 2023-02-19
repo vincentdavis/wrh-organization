@@ -7,13 +7,15 @@
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <events-table-widget ref="tableWidgetRef" :api-params="{organization: organization.id}" show-actions
+          <events-table-widget ref="tableWidgetRef" :event-list-url="`cycling_org/organization/${organization.id}/event/`" show-actions
+                               :organization="organization"
                                @add-action-clicked="$refs.eventFormDialogRef.show()"
+                               @shared-orgs-action-clicked="(item) => $refs.eventSharedOrgsDialogRef.show(item)"
                                @edit-action-clicked="(item) => $refs.eventFormDialogRef.show(item)">
           </events-table-widget>
         </v-tab-item>
         <v-tab-item>
-          <events-calendar-widget ref="calendarWidgetRef" :api-params="{organization: organization.id}" :edit-mode="true"
+          <events-calendar-widget ref="calendarWidgetRef" :event-list-url="`cycling_org/organization/${organization.id}/event/`" :edit-mode="true"
                                   @nav-link-day-clicked="(date) => $refs.eventFormDialogRef.show({start_date: $utils.formatDate(date, 'YYYY-MM-DD')})"
                                   @event-clicked="(item) => $refs.eventFormDialogRef.show(item)">
 
@@ -24,6 +26,8 @@
     <organization-event-form-dialog ref="eventFormDialogRef" :organization="organization"
                                     @delete-successed="refreshCurrentTab()"
                                     @save-successed="refreshCurrentTab()"></organization-event-form-dialog>
+    <event-shared-orgs-dialog ref="eventSharedOrgsDialogRef" :organization="organization"
+                              @save-successed="refreshCurrentTab()"></event-shared-orgs-dialog>
   </div>
 </template>
 
@@ -31,14 +35,16 @@
 import {
   mdiCalendar,
   mdiTable,
+  mdiShareVariant,
 } from '@mdi/js'
 import EventsCalendarWidget from "@/views/public/EventsCalendarWidget";
 import EventsTableWidget from "@/views/public/EventsTableWidget";
 import {onMounted, ref} from "@vue/composition-api";
 import {useRouter} from "@core/utils";
 import OrganizationEventFormDialog from "@/views/dashboard/organizationProfile/OrganizationEventFormDialog";
+import EventSharedOrgsDialog from "@/views/dashboard/organizationProfile/EventSharedOrgsDialog.vue";
 export default {
-  components: {OrganizationEventFormDialog, EventsTableWidget, EventsCalendarWidget},
+  components: {EventSharedOrgsDialog, OrganizationEventFormDialog, EventsTableWidget, EventsCalendarWidget},
   props: {
     organization: {
       type: Object,
@@ -76,6 +82,7 @@ export default {
       icons: {
         mdiCalendar,
         mdiTable,
+        mdiShareVariant,
       }
     }
   }

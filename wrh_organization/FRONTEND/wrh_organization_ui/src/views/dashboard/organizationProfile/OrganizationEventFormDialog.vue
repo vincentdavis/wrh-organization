@@ -94,6 +94,11 @@
                                   label="Registration Website"></v-text-field>
                   </v-col>
                   <v-col cols="12">
+                    <v-select v-model="record.publish_type" :items="$const.EVENT_PUBLISH_TYPE_OPTIONS"
+                              item-text="title" item-value="value" label="Publish Type" dense outlined hide-details>
+                    </v-select>
+                  </v-col>
+                  <v-col cols="12">
                     <v-combobox v-model="record.tags" :items="$store.state.sitePrefs.core_backend__event_tags || []"
                                 dense outlined hide-details label="Tags" clearable multiple small-chips
                                 deletable-chips></v-combobox>
@@ -152,7 +157,7 @@
         </v-tab-item>
         <v-tab-item class="pt-6">
           <v-card-text>
-            <event-attachments-tab v-if="record && record.id" :event="record"></event-attachments-tab>
+            <event-attachments-tab v-if="record && record.id" :event="record" :organization="organization"></event-attachments-tab>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions class="pt-5">
@@ -240,6 +245,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue2';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import GoogleMap from '@/components/GoogleMap.vue';
 import EventAttachmentsTab from "@/views/dashboard/organizationProfile/EventAttachmentsTab.vue";
+import {EVENT_PUBLISH_TYPE_OPTIONS} from "@/Constants";
 
 export default {
   props: {
@@ -326,7 +332,7 @@ export default {
 
     const deleteRecord = () => {
       deleting.value = true;
-      axios.delete(`cycling_org/event/${record.value.id}`).then((response) => {
+      axios.delete(`cycling_org/organization/${props.organization.id}/event/${record.value.id}`).then((response) => {
         deleting.value = false;
         notifySuccess(`Event #${record.value.id} deleted.`);
         hide();
@@ -339,11 +345,11 @@ export default {
 
     const save = () => {
       var data = Object.assign({country: "US", state: "Colorado"}, record.value);
-      var url = "cycling_org/event",
+      var url = `cycling_org/organization/${props.organization.id}/event`,
           httpMethod = axios.post,
           successMsg = "Event added successfully.";
       if (isEditMode.value) {
-        url = `cycling_org/event/${record.value.id}`;
+        url = `cycling_org/organization/${props.organization.id}/event/${record.value.id}`;
         httpMethod = axios.patch;
         successMsg = "Event updated successfully."
       } else {
@@ -374,7 +380,7 @@ export default {
       } else if (data.banner_image !== null) {
         delete data.banner_image;
       }
-      axios.patch(`cycling_org/event/${record.value.id}/prefs`, data).then((response) => {
+      axios.patch(`cycling_org/organization/${props.organization.id}/event/${record.value.id}/prefs`, data).then((response) => {
         savingPrefs.value = false;
         const prefsData = response.data || {};
         prefsData.information_board_content = prefsData.information_board_content || '';
@@ -389,7 +395,7 @@ export default {
     };
 
     const loadRecord = () => {
-      axios.get(`cycling_org/event/${record.value.id}`).then((response) => {
+      axios.get(`cycling_org/organization/${props.organization.id}/event/${record.value.id}`).then((response) => {
         record.value = response.data || {};
         const prefsData = record.value.prefs || {};
         prefsData.information_board_content = prefsData.information_board_content || '';

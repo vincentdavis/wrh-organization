@@ -353,6 +353,7 @@ export default {
     const show = (r) => {
       tab.value = 0;
       phoneMask.value = null;
+      r = r || {};
       r.waiver_text = r.waiver_text || '';
       record.value = Object.assign({}, r);
       prefs.value = Object.assign({}, record.value.prefs);

@@ -559,9 +559,10 @@ class EventSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer)
 
     class Meta:
         model = Event
-        fields = '__all__'
+        exclude = []
+        # exclude = ['shared_organizations']
         extra_kwargs = {
-            'organization': {'required': True},
+            'organization': {'read_only': True},
             'create_by': {'read_only': True},
         }
 
@@ -570,3 +571,9 @@ class EventSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer)
         if 'prefs' in res:
             res['prefs'] = EventPrefsSerializer(instance).to_representation(instance)
         return res
+
+class EventSharedOrgPermsSerializer(serializers.ModelSerializer):
+    shared_org_perms = serializers.JSONField()
+    class Meta:
+        model = Event
+        fields = ('shared_org_perms', )
