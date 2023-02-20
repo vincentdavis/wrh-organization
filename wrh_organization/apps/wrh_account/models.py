@@ -36,4 +36,6 @@ class User(AbstractUser):
             self.prefs = {}
         if self.email:
             self.email = self.email.lower()
+        if self.username:
+            self.username = self.username.lower()
         return super().save(*args, **kwargs)
