@@ -990,7 +990,7 @@ class RaceResultView(AdminOrganizationActionsViewMixin, ExportViewMixin, viewset
     queryset = RaceResult.objects.all()
     serializer_class = RaceResultSerializer
     filterset_class = RaceResultFilter
-    ordering = '-id'
+    ordering = '-race__event__start_date'
     ordering_fields = '__all__'
     extra_ordering_fields = {
         'event': ('race__event__name', 'race__event__start_date'),
@@ -1247,7 +1247,7 @@ class EventView(AdminOrganizationActionsViewMixin, AttachmentViewMixin, viewsets
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     filterset_class = EventFilter
-    ordering = '-id'
+    ordering = '-start_date'
     ordering_fields = '__all__'
     search_fields = ['name', 'description', 'country', 'city', 'state']
 
