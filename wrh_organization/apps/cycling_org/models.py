@@ -455,6 +455,14 @@ class Member(models.Model):
 
 
 class Event(models.Model):
+    PUBLISH_TYPE_PUBLIC = 'public'
+    PUBLISH_TYPE_ORG_PUBLIC = 'org_public'
+    PUBLISH_TYPE_ORG_PRIVATE = 'org_private'
+    PUBLISH_TYPE_CHOICES = (
+        (PUBLISH_TYPE_PUBLIC, 'Public'),
+        (PUBLISH_TYPE_ORG_PUBLIC, 'Org Public'),
+        (PUBLISH_TYPE_ORG_PRIVATE, 'Org Private'),
+    )
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     start_date = models.DateField()
@@ -477,19 +485,24 @@ class Event(models.Model):
     source = models.CharField(max_length=16, null=True, editable=False)
     prefs = models.JSONField(null=True, blank=True, encoder=JSONEncoder, editable=False)
     create_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    create_datetime = models.DateTimeField(auto_now_add=True)
-    update_datetime = models.DateTimeField(auto_now=True)
     location_lat = models.FloatField(null=True, blank=True)
     location_lon = models.FloatField(null=True, blank=True)
     permit_no = models.CharField(max_length=25, blank=True, null=True)
     is_usac_permitted = models.BooleanField(default=False)
     featured_event = models.BooleanField(default=False)
 
+    publish_type = models.CharField(max_length=32, choices=PUBLISH_TYPE_CHOICES, null=True)
+    shared_org_perms = models.JSONField(null=True, blank=True, editable=False)  # {org_id: 'view|edit'}
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    update_datetime = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if self.organizer_email:
             self.organizer_email = self.organizer_email.lower()
-
+        if (self.organization or self.organization_id) and (self.publish_type is None):
+            self.publish_type = self.PUBLISH_TYPE_ORG_PUBLIC
+        if not self.publish_type:
+            self.publish_type = self.PUBLISH_TYPE_PUBLIC
         if self.end_date and (self.end_date < self.start_date):
             raise ValidationError({'end_date': 'end_date should be greater than start_date'})
         return super().save(*args, **kwargs)
