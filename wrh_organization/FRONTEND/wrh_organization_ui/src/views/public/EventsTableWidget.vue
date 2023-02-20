@@ -172,7 +172,7 @@ import {
   mdiCalendarPlus,
 } from '@mdi/js'
 
-import { ref, watch, onMounted } from '@vue/composition-api'
+import { ref, watch, onMounted, onBeforeMount } from '@vue/composition-api'
 import axios from "@/axios";
 import {avatarText} from "@core/utils/filter";
 import {notifyDefaultServerError, refineVTableOptions} from "@/composables/utils";
@@ -282,6 +282,9 @@ export default {
     onMounted(() => {
       loadOrganizations();
     });
+    onBeforeMount( (() => {
+      tableFiltering.value.start_date__gte = new Date().toISOString().split('T')[0];
+    }))
 
     return {
       records,

@@ -1247,7 +1247,7 @@ class EventView(AdminOrganizationActionsViewMixin, AttachmentViewMixin, viewsets
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     filterset_class = EventFilter
-    ordering = '-start_date'
+    ordering = 'start_date'
     ordering_fields = '__all__'
     search_fields = ['name', 'description', 'country', 'city', 'state']
 
