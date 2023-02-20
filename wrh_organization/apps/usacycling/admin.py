@@ -69,7 +69,7 @@ class USACRiderLicenseAdmin(admin.ModelAdmin):
     list_display = ('id', 'first_name', 'last_name', 'license_number', 'license_type', 'license_status',
                     'license_expiration')
     list_filter = ('license_type', 'license_status')
-
+    search_fields = ('first_name', 'last_name', 'license_number')
     change_list_template = "admin/usacycling/riderlicense_changelist.html"
 
     def get_urls(self):

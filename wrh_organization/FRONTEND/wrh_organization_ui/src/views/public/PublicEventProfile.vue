@@ -32,7 +32,7 @@
                   <v-icon size="15" class="mr-1">{{icons.mdiCalendar}}</v-icon>
                   <span>{{ $utils.formatDate(event.start_date, 'MMM D, YYYY') }}</span>
                   <span v-if="event.end_date"> - {{ $utils.formatDate(event.end_date, 'MMM D, YYYY') }}</span>
-                  <v-btn icon target="__blank__" :href="`/feed/calendar/ics?event_id=${event.id}`"><v-icon  title="Download Event Calendar" small color="primary" >{{icons.mdiDownload}}</v-icon></v-btn>
+                  <v-btn class="ml-2" rounded x-small text title target="__blank__" :href="`/feed/calendar/ics?event_id=${event.id}`"><v-icon small>{{icons.mdiCalendar}}</v-icon> Add To Calendar</v-btn>
                 </v-card-subtitle>
                 <v-card-subtitle class="text-xs pa-0 pt-1">
                   <v-icon size="15" class="mr-1">{{icons.mdiMapMarker}}</v-icon>
