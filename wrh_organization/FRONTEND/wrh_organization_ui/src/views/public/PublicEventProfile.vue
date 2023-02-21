@@ -215,7 +215,7 @@ export default {
     const gmapApiKey = ref(null);
 
     const event = ref({});
-    const orgId = route.value.params.record_id;
+    const eventId = route.value.params.record_id;
 
     const loadGmapApiKey = () => {
       axios.get("cycling_org/global_conf/GOOGLE_MAP_API_TOKEN").then(
@@ -229,7 +229,7 @@ export default {
     };
 
     const loadEvent = () => {
-      axios.get(`cycling_org/event/${orgId}`, {params: {exfields: 'summary,attachments'}}).then((response) => {
+      axios.get(`cycling_org/event/${eventId}`, {params: {exfields: 'summary,attachments'}}).then((response) => {
         const e = response.data;
         if (!e.summary) {
           e.summary = {};

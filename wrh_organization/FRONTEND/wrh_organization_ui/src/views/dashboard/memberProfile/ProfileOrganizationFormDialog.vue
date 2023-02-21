@@ -339,7 +339,7 @@ export default {
     const loadRecord = () => {
       axios.get(`cycling_org/organization/${record.value.id}`).then((response) => {
         const r = response.data || {};
-        try{r.waiver_text = r.waiver_text || '';}catch(_){}
+        r.waiver_text = r.waiver_text || '';
         record.value = r;
         prefs.value = r.prefs || {};
       }, (error) => {
@@ -353,7 +353,8 @@ export default {
     const show = (r) => {
       tab.value = 0;
       phoneMask.value = null;
-      try{r.waiver_text = r.waiver_text || '';}catch(_){}
+      r = r || {};
+      r.waiver_text = r.waiver_text || '';
       record.value = Object.assign({}, r);
       prefs.value = Object.assign({}, record.value.prefs);
       if (isEditMode.value) {

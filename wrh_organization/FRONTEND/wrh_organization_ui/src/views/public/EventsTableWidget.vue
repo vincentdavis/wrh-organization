@@ -129,10 +129,23 @@
             </v-avatar>
 
             <div class="d-flex flex-column pl-1">
-              <span class="font-weight-semibold text-truncate text-decoration-none">
-                {{ item.name }}
-              </span>
-              <small class="text--secondary" v-if="item.organization">{{ item._organization.name }}</small>
+              <slot name="table-name-section" :item="item">
+                <span class="font-weight-semibold text-truncate text-decoration-none">
+                  {{ item.name }}
+                </span>
+              </slot>
+              <slot name="table-org-section" :item="item">
+                <small class="text--secondary" v-if="item.organization">
+                  <v-tooltip bottom v-if="organization && (item.organization != organization.id)">
+                    <template #activator="{ on, attrs }">
+                      <v-icon size="14" v-bind="attrs" v-on="on" color="warning">{{icons.mdiShareVariant}}</v-icon>
+                    </template>
+                    <span>Shared with your organization!</span>
+                  </v-tooltip>
+
+                  {{ item._organization.name }}
+                </small>
+              </slot>
             </div>
           </div>
         </a>
@@ -149,6 +162,20 @@
       </template>
       <template #item.actions="{item}">
         <div class="d-flex align-end justify-end">
+          <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
+              <v-btn icon small v-bind="attrs" v-on="on" @click="$emit('shared-orgs-action-clicked', item)" v-if="!organization || organization.id == item.organization" class="mr-2">
+                <v-badge overlap color="warning" :content="Object.keys(item.shared_org_perms || {}).length"
+                         :value="Object.keys(item.shared_org_perms || {}).length">
+                  <v-icon>{{ icons.mdiShareVariant }}</v-icon>
+                </v-badge>
+              </v-btn>
+              <v-btn v-else icon small v-bind="attrs" v-on="on" disabled class="mr-2">
+                <v-icon>{{ icons.mdiShareVariant }}</v-icon>
+              </v-btn>
+            </template>
+            <span>Share it with other organizations</span>
+          </v-tooltip>
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn icon small v-bind="attrs" v-on="on" @click="$emit('edit-action-clicked', item)">
@@ -170,6 +197,7 @@
 import {
   mdiPencilOutline,
   mdiCalendarPlus,
+  mdiShareVariant,
 } from '@mdi/js'
 
 import { ref, watch, onMounted, onBeforeMount } from '@vue/composition-api'
@@ -183,6 +211,14 @@ import _ from "lodash";
 export default {
   components: {},
   props: {
+    organization: {
+      type: Object,
+      required: false
+    },
+    eventListUrl: {
+      type: String,
+      default: 'cycling_org/event'
+    },
     apiParams: {
       type: Object,
       required: false
@@ -239,7 +275,7 @@ export default {
         params.order_by = ['country', 'city', 'state'].map(f => `${desc}${f}`).join(',');
       }
       loading.value = true;
-      axios.get("cycling_org/event/", {params: params}).then((response) => {
+      axios.get(props.eventListUrl, {params: params}).then((response) => {
         loading.value = false;
         records.value = response.data.results;
         pagination.value = response.data.pagination;
@@ -304,6 +340,7 @@ export default {
       icons: {
         mdiPencilOutline,
         mdiCalendarPlus,
+        mdiShareVariant,
       },
     }
   },

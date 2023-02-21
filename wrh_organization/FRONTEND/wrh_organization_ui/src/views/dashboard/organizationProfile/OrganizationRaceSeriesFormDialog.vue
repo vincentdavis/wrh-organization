@@ -259,7 +259,7 @@ export default {
         params.start_date__lte = eventFiltering.value.to_date
       }
       findingEvents.value = true;
-      axios.get("cycling_org/event/", {params: params}).then((response) => {
+      axios.get("cycling_org/event/", {params: params, include_org_private: props.organization.id}).then((response) => {
         findingEvents.value = false;
         events.value = _.unionBy(response.data.results, record.value._events || [], r => r.id);
       }, (error) => {

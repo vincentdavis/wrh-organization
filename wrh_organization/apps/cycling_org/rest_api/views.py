@@ -30,7 +30,7 @@ from apps.cycling_org.models import Member, Organization, User, OrganizationMemb
     FieldsTracking, Race, RaceResult, Category, RaceSeries, RaceSeriesResult, Event, FinancialTransaction
 from apps.cycling_org.rest_api.filters import MemberFilter, OrganizationFilter, OrganizationMemberFilter, \
     OrganizationMemberOrgFilter, FieldsTrackingFilter, RaceFilter, RaceResultFilter, CategoryFilter, RaceSeriesFilter, \
-    RaceSeriesResultFilter, EventFilter
+    RaceSeriesResultFilter, EventFilter, PublicEventFilter
 from apps.cycling_org.rest_api.serializers import MemberSerializer, OrganizationSerializer, SignupUserSerializer, \
     ActivationEmailSerializer, MyMemberSerializer, MemberOTPVerifySerializer, OrganizationMemberSerializer, \
     NestedMemberSerializer, UserSendRecoverPasswordSerializer, UserRecoverPasswordSerializer, \
@@ -38,10 +38,11 @@ from apps.cycling_org.rest_api.serializers import MemberSerializer, Organization
     NestedOrganizationSerializer, FieldsTrackingSerializer, RaceSerializer, RaceResultSerializer, CategorySerializer, \
     RaceSeriesSerializer, RaceSeriesResultSerializer, EventSerializer, PublicMemberSerializer, \
     OrganizationJoinSerializer, MyOrganizationMemberSerializer, OrganizationPrefsSerializer, EventPrefsSerializer, \
-    OrganizationSignupAndJoinSerializer, SignupAndJoinUserSerializer, EventAttachmentSerializer
+    OrganizationSignupAndJoinSerializer, SignupAndJoinUserSerializer, EventAttachmentSerializer, \
+    EventSharedOrgPermsSerializer
 from wrh_organization.helpers.utils import account_activation_token, send_sms, IsMemberVerifiedPermission, \
     IsAdminOrganizationOrReadOnlyPermission, account_password_reset_token, to_dict, IsMemberPermission, random_id, \
-    APICodeException, check_turnstile_request
+    APICodeException, check_turnstile_request, OrganizationEventPermission, IsAdminOrganizationPermission
 
 global_pref = global_preferences_registry.manager()
 
@@ -69,9 +70,13 @@ class AttachmentViewMixin(object):
     attachment_field_related = None
     attachment_serializer_class = None
 
+    def check_attachment_action_permission(self, obj, action):
+        return True
+
     @action(detail=True, methods=['delete', 'get'], url_path='attachment/(?P<attachment_pk>[0-9]+)')
     def attachment_object(self, request, *args, **kwargs):
         obj = self.get_object()
+        self.check_attachment_action_permission(obj, 'retrieve' if request.method == 'GET' else 'destroy')
         attachment_pk = kwargs.get('attachment_pk')
         attachment = get_object_or_404(obj.attachments, pk=attachment_pk)
         if request.method == 'GET':
@@ -87,6 +92,7 @@ class AttachmentViewMixin(object):
     @transaction.atomic()
     def attachment_list(self, request, *args, **kwargs):
         obj = self.get_object()
+        self.check_attachment_action_permission(obj, 'list' if request.method == 'GET' else 'create')
         if request.method == 'GET':
             qs = obj.attachments.all().order_by('-id')
             qs = self.paginate_queryset(qs)
@@ -940,22 +946,22 @@ class AdminOrganizationActionsViewMixin:
     def get_organization_object_permission(self, obj):
         return obj.organization
 
-    def _check_org_permission(self, org):
+    def _check_org_permission(self, org, action=None):
         member = self.request.user.member
         if not (org and OrganizationMember.objects.filter(member=member, organization=org, is_active=True).filter(
                 Q(is_admin=True) | Q(is_master_admin=True)).exists()):
             raise PermissionDenied('you dont have permission on this organization')
 
     def perform_create(self, serializer):
-        self._check_org_permission(serializer.validated_data.get('organization'))
+        self._check_org_permission(serializer.validated_data.get('organization'), action='create')
         serializer.save(create_by=self.request.user)
 
     def perform_update(self, serializer):
-        self._check_org_permission(serializer.instance.organization)
+        self._check_org_permission(serializer.instance.organization, action='update')
         serializer.save(organization=serializer.instance.organization)
 
     def perform_destroy(self, instance):
-        self._check_org_permission(instance.organization)
+        self._check_org_permission(instance.organization, action='delete')
         instance.delete()
 
 
@@ -1240,7 +1246,7 @@ class RaceSeriesResultView(AdminOrganizationActionsViewMixin, viewsets.ModelView
         return Response({'results': result})
 
 
-class EventView(AdminOrganizationActionsViewMixin, AttachmentViewMixin, viewsets.ModelViewSet):
+class OrganizationEventView(AttachmentViewMixin, viewsets.ModelViewSet):
     attachment_field_related = 'event'
     attachment_serializer_class = EventAttachmentSerializer
 
@@ -1250,20 +1256,98 @@ class EventView(AdminOrganizationActionsViewMixin, AttachmentViewMixin, viewsets
     ordering = 'start_date'
     ordering_fields = '__all__'
     search_fields = ['name', 'description', 'country', 'city', 'state']
+    permission_classes = (IsAuthenticated,)
+
+    org_id_kwarg = 'org_id'
+    _current_org = None
 
     def get_queryset(self):
-        return super().get_queryset().select_related('organization')
+        org_id = self.get_current_org().pk
+        qs = super().get_queryset()
+        return qs.filter(Q(organization_id=org_id) | Q(shared_org_perms__has_key=str(org_id))
+                         ).select_related('organization')
+
+    def get_current_org(self):
+        if not self._current_org:
+            org_id = self.kwargs.get(self.org_id_kwarg)
+            assert org_id, f'{self.org_id_kwarg} is not specified in url pattern'
+            member = getattr(self.request.user, 'member', None)
+            # self._current_org = get_object_or_404(Organization, pk=org_id)
+            org = get_object_or_404(Organization, pk=org_id)
+            has_access = OrganizationMember.objects.filter(member=member, organization=org, is_active=True).exists()
+            if not has_access:
+                raise PermissionDenied('you dont have permission on events of this organization')
+            self._current_org = org
+
+        return self._current_org
+
+    def check_attachment_action_permission(self, obj, action):
+        if action in ('destroy', 'create'):
+            self._check_org_permission(obj.organization, event=obj, action='update')
+    def _check_org_permission(self, org, event=None, action=None):
+        member = self.request.user.member
+        current_org = self.get_current_org()
+        om = OrganizationMember.objects.filter(member=member, organization=org, is_active=True).first()
+        if om and (om.is_admin or om.is_master_admin):
+            return True
+        shared_perm = (event.shared_org_perms or {}).get(str(current_org.pk)) if event else None
+        if shared_perm == 'edit' and action == 'update':
+            return True
+        raise PermissionDenied('you dont have permission on this organization')
+
+    def perform_create(self, serializer):
+        self._check_org_permission(self.get_current_org(), action='create')
+        serializer.save(create_by=self.request.user, organization=self.get_current_org())
+
+    def perform_update(self, serializer):
+        self._check_org_permission(serializer.instance.organization, event=serializer.instance, action='update')
+        serializer.save(organization=serializer.instance.organization)
+
+    def perform_destroy(self, instance):
+        self._check_org_permission(instance.organization, event=instance, action='delete')
+        instance.delete()
 
     @action(detail=True, methods=['GET', 'PUT', 'PATCH'], serializer_class=EventPrefsSerializer)
     def prefs(self, request, *args, **kwargs):
         event = self.get_object()
+
         if request.method == 'GET':
             return Response(self.get_serializer(instance=event).to_representation(event))
+
+        self._check_org_permission(event.organization, event=event, action='update')
 
         serializer = self.get_serializer(instance=event, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         event = serializer.save()
         return Response(serializer.to_representation(event))
+
+    @action(detail=True, methods=['GET', 'PUT', 'PATCH'], serializer_class=EventSharedOrgPermsSerializer)
+    def shared_org_perms(self, request, *args, **kwargs):
+        event = self.get_object()
+        if request.method == 'GET':
+            return Response(self.get_serializer(instance=event).to_representation(event))
+
+        self._check_org_permission(event.organization, event=event, action='update_shared_org_perms')
+
+        serializer = self.get_serializer(instance=event, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        event = serializer.save()
+        return Response(serializer.data)
+
+
+class EventView(viewsets.ReadOnlyModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    filterset_class = PublicEventFilter
+    ordering = '-id'
+    ordering_fields = '__all__'
+    search_fields = ['name', 'description', 'country', 'city', 'state']
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        # return super().get_queryset().exclude(
+        #     publish_type=Event.PUBLISH_TYPE_ORG_PRIVATE).select_related('organization')
+        return super().get_queryset().select_related('organization')
 
 
 class PublicViewMixin:

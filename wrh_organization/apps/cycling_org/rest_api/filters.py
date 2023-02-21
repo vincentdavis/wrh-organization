@@ -137,6 +137,28 @@ class EventFilter(filters.FilterSet):
 
     class Meta:
         model = Event
-        exclude = ['more_data', 'logo', 'prefs']
+        exclude = ['more_data', 'logo', 'prefs', 'shared_org_perms']
 
 
+class PublicEventFilter(EventFilter):
+    include_org_private = filters.ModelChoiceFilter(method='include_org_private_method',
+                                                    queryset=Organization.objects.all(),
+                                                    label='Included private events of Org')
+
+    def include_org_private_method(self, queryset, name, org):
+        member = self.request and getattr(self.request.user, 'member', None)
+        if member and OrganizationMember.objects.filter(member=member, organization=org, is_active=True).exists():
+            queryset = queryset.filter(
+                ~Q(publish_type=Event.PUBLISH_TYPE_ORG_PRIVATE) |
+                Q(publish_type=Event.PUBLISH_TYPE_ORG_PRIVATE, shared_org_perms__has_key=str(org.pk)) |
+                Q(publish_type=Event.PUBLISH_TYPE_ORG_PRIVATE, organization=org)
+            )
+        else:
+            queryset = queryset.exclude(publish_type=Event.PUBLISH_TYPE_ORG_PRIVATE)
+        return queryset
+
+    def filter_queryset(self, queryset):
+        org_private = self.form.cleaned_data.get('include_org_private', None)
+        if not any([org_private]):
+            queryset = queryset.exclude(publish_type=Event.PUBLISH_TYPE_ORG_PRIVATE)
+        return super().filter_queryset(queryset)
