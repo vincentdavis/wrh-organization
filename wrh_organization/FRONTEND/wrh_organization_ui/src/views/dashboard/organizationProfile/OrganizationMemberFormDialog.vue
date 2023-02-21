@@ -129,7 +129,8 @@
               </v-list>
             </v-card>
             <!-- USAC License data -->
-            <v-card class="mt-2" v-bind:key="license.id" v-for=" license in record._member.usac_licenses">
+            <template v-if="record._member.usac_licenses.length >= 1">
+              <v-card class="mt-2" v-bind:key="license.id" v-for=" license in record._member.usac_licenses">
               <v-list >
                 <v-list-item>
                   
@@ -232,9 +233,29 @@
                         </v-expansion-panel>
                 </v-expansion-panels>
                 </v-list-item>
+                <v-list-item v-else> 
+                  [No custom fields]
+                </v-list-item>
+                
 
               </v-list>
             </v-card>
+            </template>
+            <template v-else>
+              <v-list >
+                <v-list-item>
+                  
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      USAC License: 
+
+                      <b>[No License Data]</b>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </template>
+            
           </v-col>
           <v-col cols="12" :sm="isEditMode ? 6 : 12">
             <v-form
