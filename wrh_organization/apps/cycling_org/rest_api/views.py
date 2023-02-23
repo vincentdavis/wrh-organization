@@ -659,7 +659,7 @@ class OrganizationView(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'], serializer_class=OrganizationMemberMyRequestsSerializer,
             filterset_class=OrganizationMemberFilter,
-            queryset=OrganizationMember.objects.all(), permission_classes=(IsAuthenticated,))
+            queryset=OrganizationMember.objects.all(), permission_classes=(IsAuthenticated,), ordering=('start_date'))
     def my_membership_requests(self, request, *args, **kwargs):
         member = getattr(request.user, 'member', None)
         results = []
