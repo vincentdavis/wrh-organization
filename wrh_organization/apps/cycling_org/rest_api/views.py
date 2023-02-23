@@ -198,7 +198,7 @@ class GlobalConfView(viewsets.ViewSet):
 
 
 def _send_activation_email(user, request):
-    subject = 'Activate Your Account'
+    subject = 'WeRaceHere Account Activation link'
     message = render_to_string('cycling_org/email/user_activation.html', {
         'user': user,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
