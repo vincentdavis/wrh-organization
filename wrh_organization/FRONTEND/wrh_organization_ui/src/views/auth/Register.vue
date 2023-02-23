@@ -332,7 +332,7 @@ export default {
       registering.value = true;
       axios.post("cycling_org/users/registration", registerForm.value).then((response) => {
         registering.value = false;
-        notifySuccess("You have to activate your account before login. Activation link sent to your email! please check your email.", 0);
+        notifySuccess("You must activate your account using the link sent to your email, before logging in.", 0);
         context.emit("change-page", "Login");
       }, (error) => {
         registering.value = false;
