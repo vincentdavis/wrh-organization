@@ -185,10 +185,10 @@
           </v-col>
 
           <v-col cols="12" sm="6" md="3">
-            <v-text-field type="number" v-model="accountData.weight" outlined dense label="Weight" suffix="kg"></v-text-field>
+            <v-text-field type="number" v-model="accountData.weight" outlined dense label="Weight (For E-Sports)" suffix="kg"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field type="number" v-model="accountData.height" outlined dense label="Height" suffix="m"></v-text-field>
+            <v-text-field type="number" v-model="accountData.height" outlined dense label="Height (For E-Sports)" suffix="m"></v-text-field>
           </v-col>
 
           <v-col

@@ -198,7 +198,7 @@ class GlobalConfView(viewsets.ViewSet):
 
 
 def _send_activation_email(user, request):
-    subject = 'Activate Your Account'
+    subject = 'WeRaceHere Account Activation link'
     message = render_to_string('cycling_org/email/user_activation.html', {
         'user': user,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -264,12 +264,12 @@ class UserRegistrationView(viewsets.ViewSet):
         email = serializer.validated_data.get('email')
         user = User.objects.filter(email=email).first()
         if not user:
-            return Response({'error': 'User with this email does not exist! please sign up first.'},
+            return Response({'error': 'A User account with this email does not exist! please sign up first.'},
                             status=status.HTTP_404_NOT_FOUND)
         if user.is_active:
-            return Response({'error': 'User with this email is already activated.'}, status=status.HTTP_409_CONFLICT)
+            return Response({'error': 'A User account with this email is already activated.'}, status=status.HTTP_409_CONFLICT)
         _send_activation_email(user, request)
-        return Response({'message': 'email activation sent'}, status=status.HTTP_200_OK)
+        return Response({'message': 'email activation link sent'}, status=status.HTTP_200_OK)
 
     @transaction.atomic()
     def post(self, request, *args, **kwargs):
@@ -296,9 +296,9 @@ class UserRegistrationView(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         user = User.objects.filter(email=serializer.validated_data.get('email')).first()
         if not user:
-            return Response({'error': 'User with this email does not exists!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'A User with this email does not exists!'}, status=status.HTTP_404_NOT_FOUND)
         if not user.is_active:
-            return Response({'error': 'User with this email is inactive.'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'A User with this email is inactive.'}, status=status.HTTP_403_FORBIDDEN)
 
         subject = 'Reset Your Password'
         message = render_to_string('cycling_org/email/user_recover_password.html', {
@@ -521,7 +521,7 @@ class OrganizationView(viewsets.ModelViewSet):
     def _join(self, org, user, current_org_member, data, serializer_class=OrganizationJoinSerializer):
         om = current_org_member
         if om and (om.is_admin or om.is_master_admin):
-            raise PermissionDenied({'detail': 'admin members dont need to renew membership'})
+            raise PermissionDenied({'detail': 'Admin members do not need to renew membership'})
 
         serializer = serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
@@ -599,7 +599,7 @@ class OrganizationView(viewsets.ModelViewSet):
     @transaction.atomic()
     def signup_and_join(self, request, *args, **kwargs):
         if global_pref.get('user_account__disabled_signup'):
-            raise PermissionDenied({'detail': 'Signup is disabled by admin'})
+            raise PermissionDenied({'detail': 'Signup is currently disabled'})
 
         turnstile_token = request.data.get('turnstile_token', None)
         check_turnstile_request(turnstile_token, request)

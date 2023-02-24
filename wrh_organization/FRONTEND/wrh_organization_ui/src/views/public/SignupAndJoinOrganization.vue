@@ -402,7 +402,7 @@ export default {
         joining.value = false;
         var msg = `You ${alreadyJoined.value? 'Renewed membership': 'Joined'} successfully.`;
         if (!response.data._member._user.is_active) {
-          msg += ' You have to activate your account before login. Activation link sent to your email! please check your email.'
+          msg += "You must activate your account using the link sent to your email, before logging in."
         }
         notifySuccess(msg, 0);
         router.push({name: routeNames.PUBLIC_ORG_PROFILE, params: {record_id: orgId}});
