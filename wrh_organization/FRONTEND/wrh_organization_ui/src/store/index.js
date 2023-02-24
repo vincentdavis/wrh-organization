@@ -2,7 +2,7 @@ import appConfigStoreModule from '@core/@app-config/appConfigStoreModule'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import app from './app'
-import { ThemeStore } from './Theme'
+// import { ThemeStore } from './Theme'
 import EventBus from "@/EventBus";
 
 Vue.use(Vuex);
@@ -87,6 +87,6 @@ export default new Vuex.Store({
   modules: {
     appConfig: appConfigStoreModule,
     app,
-    ThemeStore
+    // ThemeStore
   },
 })

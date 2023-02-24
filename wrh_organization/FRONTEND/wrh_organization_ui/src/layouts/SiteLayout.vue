@@ -85,7 +85,7 @@
             Sign In
           </v-btn>
           <app-bar-theme-switcher></app-bar-theme-switcher>
-          <theme-color-selection/>
+<!--          <theme-color-selection/>-->
           <app-bar-user-menu v-if="$store.getters.isAuthenticated" class="ms-2"></app-bar-user-menu>
         </div>
       </div>
@@ -108,7 +108,7 @@
 <script>
 import LayoutContentHorizontalNav from '@core/layouts/variants/content/horizontal-nav/LayoutContentHorizontalNav.vue'
 import LayoutContentVerticalNav from '@core/layouts/variants/content/vertical-nav/LayoutContentVerticalNav'
-import ThemeColorSelection from '@core/layouts/components/app-customizer/ThemeColorSelection.vue' 
+import ThemeColorSelection from '@core/layouts/components/app-customizer/ThemeColorSelection.vue'
 
 // App Bar Components
 import AppBarSearch from '@core/layouts/components/app-bar/AppBarSearch.vue'
