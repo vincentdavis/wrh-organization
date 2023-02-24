@@ -18,8 +18,8 @@
           >
             <v-img
               :src="appLogo"
-              max-height="60px"
-              max-width="60px"
+              max-height="50px"
+              max-width="50px"
               alt="logo"
               contain
               class="me-3"
@@ -66,8 +66,8 @@
           >
             <v-img
               :src="appLogo"
-              max-height="60px"
-              max-width="60px"
+              max-height="50px"
+              max-width="50px"
               alt="logo"
               contain
               class="me-3"
@@ -81,10 +81,11 @@
         <!-- Right Content: I18n, Light/Dark, Notification & User Dropdown -->
         <div class="d-flex align-center">
           <app-bar-switch-org v-if="$store.getters.isAuthenticated"></app-bar-switch-org>
-          <v-btn v-if="!$store.getters.isAuthenticated" outlined class="mr-4" color="primary" :to="{name: $rns.AUTH, query: {next: $route.fullPath}}">
+          <v-btn small v-if="!$store.getters.isAuthenticated" rounded class="mr-4" color="primary" :to="{name: $rns.AUTH, query: {next: $route.fullPath}}">
             Sign In
           </v-btn>
           <app-bar-theme-switcher></app-bar-theme-switcher>
+<!--          <theme-color-selection/>-->
           <app-bar-user-menu v-if="$store.getters.isAuthenticated" class="ms-2"></app-bar-user-menu>
         </div>
       </div>
@@ -107,6 +108,7 @@
 <script>
 import LayoutContentHorizontalNav from '@core/layouts/variants/content/horizontal-nav/LayoutContentHorizontalNav.vue'
 import LayoutContentVerticalNav from '@core/layouts/variants/content/vertical-nav/LayoutContentVerticalNav'
+import ThemeColorSelection from '@core/layouts/components/app-customizer/ThemeColorSelection.vue'
 
 // App Bar Components
 import AppBarSearch from '@core/layouts/components/app-bar/AppBarSearch.vue'
@@ -144,6 +146,7 @@ export default {
     AppBarSearch,
     AppBarThemeSwitcher,
     AppBarUserMenu,
+    ThemeColorSelection
   },
   setup() {
     const { route } = useRouter();
