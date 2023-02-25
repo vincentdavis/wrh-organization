@@ -85,7 +85,7 @@
             Sign In
           </v-btn>
           <app-bar-theme-switcher></app-bar-theme-switcher>
-<!--          <theme-color-selection/>-->
+          <theme-color-selection/>
           <app-bar-user-menu v-if="$store.getters.isAuthenticated" class="ms-2"></app-bar-user-menu>
         </div>
       </div>
