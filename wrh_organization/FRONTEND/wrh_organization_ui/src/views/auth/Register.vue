@@ -154,6 +154,16 @@
             @change="(d) => {$refs.birthDateMenuRef.save(d)}"
           ></v-date-picker>
         </v-menu>
+        <v-text-field
+          v-model="registerForm.member.usac_license_number"
+          outlined
+          label="USAC License# (optional)"
+          placeholder="USAC License# (optional)"
+          hide-details
+          class="mb-3"
+          :rules="[]"
+          dense
+        ></v-text-field>
 
 <!--        <v-text-field-->
 <!--            v-model="registerForm.member.phone"-->

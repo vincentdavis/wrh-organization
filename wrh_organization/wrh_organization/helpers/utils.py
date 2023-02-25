@@ -1185,3 +1185,32 @@ class JSONPreferenceSerializer(dynamic_preferences.types.BaseSerializer):
 class JSONPreference(dynamic_preferences.types.LongStringPreference):
     field_class = JSONField
     serializer = JSONPreferenceSerializer
+
+
+def admin_url_wrap(view, admin_site, model_admin=None):
+    def wrapper(*args, **kwargs):
+        return admin_site.admin_view(view)(*args, **kwargs)
+
+    wrapper.model_admin = model_admin
+    return functools.update_wrapper(wrapper, view)
+
+
+
+class USACApi:
+    def __init__(self, login_credentials):
+        self.login_credentials = login_credentials
+        self.token = None
+    def lookup(self, license=None, email=None):
+        """Checks if a license number is valid
+        https://laravel-api.usacycling.org/api/v1/admin/search/profiles?rider_lookup=true&exact_comp_id=12345
+        https://laravel-api.usacycling.org/api/v1/admin/search/profiles?rider_lookup=true&exact_email={email}
+        """
+        if self.token is None:
+            self.token = requests.post('https://laravel-api.usacycling.org/api/v1/login', data=self.login_credentials)
+        if license is not None:
+            profile = requests.get(f"https://laravel-api.usacycling.org/api/v1/admin/search/profiles?rider_lookup=true&exact_comp_id={license}", cookies=self.token.cookies)
+        elif email is not None:
+            profile = requests.get(f"https://laravel-api.usacycling.org/api/v1/admin/search/profiles?rider_lookup=true&exact_email={email}", cookies=self.token.cookies)
+        else:
+            raise AssertionError("not enough arguments")
+        return (profile.json() or {}).get('data')

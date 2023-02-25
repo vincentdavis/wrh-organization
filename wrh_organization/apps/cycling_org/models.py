@@ -379,7 +379,8 @@ class Member(models.Model):
     more_data = models.JSONField(null=True, blank=True, encoder=JSONEncoder)
     is_verified = models.BooleanField(default=None, null=True)
     draft = models.BooleanField(default=False, null=False, editable=False)
-    usac_license_number = models.IntegerField(null=True, blank=True)
+    usac_license_number = models.IntegerField(null=True, blank=True, unique=True)
+    usac_license_number_verified = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='member', null=True)
 
     @property
@@ -418,6 +419,9 @@ class Member(models.Model):
             self.is_verified = None
         if self.email:
             self.email = self.email.lower()
+        if not self.usac_license_number:
+            self.usac_license_number = None
+            self.usac_license_number_verified = False
 
         if self.social_media:
             v = Validator(self.SOCIAL_MEDIA_SCHEMA, allow_unknown=True)
@@ -434,7 +438,7 @@ class Member(models.Model):
         self.draft = False
         self.user = user
         member_data = (user.more_data or {}).get('member_data') or {}
-        fields = ('phone', 'address1', 'address2', 'country', 'city', 'state', 'zipcode')
+        fields = ('phone', 'address1', 'address2', 'country', 'city', 'state', 'zipcode', 'usac_license_number')
         member_data = {k: member_data.get(k) for k in fields}
         member_data.update(first_name=user.first_name, last_name=user.last_name, gender=user.gender,
                            birth_date=user.birth_date, user=user, email=user.email)

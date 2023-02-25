@@ -1,6 +1,8 @@
 from django import template
 from django.conf import settings
+from django.templatetags.static import static
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -31,3 +33,10 @@ def ex_url(context, name, *args, **kwargs):
         scheme = '{}://'.format(scheme) if (scheme and scheme != 'auto') else ''
 
     return '{0}{1}{2}'.format(scheme, hostname, url)
+
+
+@register.filter
+def yesnoicon(value):
+    icon = static(f'admin/img/icon-{"yes" if value else "no"}.svg')
+    html = f'<img src="{icon}" alt="{value}">'
+    return mark_safe(html)

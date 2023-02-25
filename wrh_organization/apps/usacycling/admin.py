@@ -3,12 +3,14 @@ import io
 import json
 import traceback
 from datetime import datetime
+from functools import update_wrapper
 
 from django.contrib import admin
 from django.forms import forms
 from django.shortcuts import redirect, render
 from django.urls import path
 
+from wrh_organization.helpers.utils import admin_url_wrap
 from . import models
 from .models import USACRiderLicense
 
@@ -75,21 +77,28 @@ class USACRiderLicenseAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('import-csv/', self.import_csv),
+            path('import-csv/', admin_url_wrap(self.import_csv, self.admin_site, self),
+                 name="usacycling_riderlicense_importcsv"),
         ]
         return my_urls + urls
 
     def import_csv(self, request):
+        context = {}
         if request.method == "POST":
             csv_file = request.FILES["csv_file"]
             decoded_file = io.StringIO(csv_file.read().decode())
-            import_rider_license_from_csv(decoded_file)
-            self.message_user(request, "Your csv file has been imported")
-            return redirect("..")
+            try:
+                import_rider_license_from_csv(decoded_file)
+            except Exception as e:
+                traceback.print_exc()
+                context['error'] = str(e)
+            else:
+                self.message_user(request, "Your csv file has been imported")
+                return redirect("..")
         form = CsvImportForm()
-        payload = {"form": form}
+        context['form'] = form
         return render(
-            request, "admin/csv_form.html", payload
+            request, "admin/csv_form.html", context
         )
 
 

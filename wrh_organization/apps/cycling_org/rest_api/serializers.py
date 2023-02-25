@@ -37,7 +37,7 @@ class MemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer
     class Meta:
         model = Member
         fields = "__all__"
-        read_only_fields = ('user', 'usac_license_number')
+        read_only_fields = ('user', 'usac_license_number', 'usac_license_number_verified')
 
 
 class PublicMemberSerializer(MemberSerializer):
@@ -47,7 +47,7 @@ class PublicMemberSerializer(MemberSerializer):
         model = Member
         exclude = ('phone', 'phone_verified', 'email', 'email_verified', 'address1', 'address2', 'zipcode',
                    'more_data', 'birth_date')
-        read_only_fields = ('user', 'usac_license_number')
+        read_only_fields = ('user', 'usac_license_number', 'usac_license_number_verified')
 
 
 class UserMyMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
@@ -88,7 +88,8 @@ class MyMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializ
     class Meta:
         model = Member
         fields = "__all__"
-        read_only_fields = ('user', 'phone_verified', 'email_verified', 'usac_license_number')
+        read_only_fields = ('user', 'phone_verified', 'email_verified', 'usac_license_number',
+                            'usac_license_number_verified')
 
     @transaction.atomic()
     def update(self, instance, validated_data):
@@ -307,7 +308,7 @@ class OrganizationMemberOrgSerializer(DynamicFieldsSerializerMixin, serializers.
 class SignupMemberSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ('phone', 'address1', 'address2', 'country', 'city', 'state', 'zipcode')
+        fields = ('phone', 'address1', 'address2', 'country', 'city', 'state', 'zipcode', 'usac_license_number')
 
 
 class ActivationEmailSerializer(serializers.Serializer):
