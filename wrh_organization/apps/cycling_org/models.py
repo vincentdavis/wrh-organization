@@ -381,7 +381,7 @@ class Member(models.Model):
     draft = models.BooleanField(default=False, null=False, editable=False)
     usac_license_number = models.IntegerField(null=True, blank=True, unique=True)
     usac_license_number_verified = models.BooleanField(default=False)
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='member', null=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='member', null=True, blank=True)
 
     @property
     def age(self):
