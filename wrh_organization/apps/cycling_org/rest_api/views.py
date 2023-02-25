@@ -39,7 +39,7 @@ from apps.cycling_org.rest_api.serializers import MemberSerializer, Organization
     RaceSeriesSerializer, RaceSeriesResultSerializer, EventSerializer, PublicMemberSerializer, \
     OrganizationJoinSerializer, MyOrganizationMemberSerializer, OrganizationPrefsSerializer, EventPrefsSerializer, \
     OrganizationSignupAndJoinSerializer, SignupAndJoinUserSerializer, EventAttachmentSerializer, \
-    EventSharedOrgPermsSerializer
+    EventSharedOrgPermsSerializer, NestedUserAvatarSerializer
 from wrh_organization.helpers.utils import account_activation_token, send_sms, IsMemberVerifiedPermission, \
     IsAdminOrganizationOrReadOnlyPermission, account_password_reset_token, to_dict, IsMemberPermission, random_id, \
     APICodeException, check_turnstile_request, OrganizationEventPermission, IsAdminOrganizationPermission
@@ -1234,7 +1234,7 @@ class RaceSeriesResultView(AdminOrganizationActionsViewMixin, viewsets.ModelView
                 rider_id = rider.id
                 user = rider.user
                 if user:
-                    user = {'id': user.id, 'username': user.username, 'avatar': user.avatar}
+                    user = NestedUserAvatarSerializer(instance=user, context={'request': request}).data
                 rider = {
                     'first_name': rider.first_name, 'last_name': rider.last_name, 'birth_date': rider.birth_date,
                     'id': rider_id, 'user': user
