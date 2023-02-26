@@ -115,4 +115,3 @@ venv.bak/
 
 # local system stuff
 **/.DS_Store
-package-lock.json
