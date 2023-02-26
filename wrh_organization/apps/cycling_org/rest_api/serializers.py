@@ -8,6 +8,7 @@ from django.core.files.storage import default_storage
 from django.core.validators import FileExtensionValidator
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from apps.cycling_org.models import Member, Organization, User, OrganizationMember, OrganizationMemberOrg, \
     FieldsTracking, Race, RaceResult, Category, RaceSeries, RaceSeriesResult, Event, EventAttachment
@@ -429,6 +430,14 @@ class RaceSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
 
     _event = NestedEventSerializer(read_only=True, source='event')
 
+    def validate(self, attrs):
+        event = attrs.get('event') or (self.instance and self.instance.event)
+        organization = attrs.get('organization') or (self.instance and self.instance.organization)
+        if (not event.organization) or (event.organization != organization):
+            raise PermissionDenied({"event": "No permission on this event"})
+
+        return attrs
+
     class Meta:
         model = Race
         fields = '__all__'
@@ -452,6 +461,14 @@ class RaceResultSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerial
             'create_by': {'read_only': True},
             'more_data': {'read_only': True},
         }
+
+    def validate(self, attrs):
+        race = attrs.get('race') or (self.instance and self.instance.race)
+        organization = attrs.get('organization') or (self.instance and self.instance.organization)
+        if (not race.organization) or (race.organization != organization):
+            raise PermissionDenied({"race": "No permission on this race"})
+
+        return attrs
 
     def to_representation(self, instance):
         res = super().to_representation(instance)

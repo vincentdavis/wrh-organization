@@ -1264,6 +1264,8 @@ class OrganizationEventView(AttachmentViewMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         org_id = self.get_current_org().pk
         qs = super().get_queryset()
+        if (self.request.GET.get('only_current_org') or '').lower() == 'true':
+            return qs.filter(organization_id=org_id).select_related('organization')
         return qs.filter(Q(organization_id=org_id) | Q(shared_org_perms__has_key=str(org_id))
                          ).select_related('organization')
 

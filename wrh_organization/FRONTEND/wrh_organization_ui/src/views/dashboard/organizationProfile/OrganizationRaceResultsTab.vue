@@ -326,7 +326,7 @@ export default {
         return;
       }
       findingEvents.value = true;
-      axios.get("cycling_org/event/", {params: {search: search, include_org_private: props.organization.id}}).then((response) => {
+      axios.get(`cycling_org/organization/${props.organization.id}/event/`, {params: {search: search, only_current_org: true}}).then((response) => {
         findingEvents.value = false;
         events.value = response.data.results;
       }, (error) => {
