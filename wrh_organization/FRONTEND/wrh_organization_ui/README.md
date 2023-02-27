@@ -1,3 +1,9 @@
+Org. based event and result panels for embedding into websites
+- Race result widget filtered to the ORG.
+   /widgets/race-results/:ORG_ID/
+- Widget url for events listed in the ORG calendar only
+   /widgets/events-calendar/:org_id/
+
 # Materio - Vuetify Vuejs Admin Template
 
 > Thank you for purchasing our template 🥂
