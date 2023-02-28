@@ -92,6 +92,18 @@
                   </v-date-picker>
                 </v-menu>
               </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                v-model="registerForm.usac_license_number"
+                outlined
+                label="USAC License# (optional)"
+                placeholder="USAC License# (optional)"
+                hide-details
+                class="mb-3"
+                :rules="[]"
+                dense
+              ></v-text-field>
+              </v-col>
             </v-row>
           </template>
           <template v-else>
