@@ -76,6 +76,8 @@
 
     <v-data-table
       :headers="tableColumns"
+      :sort-by="['start_date']"
+      :sort-desc="[false]"
       :items="records"
       :options.sync="tableOptions"
       @update:options="loadRecords()"
@@ -272,9 +274,9 @@ export default {
     onMounted(() => {
       loadOrganizations();
     });
-    onBeforeMount( (() => {
-      tableFiltering.value.start_date__gte = new Date().toISOString().split('T')[0];
-    }))
+    // onBeforeMount( (() => {
+    //   tableFiltering.value.end_date__gte = new Date().toISOString().split('T')[0];
+    // }))
 
     return {
       records,
