@@ -48,67 +48,36 @@
           </v-autocomplete>
         </v-col>
         <v-col cols="12" md="3" sm="6">
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="primary"
-                dark
-                v-bind="attrs"
-                small
-                v-on="on"
-              >
-                Filter by time period
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="filterByDate('today')">
-                <v-list-item-title>Today</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="filterByDate('next_7_days')">
-                <v-list-item-title>Next 7 Days</v-list-item-title>
-              </v-list-item>
-              <v-list-item >
-                <v-list-item-title>Custom:</v-list-item-title>
-              </v-list-item>
-              <v-list-item class="mt-2">
-                  <v-menu v-model="fromDateMenu" :close-on-content-click="false"
-                      :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field class="pt-0 pb-0" v-model="tableFiltering.start_date__gte" label="From Date" hide-details
-                                    v-bind="attrs" v-on="on" dense readonly clearable>
-                      </v-text-field>
-                    </template>
-                    <v-date-picker v-model="tableFiltering.start_date__gte" color="primary" no-title @input="fromDateMenu = false">
-                    </v-date-picker>
-                  </v-menu>
-                  <v-menu class="pl-2" v-model="toDateMenu" :close-on-content-click="false"
-                      :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field class="pt-0 pb-0" v-model="tableFiltering.start_date__lte" label="To Date" hide-details
-                                    v-bind="attrs" v-on="on" dense readonly clearable>
-                      </v-text-field>
-                    </template>
-                    <v-date-picker v-model="tableFiltering.start_date__lte" color="primary"  @input="toDateMenu = false">
-                    </v-date-picker>
-                  </v-menu>
-              </v-list-item>
-              
-            </v-list>
-          </v-menu>
-        </v-col>
-
-        <v-col cols="12" md="3" sm="6">
-          
-        </v-col>
-        <v-col cols="12" md="3" sm="6">
-          
-        </v-col>
-
+          <v-menu v-model="fromDateMenu" :close-on-content-click="false"
+              :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field class="pt-0 pb-0" v-model="tableFiltering.start_date__gte" label="From Date" hide-details
+                              v-bind="attrs" v-on="on" dense readonly clearable>
+                </v-text-field>
+              </template>
+              <v-date-picker v-model="tableFiltering.start_date__gte" color="primary" no-title @input="fromDateMenu = false">
+              </v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="12" md="3" sm="6">
+            <v-menu class="pl-2" v-model="toDateMenu" :close-on-content-click="false"
+                :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field class="pt-0 pb-0" v-model="tableFiltering.start_date__lte" label="To Date" hide-details
+                              v-bind="attrs" v-on="on" dense readonly clearable>
+                </v-text-field>
+              </template>
+              <v-date-picker v-model="tableFiltering.start_date__lte" color="primary"  @input="toDateMenu = false">
+              </v-date-picker>
+            </v-menu>
+          </v-col>
       </v-row>
     </v-card-text>
 
     <v-data-table
       :headers="tableColumns"
+      :sort-by="['start_date']"
+      :sort-desc="[false]"
       :items="records"
       :options.sync="tableOptions"
       @update:options="loadRecords()"
@@ -249,19 +218,6 @@ export default {
     if (props.showActions) {
       tableColumns.push({text: 'ACTIONS', value: 'actions', align: 'end', sortable: false,})
     }
-    const filterByDate = (filter) => {
-        var today = new Date().toISOString().split('T')[0]
-        if(filter == 'today'){
-          tableFiltering.value.start_date = today;
-          tableFiltering.value.end_date = today;
-        }
-        else if('next_7_days'){
-          var end_Date = new Date(new Date().setDate(new Date().getDate() + 7));
-          tableFiltering.value.start_date = today;
-          tableFiltering.value.end_date = end_Date.toISOString().split('T')[0];
-        }
-        loadRecords(1)
-    }
     const loadRecords = (page) => {
       if (page) {
         tableOptions.value.page = page;
@@ -318,16 +274,15 @@ export default {
     onMounted(() => {
       loadOrganizations();
     });
-    onBeforeMount( (() => {
-      tableFiltering.value.start_date__gte = new Date().toISOString().split('T')[0];
-    }))
+    // onBeforeMount( (() => {
+    //   tableFiltering.value.end_date__gte = new Date().toISOString().split('T')[0];
+    // }))
 
     return {
       records,
       tableColumns,
       tableOptions,
       tableFiltering,
-      filterByDate,
       loading,
       pagination,
       loadRecords,

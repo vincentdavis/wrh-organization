@@ -3,7 +3,7 @@
     <v-card-title class="align-start pb-3 pt-5">
       <span>Upcoming Events</span>
       <v-spacer></v-spacer>
-      <v-btn text color="info" :to="{name: $rns.PUBLIC_EVENTS, query: {start_date__gte: today, organization: (apiParams || {}).organization}}" x-small>View All</v-btn>
+      <v-btn text color="info" :to="{name: $rns.PUBLIC_EVENTS, query: {end_date__gte: today, organization: (apiParams || {}).organization}}" x-small>View All</v-btn>
     </v-card-title>
     <v-divider></v-divider>
 
@@ -73,8 +73,8 @@ export default {
 
     const loadEvents = () => {
       loading.value = true;
-      const params =  Object.assign({
-        start_date__gte: today,
+      const params =  Object.assign({ 
+        end_date__gte: today,
         page_size: 5,
         order_by: 'start_date,name'
       }, props.apiParams);
