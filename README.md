@@ -1,14 +1,5 @@
 # We Race Here
 
-Load USA Events:
-``python manage.py usac_event_sync``
-
-Load USA Clubs:
-``python manage.py usac_club_import``
-
-To Load USA Rider:
-Import CSV file directly into DB table
-
 ## Deploy:
 1. On local dev run build_release.sh. This will build the frontend, tag the release and push to master.
 2. On server, dev or prod, run wrh_organization_deploy (deploy.sh) Thsi will pull the latest build.
