@@ -7,12 +7,13 @@
 ## Installing:
 
 ### Backend Prod
-Currently prodction is running on Ubuntu 22.04 (LTS)
-There is a install script in the utils folder.
+- Currently prodction is running on Ubuntu 22.04 (LTS)
+- There is a install script in the utils folder.
+- runs under user appuser
 
 ### Backend Dev
-For developement, use python 3.10+
-run pip install -r requirement.txt
+- For developement, use python 3.10+
+- run pip install -r requirement.txt
 
 ### Frontend
 1. Install all packages
