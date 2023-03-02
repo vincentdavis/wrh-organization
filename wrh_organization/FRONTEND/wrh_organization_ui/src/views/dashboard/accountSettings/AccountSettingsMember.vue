@@ -381,6 +381,9 @@ export default {
       } else if (data.user.avatar !== null) {
         delete data.user.avatar;
       }
+      if (!data.usac_license_number) {
+        data.usac_license_number = null;
+      }
       axios.patch("cycling_org/member/me", data).then((response) => {
         saving.value = false;
         accountDataOrig.value = response.data;
