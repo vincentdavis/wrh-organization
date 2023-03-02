@@ -7,7 +7,7 @@
 ## Installing:
 
 ### Backend Prod
-- Currently prodction is running on Ubuntu 22.04 (LTS)
+- Currently, prodction is running on Ubuntu 22.04 (LTS)
 - There is a install script in the utils folder.
 - runs under user appuser
 
