@@ -507,7 +507,7 @@ class OrganizationView(viewsets.ModelViewSet):
                 currency='usd',
                 source=token,
                 description=f'Membership, {org.id}, {org.name}, user, {user.id}, {user.username}',
-                metadata={'org_id': org.id, 'user_id': user.id, 'Membership': org_member_price, 'Donation': donation}
+                metadata={'org_id': org.id, 'user_id': user.id, 'membership': org_member_price, 'donation': donation}
             )
         except StripeError as e:
             traceback.print_exc()
