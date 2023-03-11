@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Validate</title>
+  </head>
+  <body>
+    <p>Upload an entry list or results to check USAC and membership status</p>
+
+    <form method="POST" enctype="multipart/form-data" class="form-horizontal">
+      {% csrf_token %} {{form.as_p}}
+      <button type="submit">Upload</button>
+    </form>
+  </body>
+</html>
