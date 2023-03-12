@@ -11,13 +11,13 @@ def usac_license_on_record(license_number: str) -> str:
             return 'ONE DAY'
         l = Member.objects.get(usac_license_number=license_number)
     except ObjectDoesNotExist:
-        return 'False'
+        return 'FALSE'
     except ValueError:
         return 'ERROR'
     if l.usac_license_number_verified:
-        return 'True'
+        return 'TRUE'
     else:
-        return 'Not_Verified'
+        return 'NOT_VERIFIED'
 
 
 def usac_license_status(license_number: str) -> tuple[str, str | list]:

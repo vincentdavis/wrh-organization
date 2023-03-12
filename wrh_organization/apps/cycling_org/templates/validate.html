@@ -5,7 +5,25 @@
     <title>Validate</title>
   </head>
   <body>
-    <p>Upload an entry list or results to check USAC and membership status</p>
+    <p>The purpose of this tool is to validate the status of entries or results.
+        Uploading a file will quickly result in a file being downloaded with additional columns</p>
+    <p>The following columns are required exactly as listed below.
+    <br>- "License"
+    <br>- "First Name"
+    <br>- "Last Name"
+    <br>- "Gender"
+    <br>- "Club"
+    <br>- "Category"
+    </p>
+
+    <p>Following columns will be added:
+    <br>- 'WRH_USAC_LICENSE_ON_RECORD': [ONE DAY, FALSE, TRUE, NOT VERIFIED, ERROR]
+    <br>- 'WRH_USAC_LICENCE_STATUS': [ONE DAY, VALID, FALSE, ERROR] With the License types
+    <br>- 'WRH_USAC_CLUB_STATUS': [ONCE DAY, NO CLUB, LICENSE NOT FOUND, VALID, INVALID, ERROR] Does the entry match their USAC club.
+    <br>- 'WRH_CLUB_STATUS' [ONCE DAY, NO CLUB, LICENSE NOT FOUND, VALID, INVALID, ERROR] Does the entry match their WRH club.
+    <br>- 'WRH_BC_MEMBER': [TRUE, FALSE, LICENse NOT FOUND, ERROR]
+    <br>- 'WRH_CLUB_MEMBERSHIPS': The WRH clubs the person is a member of or ERROR
+    </p>
 
     <form method="POST" enctype="multipart/form-data" class="form-horizontal">
       {% csrf_token %} {{form.as_p}}
