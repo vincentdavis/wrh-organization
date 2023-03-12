@@ -20,25 +20,22 @@ def usac_license_on_record(license_number: str) -> str:
         return 'NOT_VERIFIED'
 
 
-def usac_license_status(license_number: str) -> tuple[str, str | list]:
+def valid_usac_licenses(license_number: str) -> str|list[str,...]:
     """Get status of USAC license number from USAC records (model)"""
     try:
         if license_number == 'ONE DAY':
-            return 'ONE DAY', ''
+            return 'ONE DAY'
         licenses = USACRiderLicense.objects.filter(license_number=license_number)
         if not licenses:
-            return 'NOT FOUND', ''
-        if all([l.license_status == 'Valid' for l in licenses]):
-            status = 'VALID'
+            return 'NOT FOUND'
         else:
-            status = 'FALSE'
-        types = [(l.license_status, l.license_type) for l in licenses]
-        return status, types
+            return [f"{l.license_type}" for l in licenses if l.license_status.lower() == 'valid']
     except ValueError:
-        return 'ERROR', 'ERROR'
+        return 'ERROR'
+    except:
+        return 'ERROR'
 
-
-def usac_club_status(license_number: str, club: str) -> str:
+def usac_club_match(license_number: str, club: str) -> str:
     """Get status of persons USAC club from USAC records (model)"""
     try:
         if license_number == 'ONE DAY':
@@ -48,15 +45,15 @@ def usac_club_status(license_number: str, club: str) -> str:
         licenses = USACRiderLicense.objects.filter(license_number=license_number)
         if not licenses:
             return 'LICENSE NOT FOUND'
-        if club in [l.Club for l in licenses]:
-            return 'VALID'
+        if club in [l.data['club'] for l in licenses]:
+            return 'MATCH'
         else:
-            return 'INVALID'
+            return 'NO MATCH'
     except:
         return 'ERROR'
 
 
-def wrh_club_status(license_number: str, club: str) -> str:
+def wrh_club_match(license_number: str, club: str) -> str:
     """Get status of persons WRH club from WRH records (model)"""
     try:
         if license_number == 'ONE DAY':
@@ -67,9 +64,9 @@ def wrh_club_status(license_number: str, club: str) -> str:
         clubs = OrganizationMember.objects.filter(member=m)
         if clubs:
             if club in [c.organization.name for c in clubs]:
-                return 'VALID'
+                return 'MATCH'
             else:
-                return 'INVALID'
+                return 'NO MATCH'
     except ObjectDoesNotExist:
         return 'LICENSE NOT FOUND'
     except:
@@ -82,9 +79,9 @@ def wrh_bc_member(license_number: str) -> str:
         m = Member.objects.get(usac_license_number=license_number)
         clubs = OrganizationMember.objects.filter(member=m)
         if 'Bicycle Colorado' in [c.organization.name for c in clubs]:
-            return 'True'
+            return 'TRUE'
         else:
-            return 'False'
+            return 'FALSE'
     except ObjectDoesNotExist:
         return 'LICENSE NOT FOUND'
     except:
@@ -99,4 +96,28 @@ def wrh_club_memberships(license_number: str) -> str:
     except ObjectDoesNotExist:
         return ''
     except:
+        return 'ERROR'
+
+def wrh_email_match(email: str) -> str:
+    try:
+        m = Member.objects.get(email=email)
+        return f"{m.first_name} {m.last_name}"
+    except ObjectDoesNotExist:
+        return "NOT FOUND"
+    except:
+        return 'ERROR'
+    
+def wrh_local_association(license_number: str) -> list[str]|str:
+    try:
+        m = USACRiderLicense.objects.filter(license_number=license_number)
+        return [t.local_association for t in m]
+    except:
+        return 'ERROR'
+    
+def wrh_usac_clubs(license_number: str) -> list[str]|str:
+    try:
+        m = USACRiderLicense.objects.filter(license_number=license_number)
+        return [t.data['club'] for t in m]
+    except Exception as e:
+        print(e)
         return 'ERROR'
