@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Validate</title>
+  </head>
+  <body>
+    <p>The purpose of this tool is to validate the status of entries or results.
+        Uploading a file will quickly result in a file being downloaded with additional columns</p>
+    <p>The following columns are required exactly as listed below.
+    <br>- "License"
+    <br>- "First Name"
+    <br>- "Last Name"
+    <br>- "Club"
+    <br>- "Email" Optional
+    </p>
+
+    <p>Following columns will be added:
+    <br>- 'WRH_USAC_LICENSE_ON_RECORD': [ONE DAY, FALSE, TRUE, NOT VERIFIED, ERROR]
+    <br>- 'WRH_VALID_USAC_LICENCES': [ONE DAY, list of valid license type, ERROR]
+    <br>- 'WRH_USAC_CLUB_STATUS': [ONCE DAY, NO CLUB, LICENSE NOT FOUND, VALID, INVALID, ERROR] Does the entry match their USAC club.
+    <br>- 'WRH_CLUB_STATUS' [ONCE DAY, NO CLUB, LICENSE NOT FOUND, VALID, INVALID, ERROR] Does the entry match their WRH club.
+    <br>- 'WRH_BC_MEMBER': [TRUE, FALSE, LICENse NOT FOUND, ERROR]
+    <br>- 'WRH_CLUB_MEMBERSHIPS': The WRH clubs the person is a member of or ERROR
+    <br>- 'WRH_LOCAL_ASSOCIATION': The listed local association or ERROR
+    <br>- 'WRH_USAC_CLUBS': list of clubs or Error
+    </p>
+
+    <form method="POST" enctype="multipart/form-data" class="form-horizontal">
+      {% csrf_token %} {{form.as_p}}
+      <button type="submit">Upload</button>
+    </form>
+  </body>
+</html>
