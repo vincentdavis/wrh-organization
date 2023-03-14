@@ -118,6 +118,5 @@ def wrh_usac_clubs(license_number: str) -> list[str]|str:
     try:
         m = USACRiderLicense.objects.filter(license_number=license_number)
         return [t.data['club'] for t in m]
-    except Exception as e:
-        print(e)
+    except:
         return 'ERROR'
