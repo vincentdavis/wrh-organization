@@ -10,6 +10,7 @@ from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from wrh_organization.helpers.utils import get_random_upload_path
 from django.http import HttpResponse
+from .forms import UploadValidateFile  
 
 
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
@@ -31,12 +32,13 @@ def ckeditor_upload_file(request):
         file_name = fs.save(file_path, f)
         url = fs.url(file_name)
         return JsonResponse({"url": url})
-
+# @login_required
+@login_required
 def validate(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
+        form = UploadValidateFile(request.POST, request.FILES)
         if form.is_valid():
-            csv_file = request.FILES['csv_file'] # Form key
+            csv_file = request.FILES['validate_file'] # Form key
             decoded_file = csv_file.read().decode('utf-8').splitlines()
             reader = csv.DictReader(decoded_file)
             try:
@@ -76,5 +78,5 @@ def validate(request):
         return response
     else:
         # GET method - render upload form
-        form = UploadFileForm()
+        form = UploadValidateFile()
     return render(request, 'validate.html', {'form': form})
