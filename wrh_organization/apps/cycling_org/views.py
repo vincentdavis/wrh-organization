@@ -14,7 +14,8 @@ from .forms import UploadValidateFile
 
 
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
-    wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match
+    wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
+    bc_individual_cup_ready, bc_team_cup_ready
 
 @require_http_methods(["POST"])
 @login_required
@@ -55,7 +56,8 @@ def validate(request):
             # Creating CSV 
             added_fields = ['WRH_USAC_LICENSE_ON_RECORD', 'WRH_VALID_USAC_LICENCES', 'WRH_USAC_CLUB_MATCH',
                             'WRH_USAC_CLUBS', 'WRH_CLUB_MATCH', 'WRH_BC_MEMBER',
-                            'WRH_CLUB_MEMBERSHIPS', 'WRH_LOCAL_ASSOCIATION']
+                            'WRH_CLUB_MEMBERSHIPS', 'WRH_LOCAL_ASSOCIATION', 'BC_RACE_READY', 'BC_INDIVIDUAL_CUP_READY',
+                            'BC_TEAM_CUP_READY']
             if "Email" in reader.fieldnames:
                 added_fields.append("WRH_EMAIL_MATCH")
                 email = True
@@ -72,6 +74,9 @@ def validate(request):
                 row['WRH_BC_MEMBER'] = wrh_bc_member(row['License'])
                 row['WRH_CLUB_MEMBERSHIPS'] = wrh_club_memberships(row['License'])
                 row['WRH_LOCAL_ASSOCIATION'] = wrh_local_association(row['License'])
+                row['BC_RACE_READY'] = bc_race_ready(row['License'])
+                row['BC_INDIVIDUAL_CUP_READY'] = bc_individual_cup_ready(row['License'])
+                row['BC_TEAM_CUP_READY'] = bc_team_cup_ready(row['License'], row['Club'])
                 if email:
                     row['WRH_EMAIL_MATCH'] = wrh_email_match(row['Email'])
                 verified.writerow(row)
