@@ -1,3 +1,5 @@
+from typing import Literal
+
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Member, OrganizationMember
@@ -20,7 +22,7 @@ def usac_license_on_record(license_number: str) -> str:
         return 'NOT_VERIFIED'
 
 
-def valid_usac_licenses(license_number: str) -> str|list[str,...]:
+def valid_usac_licenses(license_number: str) -> str | list[str, ...]:
     """Get status of USAC license number from USAC records (model)"""
     try:
         if license_number == 'ONE DAY':
@@ -34,6 +36,7 @@ def valid_usac_licenses(license_number: str) -> str|list[str,...]:
         return 'ERROR'
     except:
         return 'ERROR'
+
 
 def usac_club_match(license_number: str, club: str) -> str:
     """Get status of persons USAC club from USAC records (model)"""
@@ -98,6 +101,7 @@ def wrh_club_memberships(license_number: str) -> str:
     except:
         return 'ERROR'
 
+
 def wrh_email_match(email: str) -> str:
     try:
         m = Member.objects.get(email=email)
@@ -106,17 +110,46 @@ def wrh_email_match(email: str) -> str:
         return "NOT FOUND"
     except:
         return 'ERROR'
-    
-def wrh_local_association(license_number: str) -> list[str]|str:
+
+
+def wrh_local_association(license_number: str) -> list[str] | str:
     try:
         m = USACRiderLicense.objects.filter(license_number=license_number)
         return [t.local_association for t in m]
     except:
         return 'ERROR'
-    
-def wrh_usac_clubs(license_number: str) -> list[str]|str:
+
+
+def wrh_usac_clubs(license_number: str) -> list[str] | str:
     try:
         m = USACRiderLicense.objects.filter(license_number=license_number)
         return [t.data['club'] for t in m]
     except:
         return 'ERROR'
+
+
+def bc_race_ready(license_number: str) -> Literal['TRUE', 'FALSE']:
+    usac_member = valid_usac_licenses(license_number) not in ['NOT FOUND', 'ERROR', 'ONE DAY']
+    if usac_member:
+        return 'TRUE'
+    else:
+        return 'FALSE'
+
+
+def bc_individual_cup_ready(license_number: str) -> Literal['TRUE', 'FALSE']:
+    # TODO: need to check bc membership type.
+    if bc_race_ready == 'TRUE' and wrh_bc_member(license_number) == 'TRUE':
+        return 'TRUE'
+    else:
+        return 'FALSE'
+
+
+def bc_team_cup_ready(license_number: str, club: str) -> Literal['TRUE', 'FALSE']:
+    match_bc = wrh_club_match(license_number, club) == 'MATCH'
+    # TODO: Should remove BC from the list.
+    match_usac = club in wrh_usac_clubs(license_number)
+    ind_ready = bc_individual_cup_ready(license_number) == 'TRUE'
+    if match_bc and match_usac and ind_ready:
+        return 'TRUE'
+    else:
+        return 'FALSE'
