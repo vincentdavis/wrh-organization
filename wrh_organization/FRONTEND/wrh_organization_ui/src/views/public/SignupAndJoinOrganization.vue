@@ -197,7 +197,7 @@
         </v-card-text>
         <v-card-text :class="{disabled: accountMode == 'sign-in'}">
           <h5 class="mb-2">
-            Please donate to support this WeRaceHere project and Bicycle Colorado advocacy:
+            Support Bicycle Colorado events and advocacy by donating:
           </h5>
           <v-row>
             <v-col cols="12">

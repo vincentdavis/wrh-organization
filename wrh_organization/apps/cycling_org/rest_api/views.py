@@ -40,9 +40,8 @@ from apps.cycling_org.rest_api.serializers import MemberSerializer, Organization
     OrganizationJoinSerializer, MyOrganizationMemberSerializer, OrganizationPrefsSerializer, EventPrefsSerializer, \
     OrganizationSignupAndJoinSerializer, SignupAndJoinUserSerializer, EventAttachmentSerializer, \
     EventSharedOrgPermsSerializer, NestedUserAvatarSerializer
-from wrh_organization.helpers.utils import account_activation_token, send_sms, IsMemberVerifiedPermission, \
-    IsAdminOrganizationOrReadOnlyPermission, account_password_reset_token, to_dict, IsMemberPermission, random_id, \
-    APICodeException, check_turnstile_request, OrganizationEventPermission, IsAdminOrganizationPermission
+from wrh_organization.helpers.utils import account_activation_token, send_sms, IsAdminOrganizationOrReadOnlyPermission, account_password_reset_token, to_dict, IsMemberPermission, random_id, \
+    APICodeException, check_turnstile_request
 
 global_pref = global_preferences_registry.manager()
 
@@ -198,7 +197,7 @@ class GlobalConfView(viewsets.ViewSet):
 
 
 def _send_activation_email(user, request):
-    subject = 'WeRaceHere Account Activation link'
+    subject = 'Bicycle Colorado Account Activation link'
     message = render_to_string('cycling_org/email/user_activation.html', {
         'user': user,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -680,7 +679,6 @@ class OrganizationView(viewsets.ModelViewSet):
             )
     def review_membership_request(self, request, *args, **kwargs):
         member = getattr(request.user, 'member', None)
-        results = []
         member_status = kwargs.get('review_action')
         org_member_id = kwargs.get('org_member_id')
         qs = self.queryset.filter(member=member, status=OrganizationMember.STATUS_WAITING, is_active=True)
@@ -721,7 +719,7 @@ class OrganizationView(viewsets.ModelViewSet):
         org_id = global_pref.get('core_backend__default_org_id')
         org = Organization.objects.filter(pk=org_id).first()
         if not org:
-            return Response({f'detail': f'Not found default organization # {org_id}'})
+            return Response({'detail': f'Not found default organization # {org_id}'})
         return Response(self.get_serializer(instance=org).data)
 
     @action(detail=True, methods=['GET'])
@@ -989,7 +987,7 @@ class RaceView(AdminOrganizationActionsViewMixin, viewsets.ModelViewSet):
                 name=race,
                 create_by=request.user
             )
-        return Response(f"Race Created")
+        return Response("Race Created")
     def get_queryset(self):
         return super().get_queryset().select_related('event')
 
@@ -1222,7 +1220,7 @@ class RaceSeriesResultView(AdminOrganizationActionsViewMixin, viewsets.ModelView
         except (KeyError, TypeError):
             org_id = None
         if org_id:
-            org = get_object_or_404(Organization.objects.filter(pk=org_id))
+            get_object_or_404(Organization.objects.filter(pk=org_id))
         result = {}
         for r in qs:
             points = points_map.get(r.place) or 0

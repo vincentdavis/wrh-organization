@@ -320,7 +320,7 @@ ANYMAIL = {
     'MAILGUN_SENDER_DOMAIN': '<MAILGUN_SENDER_DOMAIN>',
     'MAILGUN_API_KEY': '<MAILGUN_API_KEY>',
 }
-DEFAULT_EMAIL_FROM = "info@weracehere.org"
+DEFAULT_EMAIL_FROM = "info@bicyclecolorado.org"
 
 # django-ckeditor-5
 customColorPalette = [
