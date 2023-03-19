@@ -238,7 +238,7 @@ const router = new VueRouter({
 
 router.afterEach((toRoute) => {
   let pageInfo = toRoute.meta.pageInfo || {},
-      title = `WeRaceHere :: ${pageInfo.title || toRoute.name} ::`;
+      title = `Bicycle Colorado :: ${pageInfo.title || toRoute.name} ::`;
   if (pageInfo.titleDesc) {
     title = title + pageInfo.titleDesc;
   }
