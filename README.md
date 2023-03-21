@@ -41,7 +41,7 @@
    ```
 
 3. Generate build files for deployment:
-Run the build release script
+Run the build release script.
 
    ```bash
    yarn build
