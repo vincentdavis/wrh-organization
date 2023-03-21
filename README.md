@@ -14,6 +14,7 @@
 ### Backend Dev
 - For development, use python 3.10+
 - run pip install -r requirements.txt
+- curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash - &&sudo apt-get install -y nodejs
 
 ### Frontend
 1. Install all packages
