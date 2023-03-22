@@ -5,12 +5,16 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.views.generic import TemplateView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from wrh_organization.helpers.utils import get_random_upload_path
 from django.http import HttpResponse
 from .forms import UploadValidateFile  
+from .models import Organization
 
 
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
@@ -84,3 +88,18 @@ def validate(request):
         # GET method - render upload form
         form = UploadValidateFile()
     return render(request, 'validate.html', {'form': form})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class Clubs(TemplateView):
+    template_name = 'BC/Clubs.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Org'] = Organization.objects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
+        return self.render_to_response(context)
