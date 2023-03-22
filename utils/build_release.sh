@@ -51,11 +51,15 @@ if [ "${BE_INC_VER_TYPE}" != 'ignore' ]; then
   echo ${NEW_BACKEND_VERSION} >./VERSION
 fi
 
+echo "#############################################"
 cd ${FRONTEND_DIR}
 FRONTEND_VERSION=$(node -p "require('./package.json').version")
+echo "Current frontend version: ${FRONTEND_VERSION}"
+echo "##############################################"
 NEW_FRONTEND_VERSION=${FRONTEND_VERSION}
 if [ "${FE_INC_VER_TYPE}" != "ignore" ]; then
   NEW_FRONTEND_VERSION=$(npm version ${FE_INC_VER_TYPE} | sed 's/v//')
+  echo "New frontend version: ${NEW_FRONTEND_VERSION}"
 fi
 
 if [ "${FE_INC_VER_TYPE}" = 'ignore' ] && [ "${BE_INC_VER_TYPE}" = 'ignore' ]; then
