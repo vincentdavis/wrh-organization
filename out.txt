@@ -1,0 +1,178 @@
+Your branch is up to date with 'origin/master'.
+Already up to date.
+Building release #[-0.1.13] ...
+
+> wrh_organization_ui@0.1.13 build
+> vue-cli-service build --no-clean
+
+
+ WARNING  Compiled with 10 warnings7:04:58 AM
+
+ warning  
+
+chunk chunk-a19f04d6 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/styles/components/_selection-controls.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VTooltip/VTooltip.sass
+   - couldn't fulfill desired order of chunk group(s) , , , , 
+
+ warning  
+
+chunk chunk-a19f04d6 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VRadioGroup/VRadioGroup.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VSwitch/VSwitch.sass
+   - couldn't fulfill desired order of chunk group(s) , , , 
+   - while fulfilling desired order of chunk group(s) , 
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VTooltip/VTooltip.sass
+   - couldn't fulfill desired order of chunk group(s) , , , , 
+
+ warning  
+
+chunk chunk-a19f04d6 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VTooltip/VTooltip.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VSwitch/VSwitch.sass
+   - couldn't fulfill desired order of chunk group(s) 
+   - while fulfilling desired order of chunk group(s) , , , , 
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VRadioGroup/VRadio.sass
+   - couldn't fulfill desired order of chunk group(s) 
+   - while fulfilling desired order of chunk group(s) , , , , 
+
+ warning  
+
+chunk chunk-a19f04d6 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VSwitch/VSwitch.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VRadioGroup/VRadio.sass
+   - couldn't fulfill desired order of chunk group(s) , 
+   - while fulfilling desired order of chunk group(s) , , , 
+
+ warning  
+
+chunk chunk-ba377e92 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VDataTable/VDataTable.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VDataTable/VSimpleTable.sass
+   - couldn't fulfill desired order of chunk group(s) , 
+   - while fulfilling desired order of chunk group(s) , , , , , , , , , , , , 
+
+ warning  
+
+chunk chunk-ba377e92 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VDataIterator/VDataFooter.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VDataTable/VSimpleTable.sass
+   - couldn't fulfill desired order of chunk group(s) , 
+   - while fulfilling desired order of chunk group(s) , , , , , , , , , , , , 
+
+ warning  
+
+chunk chunk-ba377e92 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VDataTable/VDataTableHeader.sass
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VDataTable/VSimpleTable.sass
+   - couldn't fulfill desired order of chunk group(s) , 
+   - while fulfilling desired order of chunk group(s) , , , , , , , , , , , , 
+
+ warning  
+
+chunk chunk-fff6c072 [mini-css-extract-plugin]
+Conflicting order. Following module has been added:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--9-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--9-oneOf-1-2!./node_modules/sass-loader/dist/cjs.js??ref--9-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/dashboard/organizationProfile/OrganizationRaceResultFormDialog.vue?vue&type=style&index=0&id=cfb87602&prod&lang=scss&
+despite it was not able to fulfill desired ordering with these modules:
+ * css ./node_modules/css-loader/dist/cjs.js??ref--10-oneOf-3-1!./node_modules/postcss-loader/src??ref--10-oneOf-3-2!./node_modules/sass-loader/dist/cjs.js??ref--10-oneOf-3-3!./node_modules/vuetify/src/components/VFileInput/VFileInput.sass
+   - couldn't fulfill desired order of chunk group(s) 
+   - while fulfilling desired order of chunk group(s) , , , 
+
+ warning  
+
+asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  img/error.b3bd0483.png (251 KiB)
+  js/chunk-05dc492e.c27fc022.js (255 KiB)
+  js/chunk-74212e77.0f88ec24.js (381 KiB)
+  js/chunk-fd8791c8.706efbdd.js (991 KiB)
+  css/chunk-vendors.f6d9dd53.css (368 KiB)
+  js/chunk-vendors.0fc1db57.js (1.15 MiB)
+
+ warning  
+
+entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  app (1.68 MiB)
+      css/chunk-vendors.f6d9dd53.css
+      js/chunk-vendors.0fc1db57.js
+      css/app.3317db32.css
+      js/app.81e197b0.js
+
+
+  File                                    Size              Gzipped
+
+  dist/js/chunk-vendors.0fc1db57.js       1179.24 KiB       346.51 KiB
+  dist/js/chunk-fd8791c8.706efbdd.js      991.45 KiB        241.16 KiB
+  dist/js/chunk-74212e77.0f88ec24.js      380.88 KiB        90.61 KiB
+  dist/js/chunk-05dc492e.c27fc022.js      255.04 KiB        76.57 KiB
+  dist/js/chunk-1f59675a.deac6b69.js      194.89 KiB        56.48 KiB
+  dist/js/app.81e197b0.js                 95.62 KiB         27.70 KiB
+  dist/js/chunk-47085e7e.09ba6320.js      50.81 KiB         19.55 KiB
+  dist/js/chunk-fdc91f9a.9fb9b329.js      45.19 KiB         18.78 KiB
+  dist/js/chunk-fff6c072.39f2acbc.js      39.72 KiB         10.68 KiB
+  dist/js/chunk-ba377e92.621d719c.js      36.45 KiB         9.31 KiB
+  dist/js/chunk-2cb33b46.c76373a3.js      29.56 KiB         8.57 KiB
+  dist/js/chunk-a93f138e.46fd6b48.js      29.34 KiB         8.66 KiB
+  dist/js/chunk-5a16cd4a.2e2f92c8.js      27.99 KiB         7.87 KiB
+  dist/js/chunk-282a2848.3c1bfec6.js      17.15 KiB         5.65 KiB
+  dist/js/chunk-cd0ca820.b7871650.js      17.06 KiB         5.61 KiB
+  dist/js/chunk-7cff7edd.1ef043ad.js      13.46 KiB         4.48 KiB
+  dist/js/chunk-a19f04d6.5f8ecdf5.js      13.07 KiB         4.15 KiB
+  dist/js/chunk-4608d0ad.047d9335.js      10.92 KiB         3.62 KiB
+  dist/js/chunk-13d41670.484f9c12.js      10.70 KiB         3.63 KiB
+  dist/js/chunk-6595742c.3d75cf25.js      10.06 KiB         6.45 KiB
+  dist/js/chunk-22e896df.5b64382e.js      3.96 KiB          1.71 KiB
+  dist/js/chunk-2d0ba0ca.22b17032.js      3.61 KiB          1.53 KiB
+  dist/js/chunk-2d2389e6.d41cc4d2.js      3.16 KiB          1.41 KiB
+  dist/js/chunk-6418f4e6.fc647595.js      2.81 KiB          1.28 KiB
+  dist/js/chunk-9673ce86.a14a82b8.js      2.44 KiB          1.18 KiB
+  dist/js/chunk-40c8a93c.5c6bb646.js      2.41 KiB          1.10 KiB
+  dist/js/chunk-2d0effff.a69b3c57.js      0.48 KiB          0.36 KiB
+  dist/js/chunk-2d2217f3.0b038304.js      0.47 KiB          0.34 KiB
+  dist/css/chunk-vendors.f6d9dd53.css     368.34 KiB        45.86 KiB
+  dist/css/app.3317db32.css               78.20 KiB         10.66 KiB
+  dist/css/chunk-74212e77.bb7a5842.css    29.32 KiB         6.84 KiB
+  dist/css/chunk-1f59675a.dd2cadd4.css    20.21 KiB         5.24 KiB
+  dist/css/chunk-47085e7e.34f3133a.css    14.87 KiB         1.50 KiB
+  dist/css/ckeditor-content-styles.css    13.00 KiB         2.53 KiB
+  dist/css/chunk-ba377e92.4bff1280.css    11.62 KiB         1.82 KiB
+  dist/css/chunk-2cb33b46.1305a824.css    8.83 KiB          1.29 KiB
+  dist/css/chunk-a19f04d6.da00fc14.css    8.21 KiB          1.64 KiB
+  dist/css/chunk-05dc492e.e4374928.css    6.59 KiB          1.83 KiB
+  dist/css/chunk-fd8791c8.4369192a.css    6.47 KiB          0.80 KiB
+  dist/css/chunk-5a16cd4a.85c9c29c.css    5.41 KiB          1.35 KiB
+  dist/css/chunk-a93f138e.70128051.css    4.88 KiB          1.34 KiB
+  dist/css/chunk-282a2848.d0c51695.css    3.41 KiB          0.93 KiB
+  dist/css/chunk-cd0ca820.d0c51695.css    3.41 KiB          0.93 KiB
+  dist/css/chunk-13d41670.ecf8f88c.css    2.81 KiB          0.74 KiB
+  dist/css/chunk-fff6c072.267108f2.css    2.01 KiB          0.60 KiB
+  dist/css/chunk-fdc91f9a.8bf77fae.css    0.89 KiB          0.39 KiB
+  dist/css/chunk-22e896df.7c7e44ec.css    0.59 KiB          0.31 KiB
+  dist/css/chunk-7cff7edd.7c7e44ec.css    0.59 KiB          0.31 KiB
+  dist/css/chunk-40c8a93c.041d47c5.css    0.45 KiB          0.21 KiB
+  dist/css/chunk-6418f4e6.05e7b25a.css    0.44 KiB          0.21 KiB
+  dist/css/chunk-9673ce86.05e7b25a.css    0.44 KiB          0.21 KiB
+  dist/css/chunk-6595742c.ff3d539c.css    0.42 KiB          0.23 KiB
+  dist/css/chunk-4608d0ad.848ddaa7.css    0.33 KiB          0.20 KiB
+
+  Images and other types of assets omitted.
+
+ DONE  Build complete. The dist directory is ready to be deployed.
+ INFO  Check out deployment instructions at https://cli.vuejs.org/guide/deployment.html
+      
