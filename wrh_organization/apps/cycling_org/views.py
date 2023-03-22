@@ -11,7 +11,8 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
-from wrh_organization.helpers.utils import get_random_upload_path
+from rest_framework import serializers
+from wrh_organization.helpers.utils import get_random_upload_path, DynamicFieldsSerializerMixin, Base64ImageField
 from django.http import HttpResponse
 from .forms import UploadValidateFile  
 from .models import Organization
@@ -90,16 +91,26 @@ def validate(request):
     return render(request, 'validate.html', {'form': form})
 
 
+class OrganizationSerializerTemplate(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
+    members_count = serializers.SerializerMethodField()
+    logo = Base64ImageField(required=False, allow_null=True)
+
+    def get_members_count(self, value):
+        return value.members.all().count()
+    class Meta:
+        model = Organization
+        fields = "__all__"
+
 @method_decorator(csrf_exempt, name='dispatch')
 class Clubs(TemplateView):
     template_name = 'BC/Clubs.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['Org'] = Organization.objects.all()
+        context['Org'] = OrganizationSerializerTemplate(Organization.objects.all(), many=True).data
         return context
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
+        context['Org'] = OrganizationSerializerTemplate(Organization.objects.filter(name__icontains=request.POST.get('org')), many=True).data
         return self.render_to_response(context)

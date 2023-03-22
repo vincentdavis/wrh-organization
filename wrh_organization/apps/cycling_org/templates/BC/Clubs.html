@@ -52,7 +52,7 @@
                         <div class="author-thumbnail">
                            {% if org.logo %}
                            <img style="width:100%;
-                              max-width:60px;" src="/media/{{org.logo}}" alt="">
+                              max-width:60px;" src="{{org.logo}}" alt="">
                            {% else %}
                            <img style="width:100%;
                               max-width:60px;"
@@ -82,7 +82,7 @@
                      </div>
                      <div class="col-sm-12 col-md-5 blogdetail-right" style="margin-top:
                         90px;">
-                        <b>{{org.members.all.count}} </b> Members
+                        <b>{{org.members_count}} </b> Members
                      </div>
                   </div>
                   {% endfor %}
