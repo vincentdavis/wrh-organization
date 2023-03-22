@@ -41,6 +41,7 @@
    ```
 
 3. Generate build files for deployment:
+
 Run the build_release.sh script.
 
    ```bash
