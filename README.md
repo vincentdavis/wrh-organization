@@ -40,7 +40,9 @@
    # npm run serve [for npm]
    ```
 
-3. Generate build files for deployment
+3. Generate build files for deployment:
+
+Run the build_release.sh script.
 
    ```bash
    yarn build

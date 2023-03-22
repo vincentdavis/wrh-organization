@@ -50,7 +50,6 @@ def validate(request):
                 assert "License" in reader.fieldnames
                 assert "First Name" in reader.fieldnames
                 assert "Last Name" in reader.fieldnames
-                assert "Gender" in reader.fieldnames
                 assert "Club" in reader.fieldnames
             except AssertionError:
                 return HttpResponse("Missing required field. Please check your CSV file and try again.")

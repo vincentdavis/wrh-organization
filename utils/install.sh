@@ -14,6 +14,7 @@ sudo apt-get install python3-pip -y
 sudo apt-get install git -y
 sudo apt-get install supervisor -y
 sudo apt-get install redis-server -y
+sudo apt-get install python3-semver -y
 sudo pip install virtualenv
 
 # setup project
