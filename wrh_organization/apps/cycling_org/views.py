@@ -91,15 +91,7 @@ def validate(request):
     return render(request, 'validate.html', {'form': form})
 
 
-class OrganizationSerializerTemplate(DynamicFieldsSerializerMixin, serializers.ModelSerializer):
-    members_count = serializers.SerializerMethodField()
-    logo = Base64ImageField(required=False, allow_null=True)
 
-    def get_members_count(self, value):
-        return value.members.all().count()
-    class Meta:
-        model = Organization
-        fields = "__all__"
 
 @method_decorator(csrf_exempt, name='dispatch')
 class Clubs(TemplateView):
@@ -107,10 +99,10 @@ class Clubs(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['Org'] = OrganizationSerializerTemplate(Organization.objects.all(), many=True).data
+        context['Org'] = Organization.objects.all()
         return context
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['Org'] = OrganizationSerializerTemplate(Organization.objects.filter(name__icontains=request.POST.get('org')), many=True).data
+        context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
