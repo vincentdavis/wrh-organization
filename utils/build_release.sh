@@ -41,8 +41,13 @@ cd ./wrh_organization
 
 BACKEND_VERSION=$(cat ./VERSION)
 NEW_BACKEND_VERSION=${BACKEND_VERSION}
+echo "#############################################"
+echo "Current backend version: ${BACKEND_VERSION}"
+echo "##############################################"
 if [ "${BE_INC_VER_TYPE}" != 'ignore' ]; then
+  echo "Bumping backend version: ${BE_INC_VER_TYPE} ..."
   NEW_BACKEND_VERSION=$(pysemver bump ${BE_INC_VER_TYPE} ${BACKEND_VERSION})
+  echo "New backend version: ${NEW_BACKEND_VERSION}"
   echo ${NEW_BACKEND_VERSION} >./VERSION
 fi
 
