@@ -17,7 +17,7 @@ from . import models
 class OrganizationMemberAdmin(admin.ModelAdmin):
     list_display = ('id', 'member', 'organization', 'status', 'is_active', 'is_admin')
     list_filter = ('member', 'organization', 'status', 'is_active', 'is_admin', 'is_master_admin')
-    search_fields = ('member__first_name', 'member__last_name', 'organization')
+    search_fields = ('member__first_name', 'member__last_name', 'organization__name')
 
 
 class OrganizationMemberOrgAdmin(admin.ModelAdmin):
