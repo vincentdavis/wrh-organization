@@ -14,10 +14,35 @@ from wrh_organization.helpers.utils import admin_url_wrap, USACApi
 from . import models
 
 
+@admin.action(description='Accept membership in club')
+def accept_membership(modeladmin, request, queryset):
+    for org_member in queryset:
+        # member = getattr(org_member, 'status', None)
+        # if member and member.status == 'Accepted':
+        #     continue
+        try:
+            print(
+                f'Accepting membership for {org_member.status}: {org_member.member.first_name}: {org_member.organization.name}')
+            # with transaction.atomic():
+            #     existing_member = Member.objects.exclude(user=user).filter(email=user.email
+            #                                                                ).order_by('email_verified').first()
+            #     member = existing_member or member
+            # 
+            #     member = Member() if member is None else member
+            # 
+            #     member.set_as_verified(user)
+            #     user.is_active = True
+            #     user.draft = False
+            #     user.save(update_fields=['is_active', 'draft'])
+        except Exception:
+            traceback.print_exc()
+
+
 class OrganizationMemberAdmin(admin.ModelAdmin):
     list_display = ('id', 'member', 'organization', 'status', 'is_active', 'is_admin')
-    list_filter = ('member', 'organization', 'status', 'is_active', 'is_admin', 'is_master_admin')
+    list_filter = ('status', 'is_active', 'is_admin', 'is_master_admin', 'organization')
     search_fields = ('member__first_name', 'member__last_name', 'organization__name')
+    actions = [accept_membership]
 
 
 class OrganizationMemberOrgAdmin(admin.ModelAdmin):
@@ -26,7 +51,8 @@ class OrganizationMemberOrgAdmin(admin.ModelAdmin):
 
 
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'email', 'usac_license_number','usac_license_number_verified', 'draft')
+    list_display = (
+    'id', 'first_name', 'last_name', 'email', 'usac_license_number', 'usac_license_number_verified', 'draft')
     search_fields = ('first_name', 'last_name', 'usac_license_number', 'email')
     list_filter = ('email_verified', 'phone_verified', 'usac_license_number_verified')
     change_form_template = "admin/cycling_org/member_changeform.html"
@@ -34,7 +60,8 @@ class MemberAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('<int:object_id>/validate-usac-license/', admin_url_wrap(self.validate_usac_license, self.admin_site, self),
+            path('<int:object_id>/validate-usac-license/',
+                 admin_url_wrap(self.validate_usac_license, self.admin_site, self),
                  name="cycling_org_member_validate_usac_license"),
         ]
         return my_urls + urls
@@ -73,7 +100,8 @@ class MemberAdmin(admin.ModelAdmin):
             matched = {}
         else:
             matched = {
-                'name': (usac_object.get('profile_first_name') or '').lower() == f'{obj.first_name} {obj.last_name}'.lower(),
+                'name': (usac_object.get(
+                    'profile_first_name') or '').lower() == f'{obj.first_name} {obj.last_name}'.lower(),
                 'age': usac_object.get('profile_birthdate') == obj.age,
                 'gender': (usac_object.get('profile_race_gender') or '').lower() == obj.get_gender_display().lower(),
             }
@@ -102,7 +130,7 @@ class RaceAdmin(admin.ModelAdmin):
 
 
 class RaceResultAdmin(admin.ModelAdmin):
-    list_display = ('id', 'rider', 'race', 'place' )
+    list_display = ('id', 'rider', 'race', 'place')
     search_fields = ('race__name', 'rider__first_name', 'rider__last_name',)
     list_filter = ('race',)
 
@@ -133,7 +161,7 @@ class RaceSeriesResultAdmin(admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'start_date', 'is_usac_permitted', 'city', 'organization', 'shared_org_perms')
-    search_fields = ('name', )
+    search_fields = ('name',)
     list_filter = ('is_usac_permitted',)
 
 
