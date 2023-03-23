@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.views.generic import RedirectView
 from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs
+from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, Events, EventDetails
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 
 VERSION_PARAM = settings.REST_FRAMEWORK.get('VERSION_PARAM', 'version')
@@ -42,7 +42,10 @@ urlpatterns = [
             include('apps.constant_contact.rest_api.urls', namespace='constant_contact_rest_api')),
     re_path(r'^feed/calendar/ics', WRHEventsIcalFeed()),
     path('validator/', validate, name='validate'),
-    path('clubs/', Clubs.as_view(), name='Clubs'),
+    # Django View - BC
+    path('events/', Events.as_view(), name='events-dv'),
+    path('event/<int:pk>/', EventDetails.as_view(), name='events-details-dv'),
+    path('clubs/', Clubs.as_view(), name='clubs-dv'),
 ]
 
 if settings.DEBUG:
