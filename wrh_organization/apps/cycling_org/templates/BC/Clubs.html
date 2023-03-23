@@ -1,77 +1,81 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
 
-      <section class="content">
-         <!-- search form -->
-         <div class="listing-searchmember colo-search">
-            <div class="searchmember-formouter">
-               <form action="#" method="post" class="searchmember-form event-filter">
-                  {% csrf_token %}
-                  <h2>Search: </h2>
-                  <div class="calendarfield-outer">
-                     <div class="cal-input-group">
-                        <input type="text" name="org" class="datepicker" placeholder="Club or Promoter">
-                     </div>
-                  </div>
-                  <input type="submit" class="filter-submit" value="Search">
-               </form>
-               <div class="clearfix"></div>
-            </div>
-         </div>
-         <!-- blog outer -->
-         <div class="blog-outer">
-         <div class="container">
-         <div class="blog-detail">
-            <div class="col-sm-12" style="margin-top: 20px;">
-            </div>
-            <div id="et-boc" class="et-boc">
-               <div id="et_builder_outer_content" class="et_builder_outer_content">
-                  {% if Org|length >= 1%}
-                  {% for org in Org|dictsort:"name" %}
-                  <div class="blogdetail-row">
-                     <div class="col-sm-12 col-md-7 blogdetail-left">
-                        <div class="author-thumbnail">
-                           {% if org.logo %}
-                           <img style="width:100%;
-                              max-width:60px;" src="{{org.logo.url}}" alt="">
-                           {% else %}
-                           <img style="width:100%;
-                              max-width:60px;"
-                              src="https://secure.gravatar.com/avatar/da102842c31bd93d6ffc42ace2bcedce?s=96&d=mm&r=g"
-                              alt="">
-                           {%endif%}
-                        </div>
-                        <div class="blog-post">
-                           <ul class="post-list">
-                              <li>Type</li>
-                              <li> <span><a href="" rel="author">{{org.type}}
-                                 </a></span>
-                              </li>
-                           </ul>
-                           <h4><a href="/#/org-profile/{{org.id}}">{{org.name}}</a></h4>
-                           {% if org.about %}
-                           <p>{{org.about}}</p>
-                           {%endif %}
-                           <ul class="catagory-list">
-                              {% if org.website %}
-                              <li><a href="{{org.website}}">Website</a>
-                              </li>
-                              {%endif %}
-                           </ul>
-                        </div>
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="col-sm-12 col-md-5 blogdetail-right" style="margin-top:
-                        90px;">
-                        <b>{{org.members.all.count}} </b> Members
-                     </div>
-                  </div>
-                  {% endfor %}
-                  {% else%}
-                  <b>Not Found</b>
-                  {% endif%}
-               </div>
-            </div>
-         </div>
-      </section>
-  {% endblock %}
+<section class="content">
+	<!-- search form -->
+	<div class="listing-searchmember colo-search">
+		<div class="searchmember-formouter">
+			<form action="#" method="post" class="searchmember-form event-filter">
+				{% csrf_token %}
+				<h2>Search: </h2>
+				<div class="calendarfield-outer">
+					<div class="cal-input-group">
+						<input type="text" name="org" class="datepicker" placeholder="Club or
+							Promoter">
+					</div>
+				</div>
+				<input type="submit" class="filter-submit" value="Search">
+			</form>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- blog outer -->
+	<div class="blog-outer">
+		<div class="container">
+			<div class="blog-detail">
+				<div class="col-sm-12" style="margin-top: 20px;">
+				</div>
+				<div id="et-boc" class="et-boc">
+					<div id="et_builder_outer_content" class="et_builder_outer_content">
+						{% if Org|length >= 1%}
+						{% for org in Org|dictsort:"name" %}
+						<div class="blogdetail-row">
+							<div class="col-sm-12 col-md-7 blogdetail-left">
+								<div class="author-thumbnail">
+									{% if org.logo %}
+									<img style="width:100%;
+										max-width:60px;" src="{{org.logo.url}}" alt="">
+									{% else %}
+									<img style="width:100%;
+										max-width:60px;"
+										src="https://secure.gravatar.com/avatar/da102842c31bd93d6ffc42ace2bcedce?s=96&d=mm&r=g"
+										alt="">
+									{%endif%}
+								</div>
+								<div class="blog-post">
+									<ul class="post-list">
+										<li>Type</li>
+										<li> <span><a href="" rel="author">{{org.type}}
+												</a></span>
+										</li>
+									</ul>
+									<h4><a href="/#/org-profile/{{org.id}}">{{org.name}}</a></h4>
+									{% if org.about %}
+									<p>{{org.about}}</p>
+									{%endif %}
+									<ul class="catagory-list">
+										{% if org.website %}
+										<li><a href="{{org.website}}">Website</a>
+										</li>
+										{%endif %}
+									</ul>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<div class="col-sm-12 col-md-5 blogdetail-right" style="margin-top:
+								90px;">
+								<b>{{org.members.all.count}} </b> Members
+							</div>
+						</div>
+						{% endfor %}
+						{% else%}
+						<b>Not Found</b>
+						{% endif%}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>
+{% endblock %}
