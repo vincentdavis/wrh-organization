@@ -2,6 +2,22 @@
 {% block content %}
 
       <section class="content">
+         <!-- search form -->
+         <div class="listing-searchmember colo-search">
+            <div class="searchmember-formouter">
+               <form action="#" method="post" class="searchmember-form event-filter">
+                  {% csrf_token %}
+                  <h2>Search: </h2>
+                  <div class="calendarfield-outer">
+                     <div class="cal-input-group">
+                        <input type="text" name="org" class="datepicker" placeholder="Club or Promoter">
+                     </div>
+                  </div>
+                  <input type="submit" class="filter-submit" value="Search">
+               </form>
+               <div class="clearfix"></div>
+            </div>
+         </div>
          <!-- blog outer -->
          <div class="blog-outer">
          <div class="container">
@@ -17,7 +33,7 @@
                         <div class="author-thumbnail">
                            {% if org.logo %}
                            <img style="width:100%;
-                              max-width:60px;" src="{{org.logo}}" alt="">
+                              max-width:60px;" src="{{org.logo.url}}" alt="">
                            {% else %}
                            <img style="width:100%;
                               max-width:60px;"
