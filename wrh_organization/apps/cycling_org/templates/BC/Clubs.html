@@ -1,41 +1,6 @@
-<!doctype html>
-<html lang="en-US">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-      <meta name='robots' content='index, follow, max-image-preview:large,
-         max-snippet:-1, max-video-preview:-1' />
-      <!-- This site is optimized with the Yoast SEO plugin v20.1 - https://yoast.com/wordpress/plugins/seo/ -->
-      <title>We Race Here Events Calendar -</title>
-      <link rel='stylesheet' id='styles-css'
-         href='https://www.bicyclecolorado.org/wp-content/themes/bicyclecolorado/assets/css/styles.css?v=sddlieertyrtdfgfg7'
-         type='text/css' media='all' />
-   </head>
-   <body
-      class="page-template page-template-templates
-      page-template-page-colorado-events
-      page-template-templatespage-colorado-events-php page page-id-15847 page-child
-      parent-pageid-20 et_divi_builder et-pb-theme-bicycle colorado et-db">
-      <div class="wrapper">
-      <!-- content -->
-      <section class="content">
-      <!-- search form -->
-      <div class="listing-searchmember colo-search">
-         <div class="searchmember-formouter">
-            <form action="#" method="post" class="searchmember-form event-filter">
-               {% csrf_token %}
-               <h2>Search: </h2>
-               <div class="calendarfield-outer">
-                  <div class="cal-input-group">
-                     <input type="text" name="org" class="datepicker" placeholder="Club or Promoter">
-                  </div>
-               </div>
-               <input type="submit" class="filter-submit" value="Search">
-            </form>
-            <div class="clearfix"></div>
-         </div>
-      </div>
+{% extends "BC/base_dv.html" %}
+{% block content %}
+
       <section class="content">
          <!-- blog outer -->
          <div class="blog-outer">
@@ -52,7 +17,7 @@
                         <div class="author-thumbnail">
                            {% if org.logo %}
                            <img style="width:100%;
-                              max-width:60px;" src="/media/{{org.logo}}" alt="">
+                              max-width:60px;" src="{{org.logo}}" alt="">
                            {% else %}
                            <img style="width:100%;
                               max-width:60px;"
@@ -93,21 +58,4 @@
             </div>
          </div>
       </section>
-   </body>
-   <style>
-      table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-      }
-      td,
-      th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-      }
-      tr:nth-child(even) {
-      background-color: #dddddd;
-      }
-   </style>
-</html>
+  {% endblock %}
