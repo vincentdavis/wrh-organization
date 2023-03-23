@@ -27,7 +27,7 @@
             <div id="et-boc" class="et-boc">
                <div id="et_builder_outer_content" class="et_builder_outer_content">
                   {% if Org|length >= 1%}
-                  {% for org in Org %}
+                  {% for org in Org|dictsort:"name" %}
                   <div class="blogdetail-row">
                      <div class="col-sm-12 col-md-7 blogdetail-left">
                         <div class="author-thumbnail">
