@@ -11,10 +11,10 @@
 				<div class="event-detail-inner">
 					<div class="event-detail-left">
 						<a href="{% url 'events-dv'%}" class="events-link">Back To Events</a>
-						{% if object.logo%}
-						<img
-							src="{{object.logo.url}}"
-							alt="Event Logo" title="" class="img-responsive">
+						{% if object.prefs.banner_image %}
+                            <img
+                                src="{{ object.prefs.banner_image }}"
+                                alt="Event Logo" title="" class="img-responsive">
 						{% endif %}
 						<div class="eventdetail-inner">
 							<h2>{{ object.name }}</h2>
