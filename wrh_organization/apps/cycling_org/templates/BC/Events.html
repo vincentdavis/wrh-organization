@@ -26,9 +26,9 @@
 					{% if Event|length >= 1%}
 						{% for event in Event %}
 						<div class="colo-eventbox">
-                        {% if object.logo%}
+                        {% if event.logo%}
 						<img
-							src="{{object.logo.url}}"
+							src="{{event.logo.url}}"
 							alt="Event Logo" title="" class="img-responsive">
 						{% endif %}
 							<h3><a href="{% url 'events-details-dv' event.id%}"
