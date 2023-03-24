@@ -1,26 +1,31 @@
 import csv
 import traceback
+from datetime import date
+
 from PIL import Image
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from rest_framework import serializers
 from wrh_organization.helpers.utils import get_random_upload_path, DynamicFieldsSerializerMixin, Base64ImageField
 from django.http import HttpResponse
 from .forms import UploadValidateFile  
-from .models import Organization
+from .models import Organization, Event
 
 
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
+from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
+
 
 @require_http_methods(["POST"])
 @login_required
@@ -90,6 +95,36 @@ def validate(request):
         form = UploadValidateFile()
     return render(request, 'validate.html', {'form': form})
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class Events(TemplateView):
+    template_name = 'BC/Events.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        query_set = Event.objects.all().order_by('start_date')
+        query = Q(end_date__gte=date.today())
+        if request.POST.get("event-type", None) == 'usac-permitted':
+            query &= Q(is_usac_permitted=True)
+        elif request.POST.get("event-type", None) == 'featured-event':
+            query &= Q(featured_event=True)
+        context['Event'] = query_set.filter(query)
+        return self.render_to_response(context)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class EventDetails(DetailView):
+    template_name = 'BC/EventDetails.html'
+    model = Event
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['GOOGLE_MAP_API_TOKEN'] = GOOGLE_MAP_API_TOKEN
+        return context
 
 
 

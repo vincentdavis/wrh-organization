@@ -1,0 +1,75 @@
+{% extends "BC/base_dv.html" %}
+{% block content %}
+
+<section class="content">
+	<!-- content -->
+	<section class="content">
+
+		<!-- event detail -->
+		<div class="event-detail-outer">
+			<div class="container">
+				<div class="event-detail-inner">
+					<div class="event-detail-left">
+						<a href="{% url 'events-dv'%}" class="events-link">Back To Events</a>
+						{% if object.logo%}
+						<img
+							src="{{object.logo.url}}"
+							alt="Event Logo" title="" class="img-responsive">
+						{% endif %}
+						<div class="eventdetail-inner">
+							<h2>{{ object.name }}</h2>
+							<h3>{{object.start_date}} &#8211; {{object.end_date}}</h3>
+							{% if object.description%}
+							<p><strong> </strong><br />
+								{{object.description}}
+							</p>
+							{% endif %}
+
+
+						</div>
+					</div>
+					<div class="event-detail-right">
+						<h3>Event Details</h3>
+
+						<div class="detailright-inner">
+							<h4>Location</h4>
+							<h5><span>
+									{% if object.state %} {{object.state}} ,{%endif%}
+									{% if object.city %} {{object.city}} ,{%endif%}
+									{% if object.country %} {{object.country}} {%endif%}
+								</div>
+								{% if object.location_lat and object.location_lon%}
+								<div class="event-map">
+									<iframe frameborder="0" style="border:0"
+										src="https://www.google.com/maps/embed/v1/place?key={{GOOGLE_MAP_API_TOKEN}}&q=
+										{{object.location_lat}} , {{object.location_lon}} &zoom=16"
+										allowfullscreen></iframe>
+								</div>
+								{% endif %}
+
+
+
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="other-events-outer">
+							<div class="otherevents-top">
+								<h3 class="events-title">Other Events</h3>
+								<a href="{% url 'events-dv'%}" class="viewall-events">View All Events</a>
+								<div class="clearfix"></div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+			</section>
+
+
+
+		</section>
+		{% endblock %}
