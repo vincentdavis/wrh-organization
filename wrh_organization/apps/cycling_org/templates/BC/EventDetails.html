@@ -34,9 +34,8 @@
 						<div class="detailright-inner">
 							<h4>Location</h4>
 							<h5><span>
-									{% if object.state %} {{object.state}} ,{%endif%}
-									{% if object.city %} {{object.city}} ,{%endif%}
-									{% if object.country %} {{object.country}} {%endif%}
+									{% if object.city %} {{object.city}}, {%endif%}
+                                    {% if object.state %} {{object.state}}{%endif%}
 								</div>
 								{% if object.location_lat and object.location_lon%}
 								<div class="event-map">
