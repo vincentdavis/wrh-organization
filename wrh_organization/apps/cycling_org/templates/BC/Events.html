@@ -25,7 +25,6 @@
                         {% if Event|length >= 1 %}
                             {% for event in Event %}
                                 <div class="colo-eventbox">
-                                {{ EventTypes }}
                                     {% if event.logo %}
                                         <img
                                                 src="{{ event.logo.url }}"
