@@ -20,6 +20,9 @@ from django.http import HttpResponse
 from .forms import UploadValidateFile  
 from .models import Organization, Event
 
+from dynamic_preferences.registries import global_preferences_registry
+global_pref = global_preferences_registry.manager()
+
 
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
@@ -103,6 +106,7 @@ class Events(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
+        context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
 
     def post(self, request, *args, **kwargs):
