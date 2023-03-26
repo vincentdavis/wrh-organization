@@ -17,7 +17,7 @@ from django_ckeditor_5.views import storage as ck_storage
 from wrh_organization.helpers.utils import get_random_upload_path
 from django.http import HttpResponse
 from .forms import UploadValidateFile  
-from .models import Organization, Event
+from .models import Organization, Event, Member
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
@@ -149,3 +149,8 @@ class Clubs(TemplateView):
         context = self.get_context_data(**kwargs)
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
+    
+class ProfileDetail(DetailView):
+    template_name = 'BC/ProfileDetail.html'
+    model = Member
+    

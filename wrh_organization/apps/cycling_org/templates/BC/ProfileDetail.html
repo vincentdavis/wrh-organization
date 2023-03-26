@@ -1,0 +1,25 @@
+{% extends "BC/base_dv.html" %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+    <div class="event-detail-outer">
+        <section class="content">
+            <div class="profile-detail-outer">
+                <div class="profile-detail-left">
+                    <h1>{{ object.first_name }}</h1>
+                    <p>{{ object.usac_license_number }}</p>
+                </div>
+                <div class="profile-detail-right">
+                    <p>{{ object.gender }}</p>
+                    {% for k, v in object.social_media.items %}
+                        <br>{{ k }}: {{ v }}
+                    {% endfor %}
+                </div>
+{#            TODO: Add race result#}
+{#            TODO: Add club membership#}
+            </div>
+        </section>
+    </div>
+{% endblock %}
