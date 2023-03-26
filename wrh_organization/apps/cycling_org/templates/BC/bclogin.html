@@ -2,8 +2,7 @@
 {% block content %}
     <section class="content">
         <iframe height="1200" width="100%" frameborder="0" scrolling="no"
-{#                http://localhost:8080/static/vue/#/signup-and-join-org/1#}
-{#                src="https://events.bicyclecolorado.org/static/vue/index.html#/auth/?_css=https%3A%2F%2Fweracehere.org%2Fstatic%2Fexternal_css%2FBC.css"></iframe>#}
-                src="https://events.bicyclecolorado.org/static/vue/#/signup-and-join-org/1?_css=https%3A%2F%2Fweracehere.org%2Fstatic%2Fexternal_css%2FBC.css"></iframe>
+                src="{{ request.build_absolute_uri }}static/vue/#/signup-and-join-org/1?_css=https%3A%2F%2Fweracehere.org%2Fstatic%2Fexternal_css%2FBC.css">
+        </iframe>
     </section>
 {% endblock %}
