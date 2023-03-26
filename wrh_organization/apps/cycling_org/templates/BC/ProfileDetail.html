@@ -1,25 +1,26 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-</head>
     <div class="event-detail-outer">
-        <section class="content">
-            <div class="profile-detail-outer">
-                <div class="profile-detail-left">
-                    <h1>{{ object.first_name }}</h1>
-                    <p>{{ object.usac_license_number }}</p>
-                </div>
-                <div class="profile-detail-right">
-                    <p>{{ object.gender }}</p>
-                    {% for k, v in object.social_media.items %}
-                        <br>{{ k }}: {{ v }}
-                    {% endfor %}
-                </div>
-{#            TODO: Add race result#}
-{#            TODO: Add club membership#}
+        <div class="event-detail-inner">
+            <div class="profile-detail-left">
+                <h3>{{ object.first_name }} {{ object.last_name }}</h3>
+                <h5>USAC License: {{ object.usac_license_number }} </h5>
+                <h5> {{ USACData.1.race_gender }}</h5>
+                {% for u in USACData %}
+                    <h5> license: {{ u.license_type|default:"N/A" }}</h5>
+                    <h5>Club: {{ u.club|default:"N/A" }}</h5>
+                    <h5>Area: {{ u.local_association }}</h5>
+                    ----
+                {% endfor %}
+                {% for k, v in object.social_media.items %}
+                    <h5>{{ k }}: {{ v }}</h5>
+                {% endfor %}
             </div>
-        </section>
+            <div class="profile-detail-right">
+                {#TODO: Add race result#}
+                {#TODO: Add club membership#}
+                <h5> Race results here </h5>
+            </div>
+        </div>
     </div>
 {% endblock %}

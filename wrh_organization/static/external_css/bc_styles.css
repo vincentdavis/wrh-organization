@@ -15843,15 +15843,20 @@ input::placeholder {
 /*Custom Events.bicyclecolorado.org Styles*/
 
 .profile-detail-outer:after {
-  content: "";
-  display: table;
-  clear: both;
+    position: relative;
+    min-height: 1px;
+    padding-top: 100px;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: left;
+    display: table;
+    clear: both;
 }
 
 .profile-detail-left{
     width: 35%;
     float: left;
-    padding: 15px 15px 15pk 15pk;
+    /*padding: 15px 15px 15pk 15pk;*/
     margin: 0 0 0 0;
     color: #535858;
     font-size: 18px;
@@ -15860,7 +15865,6 @@ input::placeholder {
 .profile-detail-right{
     width: 65%;
     float: left;
-    padding: 15px 15px 15pk 15pk;
     margin: 0 0 0 0;
     color: #535858;
     font-size: 18px;

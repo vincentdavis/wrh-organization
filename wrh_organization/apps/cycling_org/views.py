@@ -18,6 +18,8 @@ from wrh_organization.helpers.utils import get_random_upload_path
 from django.http import HttpResponse
 from .forms import UploadValidateFile  
 from .models import Organization, Event, Member
+from ..usacycling.models import USACRiderLicense
+
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
@@ -152,5 +154,12 @@ class Clubs(TemplateView):
     
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
-    model = Member
-    
+    model = Member # I dont really knwo what this does.
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetail, self).get_context_data(**kwargs)
+        if context['object'].usac_license_number and context['object'].usac_license_number_verified:
+            lic = context['object'].usac_license_number # Get and use it to query USACRider
+            context['USACData'] = USACRiderLicense.objects.filter(license_number=lic)
+        else:
+            context['USACData'] = None
+        return context
