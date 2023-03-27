@@ -14,21 +14,20 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
-from rest_framework import serializers
-from wrh_organization.helpers.utils import get_random_upload_path, DynamicFieldsSerializerMixin, Base64ImageField
+from wrh_organization.helpers.utils import get_random_upload_path
 from django.http import HttpResponse
 from .forms import UploadValidateFile  
-from .models import Organization, Event
-
-from dynamic_preferences.registries import global_preferences_registry
-global_pref = global_preferences_registry.manager()
-
+from .models import Organization, Event, Member
+from ..usacycling.models import USACRiderLicense
 
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
 from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
 
+from dynamic_preferences.registries import global_preferences_registry
+
+global_pref = global_preferences_registry.manager()
 
 @require_http_methods(["POST"])
 @login_required
@@ -99,6 +98,10 @@ def validate(request):
     return render(request, 'validate.html', {'form': form})
 
 
+class BClogin(TemplateView):
+    template_name = 'BC/bclogin.html'
+    pass
+
 @method_decorator(csrf_exempt, name='dispatch')
 class Events(TemplateView):
     template_name = 'BC/Events.html'
@@ -108,6 +111,9 @@ class Events(TemplateView):
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
         context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
+    
+    def get_raceseries(self, Events):
+        pass
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -145,3 +151,15 @@ class Clubs(TemplateView):
         context = self.get_context_data(**kwargs)
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
+    
+class ProfileDetail(DetailView):
+    template_name = 'BC/ProfileDetail.html'
+    model = Member # I dont really knwo what this does.
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetail, self).get_context_data(**kwargs)
+        if context['object'].usac_license_number and context['object'].usac_license_number_verified:
+            lic = context['object'].usac_license_number # Get and use it to query USACRider
+            context['USACData'] = USACRiderLicense.objects.filter(license_number=lic)
+        else:
+            context['USACData'] = None
+        return context
