@@ -119,10 +119,13 @@ class Events(TemplateView):
         context = self.get_context_data(**kwargs)
         query_set = Event.objects.all().order_by('start_date')
         query = Q(end_date__gte=date.today())
-        if request.POST.get("event-type", None) == 'usac-permitted':
+        if request.POST.get("filter", None) == 'usac_event':
             query &= Q(is_usac_permitted=True)
-        elif request.POST.get("event-type", None) == 'featured-event':
+        if request.POST.get("filter", None) == 'featured':
             query &= Q(featured_event=True)
+        if request.POST.get("event-type", None) and request.POST.get("event-type", None) != 'all':
+            query &= Q(tags__contains=[request.POST.get("event-type", None)])
+        print(query)
         context['Event'] = query_set.filter(query)
         return self.render_to_response(context)
 
@@ -151,7 +154,7 @@ class Clubs(TemplateView):
         context = self.get_context_data(**kwargs)
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
-    
+
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
     model = Member # I dont really knwo what this does.

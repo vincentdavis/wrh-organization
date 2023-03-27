@@ -1,53 +1,65 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
-    <section class="content">
-        <!-- search form -->
-        <div class="listing-searchmember colo-search">
-            <div class="searchmember-formouter">
-                <form action="#" method="post" class="searchmember-form event-filter">
-                    <h2>FILTER: </h2>
-                    <select name="event-type" id="filter-events-full-cal">
-                        <option value="all">All Events</option>
-                        <option value="featured-event">Featured Event</option>
-                        <option value="usac-permitted">USAC Permitted</option>
+<section class="content">
+	<!-- search form -->
+	<div class="listing-searchmember colo-search">
+		<div class="searchmember-formouter">
+			<form action="#" method="post" class="searchmember-form event-filter">
+				<h2>FILTER: </h2>
 
-                    </select>
-                    <input type="submit" class="filter-submit" value="filter">
-                </form>
-                <div class="clearfix"></div>
-            </div>
-        </div>
 
-        <div class="colo-events-outer">
-            <div class="container">
-                <div class="coloevents-inner">
-                    <div class="colo-eventsrow">
-                        {% if Event|length >= 1 %}
-                            {% for event in Event %}
-                                <div class="colo-eventbox">
-                                    {% if event.logo %}
-                                        <img
-                                                src="{{ event.logo.url }}"
-                                                alt="Event Logo" title="" class="img-responsive">
-                                    {% endif %}
-                                    <h3><a href="{% url 'events-details-dv' event.id %}"
-                                           class=" ">{{ event.name }}</a></h3>
-                                    {% if event.is_usac_permitted %}
-                                        <img src="../static/images/USACycling_Logo_noborder.svg" alt="USACycling" width="25" height="25">
-                                    {% endif %}
-                                    <span class="date">{{ event.start_date }}</span>
-                                    <h5> {% if event.city %} {{event.city}}{%endif%} </h5>
-                                    {#							<a href="{% url 'events-details-dv' event.id%}"#}
-                                    {#								class="viewevent-btn">View Event</a>#}
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <b>No Events Found</b>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
+				<input class="gfield-choice-input" name="filter" type="radio"
+					value="usac_event" id="choice_1">
+				<label for="choice_1">USAC Event</label>
+				<input class="gfield-choice-input" name="filter" type="radio"
+					value="featured" id="choice_2">
+				<label for="choice_2" id="label_13_8_1">Featured</label>
 
-    </section>
+
+
+				<select name="event-type" id="filter-events-full-cal">
+					<option value="all">All Events</option>
+					{% for i in EventTypes%}
+					<option value="{{i}}">{{i}}</option>
+					{% endfor %}
+				</select>
+				<input type="submit" class="filter-submit" value="filter">
+			</form>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+
+	<div class="colo-events-outer">
+		<div class="container">
+			<div class="coloevents-inner">
+				<div class="colo-eventsrow">
+					{% if Event|length >= 1 %}
+					{% for event in Event %}
+					<div class="colo-eventbox">
+						{% if event.logo %}
+						<img
+							src="{{ event.logo.url }}"
+							alt="Event Logo" title="" class="img-responsive">
+						{% endif %}
+						<h3><a href="{% url 'events-details-dv' event.id %}"
+								class=" ">{{ event.name }}</a></h3>
+						{% if event.is_usac_permitted %}
+						<img src="../static/images/USACycling_Logo_noborder.svg" alt="USACycling"
+							width="25" height="25">
+						{% endif %}
+						<span class="date">{{ event.start_date }}</span>
+						<h5> {% if event.city %} {{event.city}}{%endif%} </h5>
+						{# <a href="{% url 'events-details-dv' event.id%}"#}
+							{# class="viewevent-btn">View Event</a>#}
+					</div>
+					{% endfor %}
+					{% else %}
+					<b>No Events Found</b>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>
 {% endblock %}
