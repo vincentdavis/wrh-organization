@@ -17,9 +17,10 @@
 					{% endif %}
 					<div class="eventdetail-inner">
 						{% if object.is_usac_permitted %}
-                                    <img src="../static/images/USACycling_Logo_noborder.svg" alt="USACycling" width="25"
-                                         height="25">
-                                {% endif %}
+						<img src="../static/images/USACycling_Logo_noborder.svg" alt="USACycling"
+							width="25"
+							height="25">
+						{% endif %}
 						<h2>{{ object.name }}</h2>
 						{% if object.description%}
 						<p>
@@ -34,20 +35,20 @@
 						{% endif %}
 
 						<p style="text-align: center;"><strong>
-							{% if object.website %}
-							<a style="color: #e75626;
+								{% if object.website %}
+								<a style="color: #e75626;
 									text-decoration: underline;"
 									href="{{object.website}}" target="_blank"
 									rel="noopener noreferrer">Learn more !</a>
-							{% endif %}
-							{% if object.registration_website %}
-							<a style="color: #e75626;
-										margin-left:3px;
-										text-decoration: underline;"
-										href="{{object.registration_website}}" target="_blank"
-										rel="noopener noreferrer">Register !</a>
-							{% endif %}
-						</strong></p>
+								{% endif %}
+								{% if object.registration_website %}
+								<a style="color: #e75626;
+									margin-left:3px;
+									text-decoration: underline;"
+									href="{{object.registration_website}}" target="_blank"
+									rel="noopener noreferrer">Register !</a>
+								{% endif %}
+							</strong></p>
 
 
 
@@ -55,28 +56,44 @@
 				</div>
 				<div class="event-detail-right">
 					<h3>Event Details</h3>
+
 					<div class="detailright-inner">
-						<h4>When:</h4>
+						<h4>When: </h4>
 
 						<h5>{{ object.start_date }} - {{ object.end_date }}</h5>
+						<a href="{% url 'ics'%}?event_id={{object.id}}">
+							Add to calendar
+						</a>
+
 					</div>
 
 					<div class="detailright-inner">
 						<h4>Location</h4>
 						<h5><span>
-							{% if object.city %} {{ object.city }}, {% endif %}
-							{% if object.state %} {{ object.state }}{% endif %}
-						</span></h5>
+								{% if object.city %} {{ object.city }}, {% endif %}
+								{% if object.state %} {{ object.state }}{% endif %}
+							</span></h5>
 					</div>
 					{% if object.location_lat and object.location_lon %}
 
 					<div class="event-map">
 						<iframe frameborder="0" style="border:0"
-								src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAP_API_TOKEN }}&q=
-									{{ object.location_lat }} , {{ object.location_lon }} &zoom=16"
-								allowfullscreen></iframe>
+							src="https://www.google.com/maps/embed/v1/place?key={{
+							GOOGLE_MAP_API_TOKEN }}&q=
+							{{ object.location_lat }} , {{ object.location_lon }} &zoom=16"
+							allowfullscreen></iframe>
 					</div>
 					{% endif %}
+					<div class="detailright-inner">
+						<h4>Event Files</h4>
+						{% if object.attachments.count >= 1 %}
+							{% for attachment in object.attachments.all%}
+							<a target="_blank" href="{{attachment.file.url}}">{{attachment.file_name}}</a>
+							{% endfor %}
+						{% else%}
+							<p>No Files</p>
+						{% endif%}
+					</div>
 
 
 
@@ -86,7 +103,7 @@
 			<div class="other-events-outer">
 				<div class="otherevents-top">
 					<h3 class="events-title">Other Events</h3>
-                                    <a href="{% url 'events-dv' %}" class="viewall-events">View All Events</a>
+					<a href="{% url 'events-dv' %}" class="viewall-events">View All Events</a>
 					<div class="clearfix"></div>
 				</div>
 
