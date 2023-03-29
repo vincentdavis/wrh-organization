@@ -1,9 +1,7 @@
 import csv
 import io
-import json
 import traceback
 from datetime import datetime
-from functools import update_wrapper
 
 from django.contrib import admin
 from django.forms import forms
@@ -31,7 +29,6 @@ def import_rider_license_row(row, required_fields, date_format='%m/%d/%Y'):
         db_cols['race_age'] = int(db_cols['race_age'])
     db_cols['data_hash'] = data_hash
     db_cols['data'] = row
-
     return USACRiderLicense.objects.create(**db_cols)
 
 
@@ -54,12 +51,12 @@ def import_rider_license_from_csv(csv_file, date_format='%m/%d/%Y'):
     if missed_fields:
         raise Exception(f'Invalid csv file. missed this fields: {missed_fields}')
     for row in reader:
-        print(f'Importing row #{reader.line_num} ... ', end='')
+        # print(f'Importing row #{reader.line_num} ... ', end='')
         try:
-            obj = import_rider_license_row(row, required_fields, date_format=date_format)
-            print('[OK]' if obj else '[SKIP]')
+            import_rider_license_row(row, required_fields, date_format=date_format)
+            # print('[OK]' if obj else '[SKIP]')
         except Exception:
-            print('[FAIL]')
+            # print('[FAIL]')
             traceback.print_exc()
 
 
