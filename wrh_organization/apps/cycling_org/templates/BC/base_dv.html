@@ -19,8 +19,10 @@
         <script type='text/javascript'
             src="{% static 'js/custom.js' %}"
             id='custom-js'></script>
-        <script src="https://happy-ideal.weracehere.org/script.js"
-            data-site="ARATEZFL" defer></script>
+{#        usefathon analytics#}
+        {% if 'events.bicyclecolorado.org' in request.get_host %}
+            <script src="https://cdn.usefathom.com/script.js" data-site="ARATEZFL" defer></script>
+        {% endif %}
 
 
     </head>
@@ -128,19 +130,6 @@
                                                                 glyphicon-chevron-down"></span></a>
                                                     </li>
                                                     <li
-                                                        id="menu-item-159"
-                                                        class="menu-item
-                                                        menu-item-type-post_type
-                                                        menu-item-object-page
-                                                        menu-item-has-children
-                                                        menu-item-159"><a
-                                                            href="">Racing
-                                                            Members
-                                                            <span
-                                                                class="glyphicon
-                                                                glyphicon-chevron-down"></span></a>
-                                                    </li>
-                                                    <li
                                                             id="menu-item-159"
                                                             class="menu-item
                                                             menu-item-type-post_type
@@ -148,6 +137,18 @@
                                                             menu-item-has-children
                                                             menu-item-159"><a
                                                                 href="https://www.bicyclecolorado.org/events-2/event-support-program/">Event and racing info
+                                                                <span
+                                                                    class="glyphicon
+                                                                    glyphicon-chevron-down"></span></a>
+                                                        </li>
+                                                    <li
+                                                            id="menu-item-159"
+                                                            class="menu-item
+                                                            menu-item-type-post_type
+                                                            menu-item-object-page
+                                                            menu-item-has-children
+                                                            menu-item-159"><a
+                                                                href="https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome">Sign In
                                                                 <span
                                                                     class="glyphicon
                                                                     glyphicon-chevron-down"></span></a>

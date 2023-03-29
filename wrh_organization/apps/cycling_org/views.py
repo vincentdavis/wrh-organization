@@ -98,8 +98,8 @@ def validate(request):
     return render(request, 'validate.html', {'form': form})
 
 
-class BClogin(TemplateView):
-    template_name = 'BC/bclogin.html'
+class BCsignin(TemplateView):
+    template_name = 'BC/BCsignin.html'
     pass
 
 @method_decorator(csrf_exempt, name='dispatch')

@@ -1,0 +1,23 @@
+{% extends "BC/base_dv.html" %}
+{% block content %}
+    <section class="content">
+    <br>
+        <br>
+        <br> Start
+        {% if 'localhost' in request.get_host %}
+            <iframe height="1200" width="100%" frameborder="0" scrolling="no"
+            src="http://localhost:8080/static/vue/index.html#/auth/?_css=https%3A%2F%2Fevents.bicyclecolorado.org%2Fstatic%2Fexternal_css%2FBC.css">
+            </iframe>
+        {% elif 'dev' in  request.get_host %}
+            <iframe height="1200" width="100%" frameborder="0" scrolling="no"
+                src="https://dev.weracegere.org/static/vue/index.html#/auth/?_css=https%3A%2F%2Fevents.bicyclecolorado.org%2Fstatic%2Fexternal_css%2FBC.css">
+            </iframe>
+        {% else %}
+            <iframe height="1200" width="100%" frameborder="0" scrolling="no"
+            src="https://events.bicyclecolorado.org/static/vue/index.html#/auth/?_css=https%3A%2F%2Fevents.bicyclecolorado.org%2Fstatic%2Fexternal_css%2FBC.css">
+            </iframe>
+        {% endif %}
+    </section>
+{% endblock %}
+
+{#<iframe height="1200" width="100%" frameborder="0" scrolling="no" src="https://events.bicyclecolorado.org/static/vue/index.html#/auth/?_css=https%3A%2F%2Fweracehere.org%2Fstatic%2Fexternal_css%2FBC.css"></iframe>#}
