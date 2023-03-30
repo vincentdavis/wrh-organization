@@ -83,9 +83,12 @@
                                         </li>
                                         <li>
                                             {% if user.is_authenticated %}
-                                                <a href="{% url 'logout' %}">{{ user.username }}: Sign Out</a>
+{#                                                TODO: add Sign out#}
+                                                Hello: {{ user.username }}
+{#                                                <a href="{% url 'logout' %}"></a>#}
                                             {% else %}
-                                                <a href="{% url 'login' %}">Sign In</a>
+{#                                                TODO: add sign in, need to fix urls#}
+{#                                                <a href="{% url 'login' %}">Sign In</a>#}
                                             {% endif %}
                                         </li>
                                     </ul></div>
