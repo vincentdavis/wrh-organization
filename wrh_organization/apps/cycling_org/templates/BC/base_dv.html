@@ -72,13 +72,25 @@
                                     class="menu-header-secondary-menu-top-bar-container"><ul
                                         id="menu-header-secondary-menu-top-bar"
                                         class="topnav-list
-                                        pull-right"><li id="menu-item-25568"
+                                        pull-right">
+                                        <li id="menu-item-25568"
                                             class="menu-item
                                             menu-item-type-post_type
                                             menu-item-object-page
                                             menu-item-25568"><a
                                                 href="https://www.bicyclecolorado.org/">
-                                                BICYCLE COLORADO ADVOCACY</a></li>
+                                                BICYCLE COLORADO ADVOCACY</a>
+                                        </li>
+                                        <li>
+                                            {% if user.is_authenticated %}
+{#                                                TODO: add Sign out#}
+                                                Hello: {{ user.username }}
+{#                                                <a href="{% url 'logout' %}"></a>#}
+                                            {% else %}
+{#                                                TODO: add sign in, need to fix urls#}
+{#                                                <a href="{% url 'login' %}">Sign In</a>#}
+                                            {% endif %}
+                                        </li>
                                     </ul></div>
                             </div>
                             <div class="site-nav">
@@ -141,20 +153,6 @@
                                                                     class="glyphicon
                                                                     glyphicon-chevron-down"></span></a>
                                                         </li>
-                                                    <li
-                                                            id="menu-item-159"
-                                                            class="menu-item
-                                                            menu-item-type-post_type
-                                                            menu-item-object-page
-                                                            menu-item-has-children
-                                                            menu-item-159"><a
-                                                                href="https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome">Sign In
-                                                                <span
-                                                                    class="glyphicon
-                                                                    glyphicon-chevron-down"></span></a>
-                                                        </li>
-
-
                                                 </ul></div> </div>
                                         <!-- /.navbar-collapse -->
                                     </div>
