@@ -164,7 +164,17 @@
       <v-col cols="12" md="6">
         <event-race-series-widget :event="event" class="home-widget"></event-race-series-widget>
       </v-col>
-      
+      <template v-if="event && event.more_data && event.more_data.panels">
+        <v-col v-bind:key="panel.id" cols="12" md="6" v-for="panel in event.more_data.panels">
+        <v-card>
+          <v-card-title class="align-start pb-3 pt-5">{{ panel.name }}</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text class="pa-1">
+            <iframe :src="panel.url" height="350" width="100%" ></iframe>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      </template>
 
     </v-row>
   </div>

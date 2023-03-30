@@ -34,6 +34,12 @@
 						</p>
 						{% endif %}
 
+						{% if object.more_data and object.more_data.panels %}
+							{% for panel in  object.more_data.panels%}
+						            <iframe src="{{panel.url}}" height="350" width="100%" ></iframe>
+							{% endfor%}
+						{% endif %}
+
 						<p style="text-align: center;"><strong>
 								{% if object.website %}
 								<a style="color: #e75626;
