@@ -166,6 +166,42 @@ class NestedOrganizationShortSerializer(DynamicFieldsSerializerMixin, serializer
         fields = ('id', 'name', 'type')
 
 
+class BaseMoreDataPanelsSerializer(serializers.Serializer):
+    look_up = 'more_data'
+    field_name = 'panels'
+
+    def save(self, **kwargs):
+        data = self.validated_data
+        for f, value in data.items():
+            data[f] = value
+        if not self.instance.more_data:
+            self.instance.more_data = {'panels': []}
+            self.instance.more_data['panels'] += [data]
+        elif self.instance.more_data.get('panels', None):
+            self.instance.more_data['panels'] += [data]
+        else:
+            self.instance.more_data['panels'] = [data]
+        self.instance.save()
+        return self.instance
+
+    def to_representation(self, instance):
+        more_data = getattr(instance, self.look_up) or {}
+        return more_data.get('panels', [])
+
+
+class OrganizationMoreDataPanelsSerializer(BaseMoreDataPanelsSerializer):
+    name = serializers.CharField(required=False, allow_null=True)
+    url = serializers.URLField(required=False, allow_null=True)
+
+    def to_internal_value(self, data):
+        res =super().to_internal_value(data)
+        import secrets
+        import string
+        alphabet = string.ascii_letters + string.digits
+        random_id = ''.join(secrets.choice(alphabet) for i in range(8))
+        res['id'] =  random_id
+        return res
+
 class BasePrefsSerializer(serializers.Serializer):
     file_path = ''
     prefs_field_name = 'prefs'
@@ -576,7 +612,7 @@ class EventSerializer(DynamicFieldsSerializerMixin, serializers.ModelSerializer)
     _organization = NestedOrganizationShortSerializer(read_only=True, source='organization')
     attachments = NestedEventAttachmentSerializer(read_only=True, many=True)
 
-    extra_fields = ['summary', 'more_data', 'attachments']
+    extra_fields = ['summary',  'attachments']
 
     def get_summary(self, obj):
         races_count = obj.races.count()

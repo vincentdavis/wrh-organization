@@ -13,6 +13,7 @@
         <v-tab>Basic Info</v-tab>
         <v-tab :disabled="!isEditMode">Attachments</v-tab>
         <v-tab :disabled="!isEditMode">UI Preferences</v-tab>
+        <v-tab :disabled="!isEditMode">Panels</v-tab>
         <v-tab-item class="pt-6">
           <v-card-text class="d-flex">
             <v-avatar rounded size="80" class="me-6 v-avatar-light-bg" color="grey">
@@ -225,6 +226,14 @@
             </v-card-actions>
           </v-form>
         </v-tab-item>
+        <v-tab-item class="pt-6"> 
+          <event-panels-tab v-if="record && record.id" :event="record" :organization="organization"></event-panels-tab>
+          <v-divider></v-divider>
+          <v-card-actions class="pt-5">
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" outlined @click="hide()">Close</v-btn>
+          </v-card-actions>
+        </v-tab-item>
       </v-tabs>
     </v-card>
   </v-dialog>
@@ -245,6 +254,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue2';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import GoogleMap from '@/components/GoogleMap.vue';
 import EventAttachmentsTab from "@/views/dashboard/organizationProfile/EventAttachmentsTab.vue";
+import EventPanelsTab from "@/views/dashboard/organizationProfile/EventPanelsTab.vue";
 import {EVENT_PUBLISH_TYPE_OPTIONS} from "@/Constants";
 
 export default {
@@ -258,6 +268,7 @@ export default {
     ckeditor: CKEditor.component,
     GoogleMap,
     EventAttachmentsTab,
+    EventPanelsTab
   },
   setup(props, context) {
     const isVisible = ref(false);

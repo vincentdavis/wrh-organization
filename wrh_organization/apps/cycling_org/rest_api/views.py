@@ -43,6 +43,8 @@ from apps.cycling_org.rest_api.serializers import MemberSerializer, Organization
 from wrh_organization.helpers.utils import account_activation_token, send_sms, IsAdminOrganizationOrReadOnlyPermission, account_password_reset_token, to_dict, IsMemberPermission, random_id, \
     APICodeException, check_turnstile_request
 
+from apps.cycling_org.rest_api.serializers import OrganizationMoreDataPanelsSerializer
+
 global_pref = global_preferences_registry.manager()
 
 
@@ -1322,6 +1324,27 @@ class OrganizationEventView(AttachmentViewMixin, viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         event = serializer.save()
         return Response(serializer.to_representation(event))
+
+    @action(detail=True, methods=['GET', 'PUT', 'PATCH'], serializer_class=OrganizationMoreDataPanelsSerializer)
+    def panel(self, request, *args, **kwargs):
+        event = self.get_object()
+        if request.method == 'GET':
+            return Response(self.get_serializer(instance=event).to_representation(event))
+
+        self._check_org_permission(event.organization, event=event, action='update')
+
+        serializer = self.get_serializer(instance=event, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        event = serializer.save()
+        return Response(serializer.to_representation(event))
+
+    @action(detail=True, methods=['DELETE'], url_path='panel/(?P<id>.+)')
+    def panel_delete(self, request, *args, **kwargs):
+        event = self.get_object()
+        update = [d for d in event.more_data.get('panels', []) if d.get('id') != kwargs.get('id')]
+        event.more_data['panels'] = update
+        event.save()
+        return Response("Deleted")
 
     @action(detail=True, methods=['GET', 'PUT', 'PATCH'], serializer_class=EventSharedOrgPermsSerializer)
     def shared_org_perms(self, request, *args, **kwargs):
