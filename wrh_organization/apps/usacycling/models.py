@@ -127,6 +127,7 @@ class USACRider(models.Model):
 
 
 class USACRiderLicense(models.Model):
+    """This is imported from the racer download"""
     license_number = models.IntegerField(db_index=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
