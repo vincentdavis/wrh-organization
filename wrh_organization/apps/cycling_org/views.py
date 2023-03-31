@@ -175,7 +175,7 @@ class ClubDetails(DetailView):
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
         context['USACrider'] = usacriders
         context['USACcount'] = usacriders.count()
-        print(context['USACcount'])
+        # print(context['USACcount'])
         return context
 
 
