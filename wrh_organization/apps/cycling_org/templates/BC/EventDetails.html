@@ -36,7 +36,11 @@
 
 						{% if object.more_data and object.more_data.panels %}
 							{% for panel in  object.more_data.panels%}
-						            <iframe src="{{panel.url}}" height="350" width="100%" ></iframe>
+                                {% if '<iframe' in panel.url %}
+						            {{panel.url}}
+                                {% elif %}
+                                    <iframe src="{{panel.url}}" height="350" width="100%" ></iframe>
+                                {% endif %}
 							{% endfor%}
 						{% endif %}
 

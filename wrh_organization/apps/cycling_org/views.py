@@ -6,6 +6,7 @@ from PIL import Image
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -14,20 +15,19 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
-from wrh_organization.helpers.utils import get_random_upload_path
-from django.http import HttpResponse
-from .forms import UploadValidateFile  
-from .models import Organization, Event, Member
-from ..usacycling.models import USACRiderLicense
+from dynamic_preferences.registries import global_preferences_registry
 
+from wrh_organization.helpers.utils import get_random_upload_path
+from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
+from .forms import UploadValidateFile
+from .models import Organization, Event, Member
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
-from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
-
-from dynamic_preferences.registries import global_preferences_registry
+from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
+
 
 @require_http_methods(["POST"])
 @login_required
@@ -45,13 +45,15 @@ def ckeditor_upload_file(request):
         file_name = fs.save(file_path, f)
         url = fs.url(file_name)
         return JsonResponse({"url": url})
+
+
 # @login_required
 @login_required
 def validate(request):
     if request.method == 'POST':
         form = UploadValidateFile(request.POST, request.FILES)
         if form.is_valid():
-            csv_file = request.FILES['validate_file'] # Form key
+            csv_file = request.FILES['validate_file']  # Form key
             decoded_file = csv_file.read().decode('utf-8').splitlines()
             reader = csv.DictReader(decoded_file)
             try:
@@ -74,7 +76,7 @@ def validate(request):
                 email = True
             else:
                 email = False
-            verified = csv.DictWriter(response, fieldnames=reader.fieldnames+added_fields)
+            verified = csv.DictWriter(response, fieldnames=reader.fieldnames + added_fields)
             verified.writeheader()
             for row in reader:
                 row['WRH_USAC_LICENSE_ON_RECORD'] = usac_license_on_record(row['License'])
@@ -102,6 +104,7 @@ class BCsignin(TemplateView):
     template_name = 'BC/BCsignin.html'
     pass
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class Events(TemplateView):
     template_name = 'BC/Events.html'
@@ -111,7 +114,7 @@ class Events(TemplateView):
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
         context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
-    
+
     def get_raceseries(self, Events):
         pass
 
@@ -129,6 +132,7 @@ class Events(TemplateView):
         context['Event'] = query_set.filter(query)
         return self.render_to_response(context)
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class EventDetails(DetailView):
     template_name = 'BC/EventDetails.html'
@@ -140,7 +144,6 @@ class EventDetails(DetailView):
         return context
 
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class Clubs(TemplateView):
     template_name = 'BC/Clubs.html'
@@ -148,6 +151,15 @@ class Clubs(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Org'] = Organization.objects.all()
+        # TODO: make this faster
+        context['USACclub'] = dict()
+        for u in USACRiderLicense.objects.all():
+            if u.data['club']:
+                if u.data['club'] in context['USACclub'].keys():
+                    context['USACclub'][u.data['club']] += 1
+                else:
+                    context['USACclub'][u.data['club']] = 1
+        print(context['USACclub'])
         return context
 
     def post(self, request, *args, **kwargs):
@@ -155,13 +167,15 @@ class Clubs(TemplateView):
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
 
+
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
-    model = Member # I dont really knwo what this does.
+    model = Member  # I dont really knwo what this does.
+
     def get_context_data(self, **kwargs):
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         if context['object'].usac_license_number and context['object'].usac_license_number_verified:
-            lic = context['object'].usac_license_number # Get and use it to query USACRider
+            lic = context['object'].usac_license_number  # Get and use it to query USACRider
             context['USACData'] = USACRiderLicense.objects.filter(license_number=lic)
         else:
             context['USACData'] = None
