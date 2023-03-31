@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.views.generic import RedirectView
 from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, Events, EventDetails, ProfileDetail, BCsignin
+from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, ProfileDetail, BCsignin
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 
 VERSION_PARAM = settings.REST_FRAMEWORK.get('VERSION_PARAM', 'version')
@@ -27,6 +27,7 @@ DEFAULT_VERSION = settings.REST_FRAMEWORK.get('DEFAULT_VERSION', 'v1')
 API_ENDPOINT = 'api/(?P<{}>v\d+)'.format(VERSION_PARAM)
 
 urlpatterns = [
+    path('accounts/', include('django.contrib.auth.urls')),
     re_path(r'^$', RedirectView.as_view(url=settings.VUE_STATIC_INDEX), name='index'),
     re_path(r'^{}/account/'.format(API_ENDPOINT), include('apps.wrh_account.urls', namespace='account_rest_api')),
     re_path(r'^{}/cycling_org/'.format(API_ENDPOINT),
@@ -47,7 +48,8 @@ urlpatterns = [
     path('events/', Events.as_view(), name='events-dv'),
     path('event/<int:pk>/', EventDetails.as_view(), name='events-details-dv'),
     path('clubs/', Clubs.as_view(), name='clubs-dv'),
-    path('clubs/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
+    path('club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
+    path('clubreport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
 ]
 
