@@ -5,7 +5,7 @@ from datetime import date
 from PIL import Image
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -20,7 +20,7 @@ from dynamic_preferences.registries import global_preferences_registry
 from wrh_organization.helpers.utils import get_random_upload_path
 from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
 from .forms import UploadValidateFile
-from .models import Organization, Event, Member
+from .models import Organization, OrganizationMember, Event, Member
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
@@ -152,14 +152,15 @@ class Clubs(TemplateView):
         context = super().get_context_data(**kwargs)
         context['Org'] = Organization.objects.all()
         # TODO: make this faster
-        context['USACclub'] = dict()
-        for u in USACRiderLicense.objects.all():
-            if u.data['club']:
-                if u.data['club'] in context['USACclub'].keys():
-                    context['USACclub'][u.data['club']] += 1
-                else:
-                    context['USACclub'][u.data['club']] = 1
-        print(context['USACclub'])
+        club_counts = USACRiderLicense.objects.values('data__club').annotate(count=Count('id'))
+        context['USACclub'] = {row['data__club']: row['count'] for row in club_counts if row['data__club']}
+        # context['USACclub'] = dict()
+        # for u in USACRiderLicense.objects.all():
+        #     if u.data['club']:
+        #         if u.data['club'] in context['USACclub'].keys():
+        #             context['USACclub'][u.data['club']] += 1
+        #         else:
+        #             context['USACclub'][u.data['club']] = 1
         return context
 
     def post(self, request, *args, **kwargs):
@@ -175,7 +176,19 @@ class ClubDetails(DetailView):
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
         context['USACrider'] = usacriders
         context['USACcount'] = usacriders.count()
-        # print(context['USACcount'])
+        return context
+    
+class ClubReport(DetailView):
+    template_name = 'BC/ClubReport.html'
+    model = Organization
+    def get_context_data(self, **kwargs):
+        context = super(ClubReport, self).get_context_data(**kwargs)
+        usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
+        context['USACrider'] = usacriders
+        context['USACcount'] = usacriders.count()
+        # TODO: this is not the right way to do this.
+        context['ClubAdminsId'] = OrganizationMember.objects.filter(
+            Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
         return context
 
 
