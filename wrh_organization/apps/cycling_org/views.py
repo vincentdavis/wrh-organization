@@ -166,6 +166,17 @@ class Clubs(TemplateView):
         context = self.get_context_data(**kwargs)
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
+    
+class ClubDetails(DetailView):
+    template_name = 'BC/ClubDetails.html'
+    model = Organization
+    def get_context_data(self, **kwargs):
+        context = super(ClubDetails, self).get_context_data(**kwargs)
+        usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
+        context['USACrider'] = usacriders
+        context['USACcount'] = usacriders.count()
+        print(context['USACcount'])
+        return context
 
 
 class ProfileDetail(DetailView):

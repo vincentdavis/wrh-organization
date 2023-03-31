@@ -49,7 +49,7 @@
                                                         <li><span>{{ org.type }}</span></li>
                                                     {% endif %}
                                                 </ul>
-                                                <h4><a href="/#/org-profile/{{ org.id }}">{{ org.name }}</a></h4>
+                                                <h4><a href="{% url 'club-details-dv' org.id %}">{{ org.name }}</a></h4>
                                                 {% if org.about %}
                                                     <p>{{ org.about }}</p>
                                                 {% endif %}
