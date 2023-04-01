@@ -206,7 +206,13 @@ class RaceResults(TemplateView):
         # .order_by(['race__event', 'place', 'finish_status'])
         # print(context['RaceResults'])
         return context
-
+    
+class RaceSeries(TemplateView):
+    template_name = 'BC/RaceSeries.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['RaceSeries'] = RaceSeries.objects.all().order_by('name')
+        return context
 
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
