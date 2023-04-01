@@ -28,6 +28,12 @@ from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
 
+def is_org_admin(org: Organization, user: Member) -> bool:
+    try:
+        return user.is_staff or org.organizationmember_set.filter(Q(member=user) & Q(is_admin=True)).exists()
+    except:
+        return None
+
 
 @require_http_methods(["POST"])
 @login_required
@@ -176,6 +182,7 @@ class ClubDetails(DetailView):
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
         context['USACrider'] = usacriders
         context['USACcount'] = usacriders.count()
+        context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
     
 class ClubReport(DetailView):

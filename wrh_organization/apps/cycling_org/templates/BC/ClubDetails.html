@@ -30,34 +30,49 @@
                     </div>
                     <div class="event-detail-right">
                         <h3>Club Details</h3>
+                        {% if ClubAdmin %}
                             <div class="detailright-inner">
-                                <h4>Membership</h4>
-                                {% if not user.username %}
-                                    <b style="background-color:#e85628; color:white"> &nbsp;Sign in to Join </b>
-                                {% elif user.member in org.members.all %}
-                                    <b style="background-color:#5fc7c6; color:white">
-                                        &nbsp;Joined </b>
-                                {% else %}
-                                    {{ org.members.all }}
-                                    <b style="background-color:#e85628; color:white"> Open soon </b>
-                                {% endif %}
-                                <br>
-                                <b>{{ object.members.all.count }} </b> Members
-                                <br>
-                                {% if USACcount %} <b>{{ USACcount }}</b> USAC Members {% else %} Not a USA cycling club {% endif %}
+                                <b><a href="{% url 'club-report-dv' object.id %}">Admin report</a></b>
                             </div>
+                        {% endif %}
+                        <div class="detailright-inner">
+                            <h4>Club Type</h4>
+                            <h5>{{ object.club_type }}</h5>
+                            <h5></h5>
+                        </div>
+                        <div class="detailright-inner">
+                            <h4>Membership</h4>
+                            <b>Status:&nbsp;</b>
+                            {% if not user.username %}
+                                <b style="background-color:#e85628; color:white"> &nbsp;Sign in to Join </b>
+                            {% elif ClubAdmin %}
+                                <b style="background-color:#5fc7c6; color:white">
+                                    &nbsp;Admin </b>
+                            {% elif user.member in org.members.all %}
+                                <b style="background-color:#5fc7c6; color:white">
+                                    &nbsp;Joined </b>
+                            {% else %}
+                                {{ org.members.all }}
+                                <b style="background-color:#e85628; color:white"> Open soon </b>
+                            {% endif %}
+                            <br>
+                            <b>{{ object.members.all.count }} </b> Members
+                            <br>
+                            {% if USACcount %} <b>{{ USACcount }}</b> USAC Members {% else %} Not a USA cycling
+                                club {% endif %}
+                        </div>
 
                         <div class="detailright-inner">
                             <h4>Links</h4>
                             <b> {% if object.website %}
-                                <a style = "text-decoration: underline;"
+                                <a style="text-decoration: underline;"
                                    href="{{ object.website }}" target="_blank"
                                    rel="noopener noreferrer">Website</a>
-                                {% endif %}
+                            {% endif %}
                             </b>
                             {% for k, v in object.social_media %}
                                 <a href="{{ v.type.string }}" target="_blank"
-                                       rel="noopener noreferrer">{{ v.type.meta.title }}</a>
+                                   rel="noopener noreferrer">{{ v.type.meta.title }}</a>
                             {% endfor %}
                         </div>
                         <div class="detailright-inner">

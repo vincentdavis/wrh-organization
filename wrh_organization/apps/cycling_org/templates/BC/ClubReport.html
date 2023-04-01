@@ -1,62 +1,62 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
     <section class="container">
-    <br>
-    <br>
-    <h2>{{ object.name }}</h2>
-    {% if user.member.id in ClubAdminsId %}
-        <h2> Club Members </h2>
-        {% if  not USACrider %}
-            <h4>Did not find any active USAC members with your club name</h4>
-        {% else %}
-            <h4>Active Member count at USAC: {{ USACcount }} </h4>
-        {% endif %}
-        <table>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Is Verified</th>
-            <th>USAC License Number</th>
-            <th>USAC License Number Verified</th>
-        </tr>
-        {%  for member in object.members.all %}
-            <tr>
-                <th>{{ member.first_name }}</th>
-                <th>{{ member.last_name }}</th>
-                <th>{{ member.is_verified }}</th>
-                <th>{{ member.usac_license_number }}</th>
-                <th>{{ member.usac_license_number_verified }}</th>
-            </tr>
-        {% endfor %}
-        </table>
-        <hr>
-        <h2> USAC members</h2>
-        <table>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Racing age</th>
-            <th>license_number</th>
-            <th>License Type</th>
-            <th>License Status</th>
-            <th>License Expiration</th>
-        </tr>
-        {% for rider in  USACrider %}
-            <tr>
-                <th>{{ rider.first_name }}</th>
-                <th>{{ rider.last_name }}</th>
-                <th>{{ rider.race_age }}</th>
-                <th>{{ rider.license_number }}</th>
-                <th>{{ rider.license_type }}</th>
-                <th>{{ rider.license_status }}</th>
-                <th>{{ rider.license_expiration }}</th>
-            </tr>
-        {% endfor %}
-        </table>
+        <br>
+        <br>
+        <h2>{{ object.name }}</h2>
+        {% if user.member.id in ClubAdminsId %}
+            <h2> Club Members </h2>
+            {% if  not USACrider %}
+                <h4>Did not find any active USAC members with your club name</h4>
+            {% else %}
+                <h4>Active Member count at USAC: {{ USACcount }} </h4>
+            {% endif %}
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Is Verified</th>
+                    <th>USAC License Number</th>
+                    <th>USAC License Number Verified</th>
+                </tr>
+                {% for member in object.members.all %}
+                    <tr>
+                        <th>{{ member.first_name }}</th>
+                        <th>{{ member.last_name }}</th>
+                        <th>{{ member.is_verified }}</th>
+                        <th>{{ member.usac_license_number }}</th>
+                        <th>{{ member.usac_license_number_verified }}</th>
+                    </tr>
+                {% endfor %}
+            </table>
+            <hr>
+            <h2> USAC members</h2>
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Racing age</th>
+                    <th>license_number</th>
+                    <th>License Type</th>
+                    <th>License Status</th>
+                    <th>License Expiration</th>
+                </tr>
+                {% for rider in  USACrider %}
+                    <tr>
+                        <th>{{ rider.first_name }}</th>
+                        <th>{{ rider.last_name }}</th>
+                        <th>{{ rider.race_age }}</th>
+                        <th>{{ rider.license_number }}</th>
+                        <th>{{ rider.license_type }}</th>
+                        <th>{{ rider.license_status }}</th>
+                        <th>{{ rider.license_expiration }}</th>
+                    </tr>
+                {% endfor %}
+            </table>
 
-    {% else %}
-        <h1>Access Denied</h1>
-        <p>You are not authorized to view this page. You must be a club admin</p>
-    {% endif %}
+        {% else %}
+            <h1>Access Denied</h1>
+            <p>You are not authorized to view this page. You must be a club admin</p>
+        {% endif %}
     </section>
 {% endblock %}
