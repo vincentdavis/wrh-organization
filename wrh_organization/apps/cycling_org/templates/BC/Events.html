@@ -39,11 +39,13 @@
                         {% if Event|length >= 1 %}
                             {% for event in Event %}
                                 <div class="colo-eventbox">
+                                <div class="eventspage-thumbnail">
                                     {% if event.logo %}
                                         <img
                                                 src="{{ event.logo.url }}"
                                                 alt="Event Logo" title="" class="img-responsive">
                                     {% endif %}
+                                </div>
                                     <h3><a href="{% url 'events-details-dv' event.id %}"
                                            class=" ">{{ event.name }}</a></h3>
                                     {% if event.is_usac_permitted %}
@@ -52,6 +54,10 @@
                                     {% endif %}
                                     <span class="date">{{ event.start_date }}</span>
                                     <h5> {% if event.city %} {{ event.city }}{% endif %} </h5>
+                                    <h5> {% if event.state %} {{ event.state }}{% endif %} </h5>
+                                    {% if event.description %}
+                                        <p>{{ event.description|truncatechars:100 }}</p>
+                                    {% endif %}
                                     {# <a href="{% url 'events-details-dv' event.id%}"#}
                                     {# class="viewevent-btn">View Event</a>#}
                                 </div>

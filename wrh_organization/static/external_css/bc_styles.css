@@ -11303,7 +11303,7 @@ img.nav-close {
 
 .events-page-outer .events-page-detail .eventspage-inner .eventspage-box .eventspage-thumbnail {
     position: relative;
-    border: 1px solid #c7d3d2;
+    /*border: 1px solid #c7d3d2;*/
     text-align: center;
     height: 170px;
     margin-bottom: 30px
@@ -12930,7 +12930,7 @@ div.gform_wrapper .gform_footer {
 
 .colo-events-outer .colo-eventsrow .colo-eventbox .eventspage-thumbnail {
     position: relative;
-    border: 1px solid #c7d3d2;
+    /*border: 1px solid #c7d3d2;*/
     text-align: center;
     height: 170px;
     margin-bottom: 30px
@@ -15476,7 +15476,7 @@ span.page-hero-caption {
 
 .map-featured-events .eventspage-box .eventspage-thumbnail {
     position: relative;
-    border: 1px solid #c7d3d2;
+    /*border: 1px solid #c7d3d2;*/
     text-align: center;
     height: 170px;
     margin-bottom: 30px

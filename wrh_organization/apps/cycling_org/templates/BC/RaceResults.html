@@ -1,0 +1,13 @@
+{% extends "BC/base_dv.html" %}
+{% block content %}
+    <section class="content">
+    <br>
+    <br>
+    <br>
+    {% for r in  RaceResults %}
+        {{ r.race.event }}
+        >>{{ r.race }}, {{ r }}
+        <br>
+    {% endfor %}
+    </section>
+{% endblock %}
