@@ -5,7 +5,15 @@
     <br>
     <br>
     {% for rs in RaceSeries %}
-    {{ rs }}
-    <br>
+        <h1>Events in {{ rs.name }}</h1>
+        {% for re in rs.events.all %}
+            event name: {{ re.name }}
+            <br>
+        {% endfor %}
+        {% for ra in rs.races.all %}
+            race name: {{ ra.name }}
+            <br>
+        {% endfor %}
+    {% endfor %}
     </section>
 {% endblock %}
