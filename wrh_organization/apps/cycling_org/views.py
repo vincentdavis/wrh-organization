@@ -200,7 +200,8 @@ class RaceResults(TemplateView):
     template_name = 'BC/RaceResults.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['RaceResults'] = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])
+        # TODO: add pagination.
+        context['RaceResults'] = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])[:100]
         # .order_by(['race__event', 'place', 'finish_status'])
         # print(context['RaceResults'])
         return context
