@@ -118,6 +118,7 @@ class Events(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
+        context['Featured'] = Event.objects.all().order_by('start_date').filter(Q(featured_event=True) & Q(end_date__gte=date.today()))
         context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
 
