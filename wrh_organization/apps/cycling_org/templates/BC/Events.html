@@ -1,5 +1,6 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
+{% load static %}
     <section class="content">
         <!-- search form -->
         <div class="listing-searchmember colo-search">
@@ -7,9 +8,12 @@
                 <form action="#" method="post" class="searchmember-form event-filter">
                     <input class="gfield-choice-input" name="filter" type="radio"
                            value="usac_event" id="choice_1">
-                    <label for="choice_1">USAC Event</label>
+                    <img style="max-width:17px" src="{% static 'images/USACycling_Logo_noborder.svg' %}" alt="My image"/>
+                    <label for="choice_1">
+                        USAC Event</label>
                     <input class="gfield-choice-input" name="filter" type="radio"
                            value="featured" id="choice_2">
+                    <img style="max-width:20px" src="{% static 'images/bc-icon.png' %}" alt="My image"/>
                     <label for="choice_2" id="label_13_8_1">Featured</label>
                     <select name="event-type" id="filter-events-full-cal">
                         <option value="all">All Events</option>
