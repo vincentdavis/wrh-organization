@@ -41,17 +41,16 @@
                 <div class="coloevents-inner">
                     <div class="colo-eventsrow">
                         {% if Event|length >= 1 %}
-                            {# 1 row (4) Featured events first #}
-                            {% for event in Features|slice:"4" %}
+                            {% for event in Featured|slice:"4" %}
                                 <div class="colo-eventbox">
-                                <div class="eventspage-thumbnail">
-                                    {% if event.logo and event.featured_event %}
+                                    <div class="eventspage-thumbnail">
+                                        {% if event.logo and event.featured_event %}
 
-                                            <img
-                                                    src="{{ event.logo.url }}"
-                                                    alt="Event Logo" title="" class="img-responsive">
-                                    {% endif %}
-                                </div>
+                                                <img
+                                                        src="{{ event.logo.url }}"
+                                                        alt="Event Logo" title="" class="img-responsive">
+                                        {% endif %}
+                                    </div>
                                     <h3><a href="{% url 'events-details-dv' event.id %}"
                                            class=" ">{{ event.name }}</a></h3>
                                     {% if event.is_usac_permitted %}
@@ -68,7 +67,9 @@
                                     {# class="viewevent-btn">View Event</a>#}
                                 </div>
                             {% endfor %}
+                        </div>
                             <hr>
+                        <div class="colo-eventsrow">
                             {% for event in Event %}
                                 <div class="colo-eventbox">
                                 <div class="eventspage-thumbnail">
