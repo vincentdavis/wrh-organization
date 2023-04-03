@@ -26,9 +26,9 @@ from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
 
-def is_org_admin(org: Organization, user: Member) -> bool:
+def is_org_admin(org: Organization, user) -> bool:
     try:
-        return user.is_staff or org.organizationmember_set.filter(Q(member=user) & Q(is_admin=True)).exists()
+        return user.is_staff or org.organizationmember_set.filter(Q(member=user.member) & Q(is_admin=True)).exists()
     except:
         return None
 
@@ -186,13 +186,19 @@ class ClubReport(DetailView):
     model = Organization
     def get_context_data(self, **kwargs):
         context = super(ClubReport, self).get_context_data(**kwargs)
-        usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
-        context['USACrider'] = usacriders
-        context['USACcount'] = usacriders.count()
-        # TODO: this is not the right way to do this.
-        context['ClubAdminsId'] = OrganizationMember.objects.filter(
-            Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
-        return context
+        if is_org_admin(context['object'], self.request.user):
+            usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
+            context['USACrider'] = usacriders
+            context['USACcount'] = usacriders.count()
+            # TODO: this is not the right way to do this.
+            context['ClubAdminsId'] = OrganizationMember.objects.filter(
+                Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
+            return context
+        else:
+            context['USACrider'] = None
+            context['USACcount'] = None
+            context['ClubAdminsId'] = None
+            return None
 
 class RaceResults(TemplateView):
     template_name = 'BC/RaceResults.html'
