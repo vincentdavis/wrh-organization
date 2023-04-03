@@ -1,5 +1,6 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
+{% load static %}
 
 <!-- content -->
 <section class="content">
@@ -52,8 +53,15 @@
 				</div>
 				<div class="event-detail-right">
 					<h3>Event Details</h3>
-
 					<div class="detailright-inner">
+						<div class="margin-bottom:4px" >
+						{% if event.is_usac_permitted %}
+							<img style="max-width:30px" title="USAC Event" src="{% static 'images/USACycling_Logo_noborder.svg' %}" alt="My image"/>
+						{% endif %}
+						{% if event.featured_event %}
+							<img width="30" height="30" title="Featured Event"  src="{% static 'images/bc-icon.png' %}" alt="My image"/>
+						{% endif %}
+						</div>
 						<h4>When: </h4>
 
 						<h5>{{ object.start_date }} - {{ object.end_date }}</h5>
