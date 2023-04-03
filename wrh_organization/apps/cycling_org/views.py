@@ -16,9 +16,8 @@ from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
-
+from django.conf import settings
 from wrh_organization.helpers.utils import get_random_upload_path
-from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
 from .forms import UploadValidateFile
 from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
@@ -144,7 +143,7 @@ class EventDetails(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['GOOGLE_MAP_API_TOKEN'] = GOOGLE_MAP_API_TOKEN
+        context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
         return context
 
 
