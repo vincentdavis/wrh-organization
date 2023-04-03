@@ -16,7 +16,6 @@ from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
-from django.conf import settings
 from wrh_organization.helpers.utils import get_random_upload_path
 from .forms import UploadValidateFile
 from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
