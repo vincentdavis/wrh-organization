@@ -17,7 +17,8 @@ from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
 from wrh_organization.helpers.utils import get_random_upload_path
-from .forms import UploadValidateFile
+from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
+from .forms import UploadValidateFile, EventPublicSubmitForm
 from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
@@ -144,6 +145,14 @@ class EventDetails(DetailView):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
         return context
+    
+class EventPublicSubmit(TemplateView):
+    template_name = 'BCforms/EventPublicSubmitForm.html'
+    x = EventPublicSubmitForm
+    pass
+    # if request.method == 'POST':
+    #     form = EventPublicSubmitForm(request.POST)
+    #     if form.is_valid():
 
 
 @method_decorator(csrf_exempt, name='dispatch')
