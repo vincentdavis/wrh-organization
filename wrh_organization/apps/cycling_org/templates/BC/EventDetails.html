@@ -44,21 +44,6 @@
 							{% endfor%}
 						{% endif %}
 
-						<p style="text-align: center;"><strong>
-								{% if object.website %}
-								<a style="color: #e75626;
-									text-decoration: underline;"
-									href="{{object.website}}" target="_blank"
-									rel="noopener noreferrer">Learn more !</a>
-								{% endif %}
-								{% if object.registration_website %}
-								<a style="color: #e75626;
-									margin-left:3px;
-									text-decoration: underline;"
-									href="{{object.registration_website}}" target="_blank"
-									rel="noopener noreferrer">Register !</a>
-								{% endif %}
-							</strong></p>
 
 
 
@@ -77,7 +62,14 @@
 						</a>
 
 					</div>
-
+					{% if object.website %}
+								<a href="{{object.website}}" style="margin-bottom:10px;" class="moreinfo-btn" target="_blank"
+								>Event Website</a>
+					{% endif %}
+					{% if object.registration_website %}
+								<a href="{{object.registration_website}}"  style="margin-bottom:10px;" class="moreinfo-btn" target="_blank"
+									>Registration</a>
+					{% endif %}
 					<div class="detailright-inner">
 						<h4>Location</h4>
 						<h5><span>
