@@ -1,4 +1,5 @@
-<template>
+
+\<template>
   <layout-content-vertical-nav v-if="$vuetify.breakpoint.mdAndDown" :nav-menu-items="menuItems">
     <slot></slot>
 
@@ -12,8 +13,9 @@
           <v-icon class="me-3" v-if="menuItems && menuItems.length" @click="toggleVerticalNavMenuActive">
             {{ icons.mdiMenu }}
           </v-icon>
-          <router-link
-            :to="{name: $rns.PUBLIC_HOME}"
+<!--          <router-link-->
+<!--            :to="{name: $rns.PUBLIC_HOME}"-->
+            <a :href="`/events/`"
             class="d-flex align-center text-decoration-none"
           >
             <v-img
@@ -27,7 +29,8 @@
             <h2 class="app-title text--primary">
               {{ shortAppName }}
             </h2>
-          </router-link>
+          </a>
+<!--          </router-link>-->
 
         </div>
 
@@ -80,21 +83,21 @@
 
         <!-- Right Content: I18n, Light/Dark, Notification & User Dropdown -->
         <div class="d-flex align-center">
-          <app-bar-switch-org v-if="$store.getters.isAuthenticated"></app-bar-switch-org>
+<!--          <app-bar-switch-org v-if="$store.getters.isAuthenticated"></app-bar-switch-org>-->
           <v-btn small v-if="!$store.getters.isAuthenticated" rounded class="mr-4" color="primary" :to="{name: $rns.AUTH, query: {next: $route.fullPath}}">
             Sign In
           </v-btn>
-          <app-bar-theme-switcher></app-bar-theme-switcher>
-          <theme-color-selection/>
+<!--          <app-bar-theme-switcher></app-bar-theme-switcher>-->
+<!--          <theme-color-selection/>-->
           <app-bar-user-menu v-if="$store.getters.isAuthenticated" class="ms-2"></app-bar-user-menu>
         </div>
       </div>
-      <v-overlay
-        :value="$store.state.app.shallContentShowOverlay"
-        z-index="5"
-        absolute
-        class="system-bar-overlay"
-      ></v-overlay>
+<!--      <v-overlay-->
+<!--        :value="$store.state.app.shallContentShowOverlay"-->
+<!--        z-index="5"-->
+<!--        absolute-->
+<!--        class="system-bar-overlay"-->
+<!--      ></v-overlay>-->
     </template>
 
     <!-- Slot: footer -->
