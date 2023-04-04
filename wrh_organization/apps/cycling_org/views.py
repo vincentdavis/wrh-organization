@@ -16,11 +16,9 @@ from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
-
 from wrh_organization.helpers.utils import get_random_upload_path
-from wrh_organization.settings.base import GOOGLE_MAP_API_TOKEN
 from .forms import UploadValidateFile
-from .models import Organization, Event, Member, OrganizationMember
+from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
@@ -28,7 +26,7 @@ from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
 
-def is_org_admin(org: Organization, user: Member) -> bool:
+def is_org_admin(org: Organization, user) -> bool:
     try:
         return user.is_staff or org.organizationmember_set.filter(Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
     except:
@@ -118,11 +116,9 @@ class Events(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
+        context['Featured'] = Event.objects.all().order_by('start_date').filter(Q(featured_event=True) & Q(end_date__gte=date.today()))
         context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
-
-    def get_raceseries(self, Events):
-        pass
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -146,7 +142,7 @@ class EventDetails(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['GOOGLE_MAP_API_TOKEN'] = GOOGLE_MAP_API_TOKEN
+        context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
         return context
 
 
@@ -190,10 +186,8 @@ class ClubReport(DetailView):
     model = Organization
     def get_context_data(self, **kwargs):
         context = super(ClubReport, self).get_context_data(**kwargs)
-        
         member_usac = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list('usac_license_number', flat=True)
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
-        
         matching = set(member_usac).intersection(set(usacriders.values_list('license_number', flat=True)))
         context['member_no_match'] = member_usac.exclude(usac_license_number__in=matching)
         context['usac_no_match'] = usacriders.exclude(license_number__in=matching)
@@ -208,12 +202,28 @@ class ClubReport(DetailView):
         #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
         context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
-
+      
+      
+class RaceResults(TemplateView):
+    template_name = 'BC/RaceResults.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # TODO: add pagination.
+        context['RaceResults'] = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])[:100]
+        # .order_by(['race__event', 'place', 'finish_status'])
+        # print(context['RaceResults'])
+        return context
+    
+class RaceSeriesList(TemplateView):
+    template_name = 'BC/RaceSeries.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['RaceSeries'] = RaceSeries.objects.all().order_by('name')
+        return context
 
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
-    model = Member  # I dont really knwo what this does.
-
+    model = Member
     def get_context_data(self, **kwargs):
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         if context['object'].usac_license_number and context['object'].usac_license_number_verified:

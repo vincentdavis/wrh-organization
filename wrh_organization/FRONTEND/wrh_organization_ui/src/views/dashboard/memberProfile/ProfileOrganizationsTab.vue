@@ -114,7 +114,8 @@
             </v-avatar>
 
             <div class="d-flex flex-column ms-3">
-              <a is="router-link" :to="{name: $rns.PUBLIC_ORG_PROFILE, params:{record_id: item.id}}"
+<!--              <a is="router-link" :to="{name: $rns.PUBLIC_ORG_PROFILE, params:{record_id: item.id}}"-->
+                <a :href="`/club/${item.id}/`"
                  class="d-block text--success  font-weight-semibold text-truncate text-decoration-none">{{ item.name }}
               </a>
             </div>

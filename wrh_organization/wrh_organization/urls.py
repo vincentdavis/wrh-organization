@@ -14,13 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.urls import include, re_path, path
 from django.contrib import admin
+from django.urls import include, re_path, path
 from django.views.generic import RedirectView
 from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, ProfileDetail, BCsignin
+
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
+from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
+    RaceResults, RaceSeriesList, ProfileDetail, BCsignin
 
 VERSION_PARAM = settings.REST_FRAMEWORK.get('VERSION_PARAM', 'version')
 DEFAULT_VERSION = settings.REST_FRAMEWORK.get('DEFAULT_VERSION', 'v1')
@@ -50,6 +52,8 @@ urlpatterns = [
     path('clubs/', Clubs.as_view(), name='clubs-dv'),
     path('club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
     path('ClubReport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
+    path('raceresults/', RaceResults.as_view(), name='raceresults-dv'),
+    path('raceseries/', RaceSeriesList.as_view(), name='raceseries-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
 ]
 
