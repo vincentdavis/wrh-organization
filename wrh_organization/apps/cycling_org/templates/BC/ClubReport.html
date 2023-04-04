@@ -11,13 +11,13 @@
             {% else %}
                 <h4>Active Member count at USAC: {{ USACcount }} </h4>
             {% endif %}
-            <table>
-                <tr>
+            <table style="width: 90% ">
+                <tr style="text-align: center">
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Is Verified</th>
-                    <th>USAC License Number</th>
-                    <th>USAC License Number Verified</th>
+                    <th>USAC #</th>
+                    <th>USAC Verified</th>
                 </tr>
                 {% for member in object.members.all %}
                     <tr>
@@ -31,8 +31,8 @@
             </table>
             <hr>
             <h2> USAC members</h2>
-            <table>
-                <tr>
+            <table style="width: 90% ">
+                <tr style="text-align: center">
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Racing age</th>
