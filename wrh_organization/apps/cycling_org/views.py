@@ -3,7 +3,6 @@ import traceback
 from datetime import date
 
 from PIL import Image
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 from django.http import HttpResponse
