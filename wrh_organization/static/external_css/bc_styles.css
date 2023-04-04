@@ -15876,6 +15876,7 @@ input::placeholder {
 	width: 170px;
 	margin-left: auto;
 	margin-right: auto;
+    boarder: 0px solid #c7d3d2;
 }
 
 /*# sourceMappingURL=styles.css.map */
