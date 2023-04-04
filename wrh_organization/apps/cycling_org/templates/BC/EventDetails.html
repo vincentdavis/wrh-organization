@@ -17,11 +17,6 @@
 						alt="Event Banner" title="" class="img-responsive">
 					{% endif %}
 					<div class="eventdetail-inner">
-						{% if object.is_usac_permitted %}
-						<img src="../static/images/USACycling_Logo_noborder.svg" alt="USACycling"
-							width="25"
-							height="25">
-						{% endif %}
 						<h2>{{ object.name }}</h2>
 						{% if object.description%}
 						<p>
@@ -36,12 +31,11 @@
 						{% endif %}
 
 						{% if object.more_data and object.more_data.panels %}
-							{% for panel in  object.more_data.panels%}
-{#                                {% if "iframe" in panel.url %}#}
-{#						            {{panel.url}}#}
-{#                                {% elif %}#}
-                                    <iframe src="{{panel.url}}" height="350" width="100%" ></iframe>
-{#                                {% endif %}#}
+							{% for panel in  object.more_data.panels %}
+                             	{% if "iframe" in panel.url %}
+									{{panel.url |safe}}
+                              	{% else %}
+                                    <iframe src="{{panel.url}}" height="350" width="100%" ></iframe> 						{% endif %}
 							{% endfor%}
 						{% endif %}
 
@@ -52,7 +46,7 @@
                 <a href="{% url 'events-dv'%}" class="events-link">Back To Events</a>
 				</div>
 				<div class="event-detail-right">
-					<h3>Event Details</h3>
+					<h3 style="margin-bottom:2px;padding-bottom:5px">Event Details</h3>
 					<div class="detailright-inner">
 						<div class="margin-bottom:4px" >
 						{% if event.is_usac_permitted %}

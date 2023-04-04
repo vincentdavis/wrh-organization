@@ -15879,3 +15879,24 @@ input::placeholder {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+.submit_for_event {
+    font-family: DINPro;
+    box-sizing: border-box;
+    text-decoration: none;
+    margin-left: 100px;
+    margin-top: 5px;
+    float: right!important;
+    background-color: #c7d3d2;
+    color: #535858;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 3px;
+    display: inline-block;
+    text-transform: uppercase;
+    border: 0;
+    transition: all .3s;
+    padding: 0 22px;
+    text-align: center;
+    line-height: 42px;"
+}

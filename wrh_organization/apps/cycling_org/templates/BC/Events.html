@@ -3,38 +3,42 @@
 {% load static %}
     <section class="content">
         <!-- search form -->
-        <div class="listing-searchmember colo-search">
-            <div class="searchmember-formouter">
-                <form action="#" method="post" class="searchmember-form event-filter">
-                    <input class="gfield-choice-input" name="filter" type="radio"
-                           value="usac_event" id="choice_1">
+<!-- search form -->
+	<div class="listing-searchmember colo-search">
+		<div class="searchmember-formouter">
+			<form action="#" method="post" class="searchmember-form event-filter">
+				<h2>FILTER: </h2>
+
+
+				<input class="gfield-choice-input" name="filter" type="radio"
+					value="usac_event" id="choice_1">
+
+				<label for="choice_1"  style="white-space: nowrap;padding-right:10px">
                     <img style="max-width:17px" src="{% static 'images/USACycling_Logo_noborder.svg' %}" alt="My image"/>
-                    <label for="choice_1">
-                        USAC Event</label>
-                    <input class="gfield-choice-input" name="filter" type="radio"
-                           value="featured" id="choice_2">
-                    <img style="max-width:20px" src="{% static 'images/bc-icon.png' %}" alt="My image"/>
-                    <label for="choice_2" id="label_13_8_1">Featured</label>
-                    <select name="event-type" id="filter-events-full-cal">
-                        <option value="all">All Events</option>
-                        {% for i in EventTypes %}
-                            <option value="{{ i }}">{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="submit" class="filter-submit" value="filter">
-                </form>
-                <a style="background-color: #cbdb6d; /* Green */
-                  border: none;
-                  color: white;
-                  padding: 10px 32px;
-                  text-align: center;
-                  display: inline-block;
-                  font-size: 16px;
-                  margin: 4px 20px;
-                  cursor: pointer;" target="_blank" href="https://www.bicyclecolorado.org/events-2/submit-an-event/">Submit an Event</a>
-                <div class="clearfix"></div>
-            </div>
-        </div>
+                    USAC Event</label>
+				<input class="gfield-choice-input" name="filter" type="radio"
+					value="featured" id="choice_2">
+
+				<label for="choice_2" id="label_13_8_1">
+                    <img style="max-width:20px" src="{% static 'images/bc-icon.png' %}" alt="My image"/>Featured</label>
+
+
+
+				<select name="event-type" id="filter-events-full-cal">
+					<option value="all">All Events</option>
+					{% for i in EventTypes%}
+					<option value="{{i}}">{{i}}</option>
+					{% endfor %}
+				</select>
+				<input type="submit" class="filter-submit" value="filter">
+
+                <a  href="https://www.bicyclecolorado.org/events-2/submit-an-event/" class="submit_for_event">Submit an Event</a>
+
+			</form>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+
 
         <div class="colo-events-outer">
             <div class="container">
