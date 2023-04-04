@@ -28,7 +28,7 @@ global_pref = global_preferences_registry.manager()
 
 def is_org_admin(org: Organization, user) -> bool:
     try:
-        return user.is_staff or org.organizationmember_set.filter(Q(member=user.member) & Q(is_admin=True)).exists()
+        return user.is_staff or org.organizationmember_set.filter(Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
     except:
         return None
 
@@ -186,20 +186,24 @@ class ClubReport(DetailView):
     model = Organization
     def get_context_data(self, **kwargs):
         context = super(ClubReport, self).get_context_data(**kwargs)
-        if is_org_admin(context['object'], self.request.user):
-            usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
-            context['USACrider'] = usacriders
-            context['USACcount'] = usacriders.count()
-            # TODO: this is not the right way to do this.
-            context['ClubAdminsId'] = OrganizationMember.objects.filter(
-                Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
-            return context
-        else:
-            context['USACrider'] = None
-            context['USACcount'] = None
-            context['ClubAdminsId'] = None
-            return None
-
+        member_usac = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list('usac_license_number', flat=True)
+        usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
+        matching = set(member_usac).intersection(set(usacriders.values_list('license_number', flat=True)))
+        context['member_no_match'] = member_usac.exclude(usac_license_number__in=matching)
+        context['usac_no_match'] = usacriders.exclude(license_number__in=matching)
+        context['member_no_license'] = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=False) | Q(usac_license_number__isnull=True))
+        context['member_not_verified'] = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=False) & Q(usac_license_number__isnull=False))
+        context['USACrider'] = usacriders
+        context['USACcount'] = usacriders.count()
+        context['ClubAdmins'] = OrganizationMember.objects.all().filter(Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
+        print(context['ClubAdmins'])
+        # TODO: this is not the right way to do this.
+        # context['ClubAdminsId'] = OrganizationMember.objects.filter(
+        #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
+        context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
+        return context
+      
+      
 class RaceResults(TemplateView):
     template_name = 'BC/RaceResults.html'
     def get_context_data(self, **kwargs):
