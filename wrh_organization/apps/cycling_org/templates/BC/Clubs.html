@@ -54,26 +54,27 @@
                                                     {% if org.about %}
                                                         <p>{{ org.about }}</p>
                                                     {% endif %}
-                                                    <ul class="catagory-list">
-                                                        {% if org.website %}
-                                                            <li><a href="{{ org.website }}">Website</a>
-                                                            </li>
-                                                        {% endif %}
-                                                    </ul>
+{#                                                    <ul class="catagory-list">#}
+{#                                                        {% if org.website %}#}
+{#                                                            <li><a href="{{ org.website }}">Website</a>#}
+{#                                                            </li>#}
+{#                                                        {% endif %}#}
+{#                                                    </ul>#}
                                                 </div>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="col-sm-12 col-md-5 blogdetail-right" style="margin-top:
-                                    90px;">
+                                    20px;">
                                                 <b>{{ org.members.all.count }} </b> Members
+                                            <br>
                                                 {% if not user.username %}
                                                     <b style="background-color:#e85628; color:white"> &nbsp;Sign in to Join&nbsp; </b>
                                                 {% elif user.member in org.members.all %}
                                                     <b style="background-color:#5fc7c6; color:white">
-                                                        &nbsp;Joined&nbsp; </b>
+                                                        &nbsp;You are a Member&nbsp; </b>
                                                 {% else %}
                                                     {{ org.members.all }}
-                                                    <b style="background-color:#e85628; color:white"> &nbsp;Open
+                                                    <b style="background-color:#e85628; color:white"> &nbsp;Opening
                                                         soon&nbsp; </b>
                                                 {% endif %}
                                             </div>

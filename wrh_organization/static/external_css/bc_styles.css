@@ -9428,8 +9428,8 @@ img.nav-close {
 
 .blog-detail .blogdetail-row {
     border-bottom: 1px solid #c7d3d2;
-    padding-bottom: 88px;
-    margin-bottom: 72px
+    padding-bottom: 20px;
+    margin-bottom: 20px
 }
 
 @media (max-width: 991px) {
@@ -9453,7 +9453,7 @@ img.nav-close {
 
 @media (max-width: 359px) {
     .blog-detail .blogdetail-row {
-        padding-bottom: 50px
+        padding-bottom: 20px
     }
 }
 
