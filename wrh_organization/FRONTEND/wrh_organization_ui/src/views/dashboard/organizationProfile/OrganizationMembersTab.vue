@@ -122,7 +122,8 @@
         </template>
 
         <template #item.name="{item}">
-          <a is="router-link" :to="{name: $rns.PUBLIC_RIDER_PROFILE, params:{record_id: item.member}}"
+<!--          <a is="router-link" :to="{name: $rns.PUBLIC_RIDER_PROFILE, params:{record_id: item.member}}"-->
+            <a :href="`/ProfileDetail/${item.member}/`"
              class="d-flex align-center title-link">
             <v-avatar color="success" class="v-avatar-light-bg success--text" size="30">
               <v-img v-if="item._member._user.avatar" :src="item._member._user.avatar"></v-img>
