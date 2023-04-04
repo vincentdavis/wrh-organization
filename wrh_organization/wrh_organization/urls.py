@@ -49,7 +49,7 @@ urlpatterns = [
     path('event/<int:pk>/', EventDetails.as_view(), name='events-details-dv'),
     path('clubs/', Clubs.as_view(), name='clubs-dv'),
     path('club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
-    path('clubreport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
+    path('ClubReport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
 ]
 
