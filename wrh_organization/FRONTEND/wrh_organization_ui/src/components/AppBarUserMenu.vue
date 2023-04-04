@@ -86,42 +86,42 @@
       </v-list-item>
 
       <!-- Email -->
-      <v-list-item href="#" disabled>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiEmailOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Notifications</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+<!--      <v-list-item href="#" disabled>-->
+<!--        <v-list-item-icon class="me-2">-->
+<!--          <v-icon size="22">-->
+<!--            {{ icons.mdiEmailOutline }}-->
+<!--          </v-icon>-->
+<!--        </v-list-item-icon>-->
+<!--        <v-list-item-content>-->
+<!--          <v-list-item-title>Notifications</v-list-item-title>-->
+<!--        </v-list-item-content>-->
+<!--      </v-list-item>-->
 
       <v-divider class="my-2"></v-divider>
 
       <!-- Pricing -->
-      <v-list-item href="#" disabled>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiCurrencyUsd }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Pricing</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+<!--      <v-list-item href="#" disabled>-->
+<!--        <v-list-item-icon class="me-2">-->
+<!--          <v-icon size="22">-->
+<!--            {{ icons.mdiCurrencyUsd }}-->
+<!--          </v-icon>-->
+<!--        </v-list-item-icon>-->
+<!--        <v-list-item-content>-->
+<!--          <v-list-item-title>Pricing</v-list-item-title>-->
+<!--        </v-list-item-content>-->
+<!--      </v-list-item>-->
 
       <!-- FAQ -->
-      <v-list-item href="#" disabled>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiHelpCircleOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>FAQ</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+<!--      <v-list-item href="#" disabled>-->
+<!--        <v-list-item-icon class="me-2">-->
+<!--          <v-icon size="22">-->
+<!--            {{ icons.mdiHelpCircleOutline }}-->
+<!--          </v-icon>-->
+<!--        </v-list-item-icon>-->
+<!--        <v-list-item-content>-->
+<!--          <v-list-item-title>FAQ</v-list-item-title>-->
+<!--        </v-list-item-content>-->
+<!--      </v-list-item>-->
 
       <v-divider class="my-2"></v-divider>
 

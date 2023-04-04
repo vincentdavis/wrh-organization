@@ -63,8 +63,9 @@
       >
         <!-- Left Content: Search -->
         <div class="d-flex align-center">
-          <router-link
-            :to="{name: $rns.PUBLIC_HOME}"
+<!--          <router-link-->
+<!--            :to="{name: $rns.PUBLIC_HOME}"-->
+            <a :href="`/events/`"
             class="d-flex align-center text-decoration-none"
           >
             <v-img
@@ -78,7 +79,8 @@
             <h2 class="app-title text--primary">
               {{ appName }}
             </h2>
-          </router-link>
+            </a>
+<!--          </router-link>-->
         </div>
 
         <!-- Right Content: I18n, Light/Dark, Notification & User Dropdown -->
@@ -140,30 +142,30 @@ import {useRouter} from "@core/utils";
 
 export default {
   components: {
-    AppBarSwitchOrg,
+    // AppBarSwitchOrg,
     AppFooter,
     LayoutContentHorizontalNav,
     LayoutContentVerticalNav,
 
     // App Bar Components
     AppBarSearch,
-    AppBarThemeSwitcher,
+    // AppBarThemeSwitcher,
     AppBarUserMenu,
-    ThemeColorSelection
+    // ThemeColorSelection
   },
   setup() {
     const { route } = useRouter();
     const navMenuItems = ref([
-      {
-        title: 'Race Results',
-        icon: mdiFlagCheckered,
-        to: routeNames.PUBLIC_RACE_RESULTS,
-      },
-      {
-        title: 'Events',
-        icon: mdiCalendarMonth,
-        to: routeNames.PUBLIC_EVENTS,
-      },
+      // {
+      //   title: 'Race Results',
+      //   icon: mdiFlagCheckered,
+      //   to: routeNames.PUBLIC_RACE_RESULTS,
+      // },
+      // {
+      //   title: 'Events',
+      //   icon: mdiCalendarMonth,
+      //   to: routeNames.PUBLIC_EVENTS,
+      // },
       // {
       //   title: 'USAC',
       //   icon: mdiWeb,
