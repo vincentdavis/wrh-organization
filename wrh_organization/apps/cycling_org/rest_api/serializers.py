@@ -191,7 +191,7 @@ class BaseMoreDataPanelsSerializer(serializers.Serializer):
 
 class OrganizationMoreDataPanelsSerializer(BaseMoreDataPanelsSerializer):
     name = serializers.CharField(required=False, allow_null=True)
-    url = serializers.URLField(required=False, allow_null=True)
+    url = serializers.CharField(required=False, allow_null=True)
 
     def to_internal_value(self, data):
         res =super().to_internal_value(data)
