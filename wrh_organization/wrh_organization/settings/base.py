@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'dynamic_preferences',
     'huey.contrib.djhuey',
+    'crispy_forms',
+    'crispy_bootstrap5',
     # project apps
     'apps.wrh_account',
     'apps.cycling_org',
@@ -72,6 +74,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'wrh_organization.urls'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 TEMPLATES = [
     {
