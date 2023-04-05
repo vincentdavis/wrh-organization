@@ -1,14 +1,16 @@
 from django import forms
 from django.forms import ModelForm
 from .models import Event
+
 class UploadValidateFile(forms.Form):
     validate_file = forms.FileField()
     
-class EventPublicSubmitForm(ModelForm):
+class EventEditForm(ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'description', 'start_date', 'end_date', 'organizer_email', 'country', 'city', 'state', 
-                  'website', 'registration_website', 'logo', 'tags', 'more_data', 'organization', 'create_by', 'permit_no', 'is_usac_permitted']
+        fields = ['name', 'description']
+        # fields = ['name', 'description', 'start_date', 'end_date', 'organizer_email', 'country', 'city', 'state', 
+        #           'website', 'registration_website', 'logo', 'tags', 'more_data', 'organization', 'create_by', 'permit_no', 'is_usac_permitted']
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -39,10 +41,8 @@ class EventPublicSubmitForm(ModelForm):
             'city': 'Enter the nearest city of the start.',
             'state': 'Enter the state of the start.',
             'country': 'Enter the country of the start.',
-            
-            
-            
         }
+        
         error_messages = {
             'name': {
                 'max_length': 'This event name is too long.',

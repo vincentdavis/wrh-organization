@@ -22,7 +22,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
-    RaceResults, RaceSeriesList, ProfileDetail, BCsignin, EventPublicSubmit
+    RaceResults, RaceSeriesList, ProfileDetail, BCsignin, event_edit
 
 VERSION_PARAM = settings.REST_FRAMEWORK.get('VERSION_PARAM', 'version')
 DEFAULT_VERSION = settings.REST_FRAMEWORK.get('DEFAULT_VERSION', 'v1')
@@ -55,7 +55,9 @@ urlpatterns = [
     path('raceresults/', RaceResults.as_view(), name='raceresults-dv'),
     path('raceseries/', RaceSeriesList.as_view(), name='raceseries-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
-    path('EventPublicSubmit/', EventPublicSubmit.as_view(), name='EventPublicSubmitDetail-dv')
+    path('EventForm/', event_edit, name='event_edit-dv'),
+    path('EventForm/<int:id>/', event_edit, name='event_edit-dv')
+    
 ]
 
 if settings.DEBUG:
