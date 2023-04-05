@@ -63,7 +63,8 @@ urlpatterns = [
     path('index/', Index.as_view(), name='index'),
     # BC - Authentication
     path('signin/', SignInView.as_view(), name='sign-in'),
-	path('EventPublicSubmit/', EventPublicSubmit.as_view(), name='EventPublicSubmitDetail-dv')
+	path('EventForm/', event_edit, name='event_edit-dv'),
+    path('EventForm/<int:id>/', event_edit, name='event_edit-dv')
 ]
 
 if settings.DEBUG:

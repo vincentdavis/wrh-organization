@@ -167,14 +167,23 @@ class EventDetails(DetailView):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
         return context
-    
-class EventPublicSubmit(TemplateView):
-    template_name = 'BCforms/EventPublicSubmitForm.html'
-    x = EventPublicSubmitForm
-    pass
-    # if request.method == 'POST':
-    #     form = EventPublicSubmitForm(request.POST)
-    #     if form.is_valid():
+
+
+def event_edit(request, id=None):
+    if request.method == 'POST':
+        form = EventEditForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print(form)
+        else:
+            messages.error(request, 'Please correct the error below.')
+    elif request.method == 'GET':
+        event = get_object_or_404(Event, id=id)
+        context = {'form': EventEditForm(instance=event), 'id': id}
+        print(context)
+        return render(request, 'BCforms/EventForm.html', context)
+    form = EventEditForm()
+    return render(request, 'BCforms/EventForm.html', {'form': form})
 
 
 def event_edit(request, id=None):
