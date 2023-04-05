@@ -17,16 +17,18 @@
         {% endfor %}
     <br>
         <h3> Club Members </h3>
+            <h4> Member count: {{ object.members.all.count }}</h4>
             {% if  not USACrider %}
                 <h4>Did not find any active USAC members with your club name</h4>
             {% else %}
-                <h4>Active Member count at USAC: {{ USACcount }} </h4>
+                <h4> USAC count: {{ USACcount }} </h4>
             {% endif %}
+            <br>
             <table style="width: 90% ">
                 <tr style="text-align: center">
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Is Verified</th>
+                    <th>Verified User</th>
                     <th>USAC #</th>
                     <th>USAC Verified</th>
                 </tr>
