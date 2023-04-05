@@ -130,7 +130,7 @@ class Events(TemplateView):
             query &= Q(featured_event=True)
         if request.POST.get("event-type", None) and request.POST.get("event-type", None) != 'all':
             query &= Q(tags__contains=[request.POST.get("event-type", None)])
-        print(query)
+        # print(query)
         context['Event'] = query_set.filter(query)
         return self.render_to_response(context)
 
@@ -196,7 +196,7 @@ class ClubReport(DetailView):
         context['USACrider'] = usacriders
         context['USACcount'] = usacriders.count()
         context['ClubAdmins'] = OrganizationMember.objects.all().filter(Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
-        print(context['ClubAdmins'])
+        # print(context['ClubAdmins'])
         # TODO: this is not the right way to do this.
         # context['ClubAdminsId'] = OrganizationMember.objects.filter(
         #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
