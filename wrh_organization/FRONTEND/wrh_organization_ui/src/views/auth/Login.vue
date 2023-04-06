@@ -26,9 +26,9 @@
       <p class="text-2xl font-weight-semibold text--primary mb-2">
         Login & Authentication
       </p>
-      <p class="mb-2">
-        Please sign-in to your account and start the adventure
-      </p>
+<!--      <p class="mb-2">-->
+<!--        Please sign-in to your account and start the adventure-->
+<!--      </p>-->
     </v-card-text>
 
     <!-- login form -->
@@ -94,25 +94,25 @@
     </v-card-text>
 
     <!-- divider -->
-    <v-card-text class="d-flex align-center mt-2">
-      <v-divider></v-divider>
-      <span class="mx-5">or</span>
-      <v-divider></v-divider>
-    </v-card-text>
+<!--    <v-card-text class="d-flex align-center mt-2">-->
+<!--      <v-divider></v-divider>-->
+<!--      <span class="mx-5">or</span>-->
+<!--      <v-divider></v-divider>-->
+<!--    </v-card-text>-->
 
     <!-- social links -->
-    <v-card-actions class="d-flex justify-center">
-      <v-btn
-        v-for="link in socialLink"
-        :key="link.icon"
-        icon
-        class="ms-1"
-      >
-        <v-icon :color="$vuetify.theme.dark ? link.colorInDark : link.color">
-          {{ link.icon }}
-        </v-icon>
-      </v-btn>
-    </v-card-actions>
+<!--    <v-card-actions class="d-flex justify-center">-->
+<!--      <v-btn-->
+<!--        v-for="link in socialLink"-->
+<!--        :key="link.icon"-->
+<!--        icon-->
+<!--        class="ms-1"-->
+<!--      >-->
+<!--        <v-icon :color="$vuetify.theme.dark ? link.colorInDark : link.color">-->
+<!--          {{ link.icon }}-->
+<!--        </v-icon>-->
+<!--      </v-btn>-->
+<!--    </v-card-actions>-->
   </v-card>
 
 </template>
@@ -179,7 +179,7 @@ export default {
     return {
       isPasswordVisible,
       loginForm,
-      socialLink,
+      // socialLink,
       logining,
       formValid,
       login,

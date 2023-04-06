@@ -16,21 +16,26 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, re_path, path
-from django.views.generic import RedirectView
 from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
-    RaceResults, RaceSeriesList, ProfileDetail, BCsignin, event_edit
+    RaceResults, RaceSeriesList, ProfileDetail, BCsignin, Index
+
+# login url https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome
+# logout url https://events.bicyclecolorado.org/static/vue/index.html#/logout
+#  https://events.bicyclecolorado.org/static/vue/index.html#/dashboard/member-profile
+
 
 VERSION_PARAM = settings.REST_FRAMEWORK.get('VERSION_PARAM', 'version')
 DEFAULT_VERSION = settings.REST_FRAMEWORK.get('DEFAULT_VERSION', 'v1')
 API_ENDPOINT = 'api/(?P<{}>v\d+)'.format(VERSION_PARAM)
 
 urlpatterns = [
+    path('', Index.as_view(), name='index'),
     path('accounts/', include('django.contrib.auth.urls')),
-    re_path(r'^$', RedirectView.as_view(url=settings.VUE_STATIC_INDEX), name='index'),
+    # re_path(r'^$', RedirectView.as_view(url=settings.VUE_STATIC_INDEX), name='index'),
     re_path(r'^{}/account/'.format(API_ENDPOINT), include('apps.wrh_account.urls', namespace='account_rest_api')),
     re_path(r'^{}/cycling_org/'.format(API_ENDPOINT),
             include('apps.cycling_org.urls', namespace='cycling_org_rest_api')),
@@ -55,9 +60,7 @@ urlpatterns = [
     path('raceresults/', RaceResults.as_view(), name='raceresults-dv'),
     path('raceseries/', RaceSeriesList.as_view(), name='raceseries-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
-    path('EventForm/', event_edit, name='event_edit-dv'),
-    path('EventForm/<int:id>/', event_edit, name='event_edit-dv')
-    
+    path('index/', Index.as_view(), name='index'),
 ]
 
 if settings.DEBUG:
