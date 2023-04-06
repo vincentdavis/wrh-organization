@@ -132,7 +132,7 @@ class BCsignin(TemplateView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class Events(LoginRequiredMixin, TemplateView):
+class Events(TemplateView):
     template_name = 'BC/Events.html'
 
     def get_context_data(self, **kwargs):
