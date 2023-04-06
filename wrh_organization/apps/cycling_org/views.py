@@ -178,27 +178,11 @@ def event_edit(request, id=None):
         else:
             messages.error(request, 'Please correct the error below.')
     elif request.method == 'GET':
-        event = get_object_or_404(Event, id=id)
-        context = {'form': EventEditForm(instance=event), 'id': id}
-        print(context)
-        return render(request, 'BCforms/EventForm.html', context)
-    form = EventEditForm()
-    return render(request, 'BCforms/EventForm.html', {'form': form})
-
-
-def event_edit(request, id=None):
-    if request.method == 'POST':
-        form = EventEditForm(request.POST)
-        if form.is_valid():
-            form.save()
-            print(form)
-        else:
-            messages.error(request, 'Please correct the error below.')
-    elif request.method == 'GET':
-        event = get_object_or_404(Event, id=id)
-        context = {'form': EventEditForm(instance=event), 'id': id}
-        print(context)
-        return render(request, 'BCforms/EventForm.html', context)
+        if id:
+            event = get_object_or_404(Event, id=id)
+            context = {'form': EventEditForm(instance=event), 'id': id}
+            print(context)
+            return render(request, 'BCforms/EventForm.html', context)
     form = EventEditForm()
     return render(request, 'BCforms/EventForm.html', {'form': form})
 

@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
-    RaceResults, RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView
+    RaceResults, RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView, event_edit
 
 # login url https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome
 # logout url https://events.bicyclecolorado.org/static/vue/index.html#/logout
@@ -54,6 +54,8 @@ urlpatterns = [
     path('bcsignin/', BCsignin.as_view(), name='bcsignin-dv'),
     path('events/', Events.as_view(), name='events-dv'),
     path('event/<int:pk>/', EventDetails.as_view(), name='events-details-dv'),
+    path('EventForm/', event_edit, name='event_edit-dv'),
+    path('EventForm/<int:id>/', event_edit, name='event_edit_id-dv'),
     path('clubs/', Clubs.as_view(), name='clubs-dv'),
     path('club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
     path('ClubReport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
@@ -63,8 +65,6 @@ urlpatterns = [
     path('index/', Index.as_view(), name='index'),
     # BC - Authentication
     path('signin/', SignInView.as_view(), name='sign-in'),
-	path('EventForm/', event_edit, name='event_edit-dv'),
-    path('EventForm/<int:id>/', event_edit, name='event_edit-dv')
 ]
 
 if settings.DEBUG:
