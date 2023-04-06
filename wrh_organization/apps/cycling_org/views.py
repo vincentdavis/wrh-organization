@@ -3,18 +3,23 @@ import traceback
 from datetime import date
 
 from PIL import Image
+from django import forms
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Q, Count
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import DetailView
+from django.views.generic import TemplateView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
@@ -26,13 +31,7 @@ from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_ma
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
 from ..usacycling.models import USACRiderLicense
-from django.contrib.auth.decorators import user_passes_test
-from django.utils.decorators import method_decorator
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView
+
 global_pref = global_preferences_registry.manager()
 
 
@@ -64,14 +63,17 @@ def ckeditor_upload_file(request):
 
 class Index(TemplateView):
     template_name = 'BC/index.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Banner'] = global_pref['site_ui__banner_image']
         context['InfoBoard'] = global_pref['site_ui__home_information_board']
-        context['Featured'] = Event.objects.all().order_by('start_date').filter(Q(featured_event=True) & Q(end_date__gte=date.today()))
+        context['Featured'] = Event.objects.all().order_by('start_date').filter(
+            Q(featured_event=True) & Q(end_date__gte=date.today()))
         # print(context['Featured'])
         # print(context['Banner'].url)
         return context
+
 
 # @login_required
 @login_required

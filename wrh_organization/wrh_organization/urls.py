@@ -62,7 +62,6 @@ urlpatterns = [
     path('raceresults/', RaceResults.as_view(), name='raceresults-dv'),
     path('raceseries/', RaceSeriesList.as_view(), name='raceseries-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
-    path('index/', Index.as_view(), name='index'),
     # BC - Authentication
     path('signin/', SignInView.as_view(), name='sign-in'),
 ]
