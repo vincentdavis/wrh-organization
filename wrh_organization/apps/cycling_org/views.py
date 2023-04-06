@@ -56,14 +56,14 @@ def ckeditor_upload_file(request):
 
 
 class Index(TemplateView):
-    template_name = 'bc/index.html'
+    template_name = 'BC/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Banner'] = global_pref['site_ui__banner_image']
         context['InfoBoard'] = global_pref['site_ui__home_information_board']
         context['Featured'] = Event.objects.all().order_by('start_date').filter(Q(featured_event=True) & Q(end_date__gte=date.today()))
-        print(context['Featured'])
-        print(context['Banner'].url)
+        # print(context['Featured'])
+        # print(context['Banner'].url)
         return context
 
 # @login_required
