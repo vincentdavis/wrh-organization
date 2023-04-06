@@ -92,7 +92,7 @@
                                                 <a class="fa-solid fa-user" style="color: #d75e35;" href="{% url 'logout' %}"></a>
                                             {% else %}
 {#                                                TODO: add sign in, need to fix urls#}
-                                                <a class="fa-solid fa-user" style="color: #78c3c4;" href="http://localhost:8080/static/vue/index.html#/auth?next=%2Fhome"> Sign In</a>
+                                                <a class="fa-solid fa-user" style="color: #78c3c4;" href="{% url 'sign-in'%}"> Sign In</a>
                                             {% endif %}
                                         </li>
                                     </ul></div>
