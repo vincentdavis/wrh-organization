@@ -88,11 +88,11 @@
 {#                                        <i class="fa-solid fa-user" style="color: #d75e35;"></i>#}
                                             {% if user.is_authenticated %}
 {#                                                TODO: add Sign out#}
-                                                {{ user.username }}
-                                                <a class="fa-solid fa-user" style="color: #d75e35;" href="{% url 'logout' %}"></a>
+                                                <a class="fa-solid fa-user" style="color: #ffffff; background-color: #dbed74" href="https://events.bicyclecolorado.org/static/vue/index.html#/dashboard/member-profile"> {{ user.member.first_name }}</a>
+                                                <a class="fa-solid fa-right-from-bracket" style="color: #e95625;" href="{% url 'logout' %}"></a>
                                             {% else %}
 {#                                                TODO: add sign in, need to fix urls#}
-                                                <a class="fa-solid fa-user" style="color: #78c3c4;" href="{% url 'sign-in'%}"> Sign In</a>
+                                                <a class="fa-solid fa-right-to-bracket" style="color: #cbdb6c;" href="{% url 'sign-in'%}"> Sign In</a>
                                             {% endif %}
                                         </li>
                                     </ul></div>
