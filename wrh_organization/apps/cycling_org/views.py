@@ -5,6 +5,7 @@ from datetime import date
 from PIL import Image
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -23,7 +24,13 @@ from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_ma
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
 from ..usacycling.models import USACRiderLicense
-
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
 global_pref = global_preferences_registry.manager()
 
 def is_org_admin(org: Organization, user) -> bool:
@@ -121,7 +128,7 @@ class BCsignin(TemplateView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class Events(TemplateView):
+class Events(LoginRequiredMixin, TemplateView):
     template_name = 'BC/Events.html'
 
     def get_context_data(self, **kwargs):
@@ -243,3 +250,29 @@ class ProfileDetail(DetailView):
         else:
             context['USACData'] = None
         return context
+
+
+class SignInForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'at-input'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'at-input'}))
+
+
+class SignInView(TemplateView):
+    template_name = 'BC/sign_in.html'
+
+    @method_decorator(user_passes_test(lambda user: not user.is_authenticated, login_url='index'))
+    def dispatch(self, *args, **kwargs):
+        return super(SignInView, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = SignInForm()
+        return self.render_to_response({'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = SignInForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return HttpResponseRedirect('/')
+        else:
+            return self.render_to_response({'form': form})
