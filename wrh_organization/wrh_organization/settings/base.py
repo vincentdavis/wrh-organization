@@ -73,6 +73,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'wrh_organization.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

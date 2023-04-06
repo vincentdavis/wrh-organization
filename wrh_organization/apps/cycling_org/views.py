@@ -4,12 +4,13 @@ from datetime import date
 
 from PIL import Image
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -17,8 +18,9 @@ from django.views.generic import TemplateView, DetailView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
+
 from wrh_organization.helpers.utils import get_random_upload_path
-from .forms import UploadValidateFile
+from .forms import UploadValidateFile, EventEditForm
 from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
@@ -33,9 +35,11 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 global_pref = global_preferences_registry.manager()
 
+
 def is_org_admin(org: Organization, user) -> bool:
     try:
-        return user.is_staff or org.organizationmember_set.filter(Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
+        return user.is_staff or org.organizationmember_set.filter(
+            Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
     except:
         return None
 
@@ -134,7 +138,8 @@ class Events(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
-        context['Featured'] = Event.objects.all().order_by('start_date').filter(Q(featured_event=True) & Q(end_date__gte=date.today()))
+        context['Featured'] = Event.objects.all().order_by('start_date').filter(
+            Q(featured_event=True) & Q(end_date__gte=date.today()))
         context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
 
@@ -146,9 +151,9 @@ class Events(LoginRequiredMixin, TemplateView):
             query &= Q(is_usac_permitted=True)
         if request.POST.get("filter", None) == 'featured':
             query &= Q(featured_event=True)
-        if request.POST.get("event-type", None) and request.POST.get("event-type", None) != 'all':
+        if request.POST.get("event-type", None) and 'all' != request.POST.get("event-type", None):
             query &= Q(tags__contains=[request.POST.get("event-type", None)])
-        print(query)
+        # print(query)
         context['Event'] = query_set.filter(query)
         return self.render_to_response(context)
 
@@ -162,6 +167,24 @@ class EventDetails(DetailView):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
         return context
+
+
+def event_edit(request, id=None):
+    if request.method == 'POST':
+        form = EventEditForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print(form)
+        else:
+            messages.error(request, 'Please correct the error below.')
+    elif request.method == 'GET':
+        if id:
+            event = get_object_or_404(Event, id=id)
+            context = {'form': EventEditForm(instance=event), 'id': id}
+            print(context)
+            return render(request, 'BCforms/EventForm.html', context)
+    form = EventEditForm()
+    return render(request, 'BCforms/EventForm.html', {'form': form})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -187,10 +210,12 @@ class Clubs(TemplateView):
         context = self.get_context_data(**kwargs)
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
-    
+
+
 class ClubDetails(DetailView):
     template_name = 'BC/ClubDetails.html'
     model = Organization
+
     def get_context_data(self, **kwargs):
         context = super(ClubDetails, self).get_context_data(**kwargs)
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
@@ -198,32 +223,40 @@ class ClubDetails(DetailView):
         context['USACcount'] = usacriders.count()
         context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
-    
+
+
 class ClubReport(DetailView):
     template_name = 'BC/ClubReport.html'
     model = Organization
+
     def get_context_data(self, **kwargs):
         context = super(ClubReport, self).get_context_data(**kwargs)
-        member_usac = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list('usac_license_number', flat=True)
+        member_usac = context['object'].members.all().order_by('usac_license_number').filter(
+            Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list(
+            'usac_license_number', flat=True)
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
         matching = set(member_usac).intersection(set(usacriders.values_list('license_number', flat=True)))
         context['member_no_match'] = member_usac.exclude(usac_license_number__in=matching)
         context['usac_no_match'] = usacriders.exclude(license_number__in=matching)
-        context['member_no_license'] = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=False) | Q(usac_license_number__isnull=True))
-        context['member_not_verified'] = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=False) & Q(usac_license_number__isnull=False))
+        context['member_no_license'] = context['object'].members.all().order_by('usac_license_number').filter(
+            Q(usac_license_number_verified=False) | Q(usac_license_number__isnull=True))
+        context['member_not_verified'] = context['object'].members.all().order_by('usac_license_number').filter(
+            Q(usac_license_number_verified=False) & Q(usac_license_number__isnull=False))
         context['USACrider'] = usacriders
         context['USACcount'] = usacriders.count()
-        context['ClubAdmins'] = OrganizationMember.objects.all().filter(Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
-        print(context['ClubAdmins'])
+        context['ClubAdmins'] = OrganizationMember.objects.all().filter(
+            Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
+        # print(context['ClubAdmins'])
         # TODO: this is not the right way to do this.
         # context['ClubAdminsId'] = OrganizationMember.objects.filter(
         #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
         context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
-      
-      
+
+
 class RaceResults(TemplateView):
     template_name = 'BC/RaceResults.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # TODO: add pagination.
@@ -231,17 +264,21 @@ class RaceResults(TemplateView):
         # .order_by(['race__event', 'place', 'finish_status'])
         # print(context['RaceResults'])
         return context
-    
+
+
 class RaceSeriesList(TemplateView):
     template_name = 'BC/RaceSeries.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['RaceSeries'] = RaceSeries.objects.all().order_by('name')
         return context
 
+
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
     model = Member
+
     def get_context_data(self, **kwargs):
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         if context['object'].usac_license_number and context['object'].usac_license_number_verified:
