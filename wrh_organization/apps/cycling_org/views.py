@@ -30,7 +30,6 @@ from .models import Organization, OrganizationMember, Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
-from .views_results import events_with_race, race_results, races
 from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
@@ -255,24 +254,6 @@ class ClubReport(DetailView):
         #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
         context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
-
-
-class RaceResults(TemplateView):
-    template_name = 'BC/RaceResults.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # TODO: add pagination.
-        context['EventsWith'] = events_with_race()
-        context['Races'] = races()
-        context['RaceResults'] = race_results()
-        # .order_by(['race__event', 'place', 'finish_status'])
-        # print(context['RaceResults'])
-        return context
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        context['EventsWith'] = events_with_race(request=request)
-        return self.render_to_response(context)
 
 
 class RaceSeriesList(TemplateView):
