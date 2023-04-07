@@ -49,9 +49,13 @@
             <b>{{ e.name }}:</b> {{ e.start_date }}
             <button type="button" class="collapsible">Race List</button>
             <div class="content2">
-                <p>Lorem ipsum...</p>
+                {% for r in Races %}
+                    {% if r.event == e %}
+                        {{ r.name }}
+                        <br>
+                    {% endif %}
+                {% endfor %}
             </div>
-            <br>
         {% endfor %}
 {#        {% for r in  RaceResults %}#}
 {#            {{ r.race.event }}#}

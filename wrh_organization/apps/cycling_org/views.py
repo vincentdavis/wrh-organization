@@ -26,11 +26,11 @@ from dynamic_preferences.registries import global_preferences_registry
 
 from wrh_organization.helpers.utils import get_random_upload_path
 from .forms import UploadValidateFile, EventEditForm
-from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
+from .models import Organization, OrganizationMember, Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
-from .raceresults import events_with_race
+from .views_results import events_with_race, race_results, races
 from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
@@ -264,7 +264,8 @@ class RaceResults(TemplateView):
         context = super().get_context_data(**kwargs)
         # TODO: add pagination.
         context['EventsWith'] = events_with_race()
-        context['RaceResults'] = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])[:100]
+        context['Races'] = races()
+        context['RaceResults'] = race_results()
         # .order_by(['race__event', 'place', 'finish_status'])
         # print(context['RaceResults'])
         return context
