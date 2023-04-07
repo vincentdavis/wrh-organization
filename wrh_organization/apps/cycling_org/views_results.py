@@ -9,6 +9,7 @@ from .models import Race, Event, RaceResult
 
 
 def events_with_race(request=None):
+    """Return Events with races that have been completed."""
     limit = 100
     if not request:
         events =  Event.objects.filter(Q(end_date__lte=date.today()) & Q(Exists(Race.objects.order_by('-start_datetime').filter(event=OuterRef('pk')))))
@@ -16,11 +17,21 @@ def events_with_race(request=None):
         Event.objects.filter(Q(end_date__lte=date.today()) & Q(Exists(Race.objects.order_by('-start_datetime').filter(event=OuterRef('pk')))) & Q(name__icontains=request.POST.get('event')))
     return events[:limit]
     
-def races():
-    return Race.objects.all()
+def races(event=None):
+    """ Return races possibly filtered by Event"""
+    if event:
+        return Race.objects.filter(event=event).order_by('name')
+    else:
+        return Race.objects.all()
+        
     
-def race_results():
-    return RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])
+def race_results(races=None):
+    results = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])
+    if races:
+        results = results.filter(race__in=races.values_list('id', flat=True))
+        return results
+    else:
+        return results
 
 class RaceResults(TemplateView):
     template_name = 'BC/RaceResults.html'

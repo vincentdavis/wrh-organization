@@ -47,7 +47,8 @@
                                                          alt="My image"/>
                                                 {% endif %}
                                             </ul>
-                                            <h4><a href="{% url 'events-details-dv' event.id %}">{{ event.name }}</a></h4>
+                                            <h4><a href="{% url 'events-details-dv' event.id %}">{{ event.name }}</a>
+                                            </h4>
                                             {% if event.description %}
                                                 <p>{{ event.about }}</p>
                                             {% endif %}
