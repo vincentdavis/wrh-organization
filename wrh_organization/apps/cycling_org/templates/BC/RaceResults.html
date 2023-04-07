@@ -1,13 +1,82 @@
 {% extends "BC/base_dv.html" %}
 {% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    .collapsible {
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 8px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+
+    .content2 {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      background-color: #f1f1f1;
+    }
+    </style>
+</head>
+
     <section class="content">
-    <br>
-    <br>
-    <br>
-    {% for r in  RaceResults %}
-        {{ r.race.event }}
-        >>{{ r.race }}, {{ r }}
-        <br>
-    {% endfor %}
+        <!-- search form -->
+        <div class="listing-searchmember colo-search">
+            <div class="searchmember-formouter">
+                <form action="#" method="post" class="searchmember-form event-filter">
+                    {% csrf_token %}
+                    <h2>Search: </h2>
+                    <div class="calendarfield-outer">
+                        <div class="cal-input-group">
+                            <input type="text" name="event" class="datepicker" placeholder="Search">
+                        </div>
+                    </div>
+                    <input type="submit" class="filter-submit" value="Search">
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        {% for e in EventsWith %}
+            <b>{{ e.name }}:</b> {{ e.start_date }}
+            <button type="button" class="collapsible">Race List</button>
+            <div class="content2">
+                {% for r in Races %}
+                    {% if r.event == e %}
+                        {{ r.name }}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+{#        {% for r in  RaceResults %}#}
+{#            {{ r.race.event }}#}
+{#            >>{{ r.race }}, {{ r }}#}
+{#            <br>#}
+{#        {% endfor %}#}
+
+        <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
     </section>
 {% endblock %}
