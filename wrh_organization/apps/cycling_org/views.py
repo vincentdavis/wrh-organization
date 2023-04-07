@@ -30,6 +30,7 @@ from .models import Organization, OrganizationMember, Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
+from  .views_results import races, race_results
 from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
@@ -168,6 +169,8 @@ class EventDetails(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
+        context['Races'] = races(event=context['object'])
+        context['RaceResults'] = race_results(races=context['Races'])
         return context
 
 
