@@ -127,7 +127,7 @@
                   </v-col>
 
                   <v-col cols="12" sm="12">
-                    <span class="font-weight-bold">Choose Event Location:</span>
+                    <span class="font-weight-bold">Choose Event Location: You can search a location and or move the pin.</span>
                     <GoogleMap v-if="gmapApiKey" :api-key="gmapApiKey" :latitude.sync="record.location_lat"
                                :longitude.sync="record.location_lon"></GoogleMap>
                   </v-col>

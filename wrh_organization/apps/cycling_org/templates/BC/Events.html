@@ -7,9 +7,6 @@
 	<div class="listing-searchmember colo-search">
 		<div class="searchmember-formouter">
 			<form action="#" method="post" class="searchmember-form event-filter">
-				<h2>FILTER: </h2>
-
-
 				<input class="gfield-choice-input" name="filter" type="radio"
 					value="usac_event" id="choice_1">
 
@@ -65,8 +62,7 @@
                                 </div>
                                     <span class="date" style="margin-top:4px;display: flex;justify-content: space-around;">{{ event.start_date }}</span>
                                     <div class="text-center" style="margin-top:4px;">
-                                        <h5> {% if event.city %} {{ event.city }}{% endif %} </h5>
-                                         <h5> {% if event.state %} {{ event.state }}{% endif %} </h5>
+                                    <h5> {% if event.city %} {{ event.city }},&nbsp; {% endif %}{% if event.state %} {{ event.state }}{% endif %} </h5>
                                     </div>
                                     {% if event.description %}
                                         <p>{{ event.description|truncatechars:100 }}</p>
@@ -100,8 +96,7 @@
 
                                     <span class="date" style="margin-top:4px;display: flex;justify-content: space-around;">{{ event.start_date }}</span>
                                     <div class="text-center" style="margin-top:4px;">
-                                        <h5> {% if event.city %} {{ event.city }}{% endif %} </h5>
-                                         <h5> {% if event.state %} {{ event.state }}{% endif %} </h5>
+                                        <h5> {% if event.city %} {{ event.city }},&nbsp; {% endif %}{% if event.state %} {{ event.state }}{% endif %} </h5>
                                     </div>
                                     {% if event.description %}
                                         <p>{{ event.description|truncatechars:100 }}</p>

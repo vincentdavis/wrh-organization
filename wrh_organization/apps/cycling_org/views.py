@@ -3,32 +3,45 @@ import traceback
 from datetime import date
 
 from PIL import Image
+from django import forms
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.forms import AuthenticationForm
+from django.core.mail import send_mail
 from django.db.models import Q, Count
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import DetailView
+from django.views.generic import TemplateView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
+
 from wrh_organization.helpers.utils import get_random_upload_path
-from .forms import UploadValidateFile
-from .models import Organization, OrganizationMember, Event, Member, RaceResult, RaceSeries
+from .forms import UploadValidateFile, EventEditForm
+from .models import Organization, OrganizationMember, Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
+from  .views_results import races, race_results
 from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
 
+
 def is_org_admin(org: Organization, user) -> bool:
     try:
-        return user.is_staff or org.organizationmember_set.filter(Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
+        return user.is_staff or org.organizationmember_set.filter(
+            Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
     except:
         return None
 
@@ -49,6 +62,20 @@ def ckeditor_upload_file(request):
         file_name = fs.save(file_path, f)
         url = fs.url(file_name)
         return JsonResponse({"url": url})
+
+
+class Index(TemplateView):
+    template_name = 'BC/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Banner'] = global_pref['site_ui__banner_image']
+        context['InfoBoard'] = global_pref['site_ui__home_information_board']
+        context['Featured'] = Event.objects.all().order_by('start_date').filter(
+            Q(featured_event=True) & Q(end_date__gte=date.today()))
+        # print(context['Featured'])
+        # print(context['Banner'].url)
+        return context
 
 
 # @login_required
@@ -116,7 +143,8 @@ class Events(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Event'] = Event.objects.all().order_by('start_date').filter(end_date__gte=date.today())
-        context['Featured'] = Event.objects.all().order_by('start_date').filter(Q(featured_event=True) & Q(end_date__gte=date.today()))
+        context['Featured'] = Event.objects.all().order_by('start_date').filter(
+            Q(featured_event=True) & Q(end_date__gte=date.today()))
         context['EventTypes'] = global_pref['core_backend__event_tags']
         return context
 
@@ -128,7 +156,7 @@ class Events(TemplateView):
             query &= Q(is_usac_permitted=True)
         if request.POST.get("filter", None) == 'featured':
             query &= Q(featured_event=True)
-        if request.POST.get("event-type", None) and request.POST.get("event-type", None) != 'all':
+        if request.POST.get("event-type", None) and 'all' != request.POST.get("event-type", None):
             query &= Q(tags__contains=[request.POST.get("event-type", None)])
         # print(query)
         context['Event'] = query_set.filter(query)
@@ -143,7 +171,27 @@ class EventDetails(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
+        context['Races'] = races(event=context['object'])
+        context['RaceResults'] = race_results(event=context['object'])
         return context
+
+
+def event_edit(request, id=None):
+    if request.method == 'POST':
+        form = EventEditForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print(form)
+        else:
+            messages.error(request, 'Please correct the error below.')
+    elif request.method == 'GET':
+        if id:
+            event = get_object_or_404(Event, id=id)
+            context = {'form': EventEditForm(instance=event), 'id': id}
+            print(context)
+            return render(request, 'BCforms/EventForm.html', context)
+    form = EventEditForm()
+    return render(request, 'BCforms/EventForm.html', {'form': form})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -169,10 +217,12 @@ class Clubs(TemplateView):
         context = self.get_context_data(**kwargs)
         context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
         return self.render_to_response(context)
-    
+
+
 class ClubDetails(DetailView):
     template_name = 'BC/ClubDetails.html'
     model = Organization
+
     def get_context_data(self, **kwargs):
         context = super(ClubDetails, self).get_context_data(**kwargs)
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
@@ -180,50 +230,50 @@ class ClubDetails(DetailView):
         context['USACcount'] = usacriders.count()
         context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
-    
+
+
 class ClubReport(DetailView):
     template_name = 'BC/ClubReport.html'
     model = Organization
+
     def get_context_data(self, **kwargs):
         context = super(ClubReport, self).get_context_data(**kwargs)
-        member_usac = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list('usac_license_number', flat=True)
+        member_usac = context['object'].members.all().order_by('usac_license_number').filter(
+            Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list(
+            'usac_license_number', flat=True)
         usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
         matching = set(member_usac).intersection(set(usacriders.values_list('license_number', flat=True)))
         context['member_no_match'] = member_usac.exclude(usac_license_number__in=matching)
         context['usac_no_match'] = usacriders.exclude(license_number__in=matching)
-        context['member_no_license'] = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=False) | Q(usac_license_number__isnull=True))
-        context['member_not_verified'] = context['object'].members.all().order_by('usac_license_number').filter(Q(usac_license_number_verified=False) & Q(usac_license_number__isnull=False))
+        context['member_no_license'] = context['object'].members.all().order_by('usac_license_number').filter(
+            Q(usac_license_number_verified=False) | Q(usac_license_number__isnull=True))
+        context['member_not_verified'] = context['object'].members.all().order_by('usac_license_number').filter(
+            Q(usac_license_number_verified=False) & Q(usac_license_number__isnull=False))
         context['USACrider'] = usacriders
         context['USACcount'] = usacriders.count()
-        context['ClubAdmins'] = OrganizationMember.objects.all().filter(Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
+        context['ClubAdmins'] = OrganizationMember.objects.all().filter(
+            Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
         # print(context['ClubAdmins'])
         # TODO: this is not the right way to do this.
         # context['ClubAdminsId'] = OrganizationMember.objects.filter(
         #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
         context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
         return context
-      
-      
-class RaceResults(TemplateView):
-    template_name = 'BC/RaceResults.html'
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # TODO: add pagination.
-        context['RaceResults'] = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])[:100]
-        # .order_by(['race__event', 'place', 'finish_status'])
-        # print(context['RaceResults'])
-        return context
-    
+
+
 class RaceSeriesList(TemplateView):
     template_name = 'BC/RaceSeries.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['RaceSeries'] = RaceSeries.objects.all().order_by('name')
         return context
 
+
 class ProfileDetail(DetailView):
     template_name = 'BC/ProfileDetail.html'
     model = Member
+
     def get_context_data(self, **kwargs):
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         if context['object'].usac_license_number and context['object'].usac_license_number_verified:
@@ -232,3 +282,40 @@ class ProfileDetail(DetailView):
         else:
             context['USACData'] = None
         return context
+
+def member_joined_org_email(user, org):
+    subject = 'New Member Notification'
+    message = render_to_string('cycling_org/email/member_joined_org_email.html', {
+        'user': user,
+        'org': org,
+        'host': settings.HOSTNAME
+    })
+    # TODO: Fix the to address, send to all org admins plus developer@bicyclecolorado.org
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ["developer@bicyclecolorado.org"], html_message=message,
+              fail_silently=False)
+
+
+class SignInForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'at-input'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'at-input'}))
+
+
+class SignInView(TemplateView):
+    template_name = 'BC/sign_in.html'
+
+    @method_decorator(user_passes_test(lambda user: not user.is_authenticated, login_url='index'))
+    def dispatch(self, *args, **kwargs):
+        return super(SignInView, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = SignInForm()
+        return self.render_to_response({'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = SignInForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return HttpResponseRedirect('/')
+        else:
+            return self.render_to_response({'form': form})
