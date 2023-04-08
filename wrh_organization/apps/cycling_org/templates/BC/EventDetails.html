@@ -4,7 +4,6 @@
 
     <!-- content -->
     <section class="content">
-
         <!-- event detail -->
         <div class="event-detail-outer">
             <div class="container">
@@ -46,7 +45,9 @@
                                     <h5>Race Name: {{ race.name }}</h5>
                                     <ul>
                                         {% for result in RaceResults %}
-                                            <li>{{ result.rider }}, {{ result.place }}</li>
+                                            {% if result.race == race %}
+                                            <li>{{ result.place }}: {{ result.rider }}</li>
+                                            {% endif %}
                                         {% endfor %}
                                     </ul>
                                     <br>
@@ -56,6 +57,7 @@
                         </div>
                         <a href="{% url 'events-dv' %}" class="events-link">Back To Events</a>
                     </div>
+
                     <!-- Right Side Content -->
                     <div class="event-detail-right">
                         <h3 style="margin-bottom:2px;padding-bottom:5px">Event Details</h3>

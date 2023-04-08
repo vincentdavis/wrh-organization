@@ -236,7 +236,7 @@ class Organization(models.Model):
     membership_plans = models.JSONField(null=True, blank=True, encoder=JSONEncoder)
     member_fields_schema = models.JSONField(null=True, blank=True)
     verified = models.BooleanField(default=False)
-    prefs = models.JSONField(null=True, blank=True, encoder=JSONEncoder, editable=False)
+    prefs = models.JSONField(null=True, blank=True, encoder=JSONEncoder, editable=True)
     members = models.ManyToManyField('Member', related_name='organizations', through=OrganizationMember)
     member_orgs = models.ManyToManyField('Organization', related_name='organizations', through=OrganizationMemberOrg)
     rss_url = models.TextField(default=None, null=True, blank=True)

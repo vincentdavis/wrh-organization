@@ -170,7 +170,7 @@ class EventDetails(DetailView):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_MAP_API_TOKEN'] = settings.GOOGLE_MAP_API_TOKEN
         context['Races'] = races(event=context['object'])
-        context['RaceResults'] = race_results(races=context['Races'])
+        context['RaceResults'] = race_results(event=context['object'])
         return context
 
 
