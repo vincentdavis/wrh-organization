@@ -10,11 +10,13 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.mail import send_mail
 from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -280,6 +282,17 @@ class ProfileDetail(DetailView):
         else:
             context['USACData'] = None
         return context
+
+def member_joined_org_email(user, org):
+    subject = 'New Member Notification'
+    message = render_to_string('cycling_org/email/member_joined_org_email.html', {
+        'user': user,
+        'org': org,
+        'host': settings.HOSTNAME
+    })
+    # TODO: Fix the to address, send to all org admins plus developer@bicyclecolorado.org
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ["developer@bicyclecolorado.org"], html_message=message,
+              fail_silently=False)
 
 
 class SignInForm(AuthenticationForm):
