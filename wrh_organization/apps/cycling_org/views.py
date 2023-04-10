@@ -3,13 +3,11 @@ import traceback
 from datetime import date
 
 from PIL import Image
-from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from django.db.models import Q, Count
 from django.http import HttpResponse
@@ -25,6 +23,7 @@ from django.views.generic import TemplateView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
+
 from apps.cycling_org.models import User
 from wrh_organization.helpers.utils import get_random_upload_path
 from .forms import UploadValidateFile, EventEditForm, SignInForm, SignupForm
@@ -32,10 +31,8 @@ from .models import Organization, OrganizationMember, Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
-from  .views_results import races, race_results
+from .views_results import races, race_results
 from ..usacycling.models import USACRiderLicense
-from django import forms
-from django.core.validators import RegexValidator
 
 global_pref = global_preferences_registry.manager()
 
@@ -285,6 +282,7 @@ class ProfileDetail(DetailView):
             context['USACData'] = None
         return context
 
+
 def member_joined_org_email(user, org):
     subject = 'New Member Notification'
     message = render_to_string('cycling_org/email/member_joined_org_email.html', {
@@ -295,8 +293,6 @@ def member_joined_org_email(user, org):
     # TODO: Fix the to address, send to all org admins plus developer@bicyclecolorado.org
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ["developer@bicyclecolorado.org"], html_message=message,
               fail_silently=False)
-
-
 
 
 class SignInView(TemplateView):
@@ -318,6 +314,8 @@ class SignInView(TemplateView):
             return HttpResponseRedirect('/')
         else:
             return self.render_to_response({'form': form})
+
+
 class SignupView(TemplateView):
     template_name = 'BC/sign_up.html'
 
@@ -352,5 +350,3 @@ class SignupView(TemplateView):
             # Redirect to a success page or the user's dashboard
             return redirect("/")
         return self.render_to_response(self.get_context_data())
-
-

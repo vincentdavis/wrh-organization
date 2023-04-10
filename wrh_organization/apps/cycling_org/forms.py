@@ -2,14 +2,14 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import RegexValidator
 from django.forms import ModelForm, DateInput
-from django.views.generic import TemplateView
 
-from .models import Event OrganizationMember
+from .models import Event, OrganizationMember
 
 
 class UploadValidateFile(forms.Form):
     validate_file = forms.FileField()
-    
+
+
 class EventEditForm(ModelForm):
     class Meta:
         model = Event
@@ -47,19 +47,19 @@ class EventEditForm(ModelForm):
             'state': 'Enter the state of the start.',
             'country': 'Enter the country of the start.',
         }
-        
+
         error_messages = {
             'name': {
                 'max_length': 'This event name is too long.',
             },
         }
 
+
 class JoinClubForm(ModelForm):
     class Meta:
         model = OrganizationMember
         fields = ['organization', 'member', 'org_member_uid', 'start_date', 'exp_date', 'status']
         labels = {'start_date': 'Start Date', 'exp_date': 'Expiration Date'}
-
 
 
 class SignInForm(AuthenticationForm):
@@ -75,8 +75,10 @@ class SignupForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=True, label="Confirm Password")
     date_of_birth = forms.DateField(required=True, label="Date of Birth", widget=DateInput(attrs={'type': 'date'}))
     usac_number = forms.CharField(required=False, label="USAC Number", empty_value=None)
-    gender = forms.ChoiceField(choices=[('', 'Select Gender'), ('M', 'Male'), ('F', 'Female'), ('O', 'Other')], required=False)
-    phone_number = forms.CharField(required=False, validators=[RegexValidator(r'^\+?1?\d{9,15}$')], label="Phone Number", empty_value=None)
+    gender = forms.ChoiceField(choices=[('', 'Select Gender'), ('M', 'Male'), ('F', 'Female'), ('O', 'Other')],
+                               required=False)
+    phone_number = forms.CharField(required=False, validators=[RegexValidator(r'^\+?1?\d{9,15}$')],
+                                   label="Phone Number", empty_value=None)
     address1 = forms.CharField(required=False, label="Address 1", empty_value=None)
     address2 = forms.CharField(required=False, label="Address 2", empty_value=None)
     city = forms.CharField(required=False, label="City", empty_value=None)
