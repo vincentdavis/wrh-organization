@@ -25,10 +25,16 @@ def races(event=None):
         return Race.objects.all()
         
     
-def race_results(races=None):
+def race_results(race=None, event=None):
     results = RaceResult.objects.all().order_by(*['race__event__end_date', 'race', 'place'])
-    if races:
-        results = results.filter(race__in=races.values_list('id', flat=True))
+    q = Q()
+    if event or race:
+        q = Q()
+        if race:
+            q &= Q(race=race)
+        if event:
+            q &= Q(race__event=event)
+        results = results.filter(q)
         return results
     else:
         return results
