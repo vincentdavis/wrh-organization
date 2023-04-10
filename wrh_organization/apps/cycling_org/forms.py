@@ -1,6 +1,11 @@
 from django import forms
-from django.forms import ModelForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.core.validators import RegexValidator
+from django.forms import ModelForm, DateInput
+from django.views.generic import TemplateView
+
 from .models import Event
+
 
 class UploadValidateFile(forms.Form):
     validate_file = forms.FileField()
@@ -48,4 +53,33 @@ class EventEditForm(ModelForm):
                 'max_length': 'This event name is too long.',
             },
         }
-    
+
+class SignInForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'at-input'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'at-input'}))
+
+
+class SignupForm(forms.Form):
+    first_name = forms.CharField(required=True, label="First Name")
+    last_name = forms.CharField(required=True, label="Last Name")
+    email = forms.EmailField(required=True, label="Email")
+    password = forms.CharField(widget=forms.PasswordInput, required=True, label="Password")
+    confirm_password = forms.CharField(widget=forms.PasswordInput, required=True, label="Confirm Password")
+    date_of_birth = forms.DateField(required=True, label="Date of Birth", widget=DateInput(attrs={'type': 'date'}))
+    usac_number = forms.CharField(required=False, label="USAC Number", empty_value=None)
+    gender = forms.ChoiceField(choices=[('', 'Select Gender'), ('M', 'Male'), ('F', 'Female'), ('O', 'Other')], required=False)
+    phone_number = forms.CharField(required=False, validators=[RegexValidator(r'^\+?1?\d{9,15}$')], label="Phone Number", empty_value=None)
+    address1 = forms.CharField(required=False, label="Address 1", empty_value=None)
+    address2 = forms.CharField(required=False, label="Address 2", empty_value=None)
+    city = forms.CharField(required=False, label="City", empty_value=None)
+    state = forms.CharField(required=False, label="State", empty_value=None)
+    zip_code = forms.CharField(required=True, label="Zip Code")
+    country = forms.CharField(required=False, initial="United States", label="Country", empty_value=None)
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     password = cleaned_data.get("password")
+    #     confirm_password = cleaned_data.get("confirm_password")
+    #
+    #     if password != confirm_password:
+    #         self.add_error("confirm_password", "Passwords do not match")
