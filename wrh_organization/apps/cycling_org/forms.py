@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 from django.forms import ModelForm, DateInput
 from django.views.generic import TemplateView
 
-from .models import Event
+from .models import Event OrganizationMember
 
 
 class UploadValidateFile(forms.Form):
@@ -53,6 +53,14 @@ class EventEditForm(ModelForm):
                 'max_length': 'This event name is too long.',
             },
         }
+
+class JoinClubForm(ModelForm):
+    class Meta:
+        model = OrganizationMember
+        fields = ['organization', 'member', 'org_member_uid', 'start_date', 'exp_date', 'status']
+        labels = {'start_date': 'Start Date', 'exp_date': 'Expiration Date'}
+
+
 
 class SignInForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'at-input'}))
