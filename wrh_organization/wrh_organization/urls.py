@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
-    RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView, event_edit
+    RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView, event_edit, SignupView
 from apps.cycling_org.views_results import RaceResults
 
 # login url https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome
@@ -65,6 +65,7 @@ urlpatterns = [
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
     # BC - Authentication
     path('signin/', SignInView.as_view(), name='sign-in'),
+    path('signup/', SignupView.as_view(), name='sign-up'),
 ]
 
 if settings.DEBUG:

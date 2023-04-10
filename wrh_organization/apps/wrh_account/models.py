@@ -30,7 +30,9 @@ class User(AbstractUser):
     prefs = models.JSONField(null=True, encoder=JSONEncoder, editable=False)
     draft = models.BooleanField(default=False, null=False, editable=False)
     # verified_email = models.BooleanField(default=False)
-
+    opt_in_email = models.BooleanField(default=False, null=True, blank=True)
+    terms_of_service = models.BooleanField(default=False, null=True, blank=True)
+    user_agreement_waiver = models.BooleanField(default=False, null=True, blank=True)
     def save(self, *args, **kwargs):
         if not self.prefs:
             self.prefs = {}

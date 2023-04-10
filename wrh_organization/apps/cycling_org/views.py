@@ -14,7 +14,7 @@ from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -23,15 +23,17 @@ from django.views.generic import TemplateView
 from django_ckeditor_5.forms import UploadFileForm
 from django_ckeditor_5.views import storage as ck_storage
 from dynamic_preferences.registries import global_preferences_registry
-
+from apps.cycling_org.models import User
 from wrh_organization.helpers.utils import get_random_upload_path
-from .forms import UploadValidateFile, EventEditForm
+from .forms import UploadValidateFile, EventEditForm, SignInForm, SignupForm
 from .models import Organization, OrganizationMember, Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
 from  .views_results import races, race_results
 from ..usacycling.models import USACRiderLicense
+from django import forms
+from django.core.validators import RegexValidator
 
 global_pref = global_preferences_registry.manager()
 
@@ -282,9 +284,6 @@ class ProfileDetail(DetailView):
         return context
 
 
-class SignInForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'at-input'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'at-input'}))
 
 
 class SignInView(TemplateView):
@@ -306,3 +305,39 @@ class SignInView(TemplateView):
             return HttpResponseRedirect('/')
         else:
             return self.render_to_response({'form': form})
+class SignupView(TemplateView):
+    template_name = 'BC/sign_up.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = SignupForm(self.request.POST or None)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            # Create the user account
+            # Create a new user instance and save it
+            waiver = request.POST.get('waiver', False) == 'on'
+            terms_of_service = request.POST.get('terms_of_service', False) == 'on'
+            opt_out_email = request.POST.get('opt_out_email', False) == 'on'
+
+            user = User.objects.create_user(
+                username=form.cleaned_data['email'],  # Assuming 'email' is the field name for email
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password'],  # Assuming 'password' is the field name for password
+                first_name=form.cleaned_data['first_name'],  # Assuming 'first_name' is the field name for first name
+                last_name=form.cleaned_data['last_name'],  # Assuming 'last_name' is the field name for last name
+            )
+            user.opt_in_email = opt_out_email
+            user.user_agreement_waiver = waiver
+            user.terms_of_service = terms_of_service
+            user.save()
+            # Log the user in
+            login(request, user)
+
+            # Redirect to a success page or the user's dashboard
+            return redirect("/")
+        return self.render_to_response(self.get_context_data())
+
+
