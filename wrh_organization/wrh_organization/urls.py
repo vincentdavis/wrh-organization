@@ -23,6 +23,7 @@ from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
     RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView, event_edit, SignupView
 from apps.cycling_org.views_results import RaceResults
+from apps.cycling_org.views_clubs import join_club
 
 # login url https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome
 # logout url https://events.bicyclecolorado.org/static/vue/index.html#/logout
@@ -59,6 +60,7 @@ urlpatterns = [
     path('EventForm/<int:id>/', event_edit, name='event_edit_id-dv'),
     path('clubs/', Clubs.as_view(), name='clubs-dv'),
     path('club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
+    path('Club/JoinClub/<int:pk>/', join_club, name='join-club-dv'),
     path('ClubReport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
     path('RaceResults/', RaceResults.as_view(), name='raceresults-dv'),
     path('raceseries/', RaceSeriesList.as_view(), name='raceseries-dv'),
