@@ -1,0 +1,29 @@
+{% extends "BC/base_dv.html" %}
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Edit Club</title>
+</head>
+{% block content %}
+    <section class="content">
+        <br>
+        <br>
+        <br>
+        {% if user.is_authenticated and ClubAdmin %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+            <H3>CLUB TYPE: {{ Club.type }}</H3>
+                <b>The Form</b>
+                {% for f in form %}}
+                    {{ f.label_tag }}
+                    {{ f }}
+                    <br>
+                {% endfor %}
+                <button class="btn btn-primary my-4" type="submit">Submit</button>
+            </form>
+        {% endif %}
+            <p> TEMP WARNING: You must be logged in and a staff user</p>
+    </section>
+{% endblock %}
