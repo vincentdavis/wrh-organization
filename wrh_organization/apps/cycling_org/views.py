@@ -25,7 +25,7 @@ from dynamic_preferences.registries import global_preferences_registry
 from apps.cycling_org.models import User
 from wrh_organization.helpers.utils import get_random_upload_path
 from .forms import UploadValidateFile, EventEditForm, SignInForm, SignupForm
-from .models import Event, Member, RaceSeries
+from .models import Event, Member, RaceSeries, OrganizationMember
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
@@ -169,7 +169,7 @@ def event_edit(request, id=None):
     if request.method == 'POST':
         form = EventEditForm(request.POST)
         if form.is_valid():
-            form.save()
+            # form.save()
             print(form)
         else:
             messages.error(request, 'Please correct the error below.')
@@ -177,7 +177,8 @@ def event_edit(request, id=None):
         if id:
             event = get_object_or_404(Event, id=id)
             context = {'form': EventEditForm(instance=event), 'id': id}
-            print(context)
+            context['OrgsAdmin'] = OrganizationMember.objects.filter(Q(member=request.user.member) and (Q(is_admin=True) or Q(is_master_admin=True)))
+            # print(context['OrgsAdmin'])
             return render(request, 'BCforms/EventForm.html', context)
     form = EventEditForm()
     return render(request, 'BCforms/EventForm.html', {'form': form})
