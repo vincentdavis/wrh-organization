@@ -6,18 +6,52 @@
 
     <title>Submit an event</title>
 </head>
+
 {% block content %}
+    {% load static %}
+
     <section class="content">
         <br>
         <br>
         <br>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <b>The Form</b>
-            {% for f in form %}:
-                {{ f }}
-                <br>
-            {% endfor %}
+            <b>Basic form, no user account required</b>
+            <ui>
+                <li>Event Title: {{ form.name }}</li>
+                <li>Registration website: {{ form.registration_website }}</li>
+                <li>Event contact email: {{ form.organizer_email }}</li>
+                <li>Start-Date: {{ form.start_date }}</li>
+                <li>End-Date: {{ form.end_date }}</li>
+                <li>Event is USA Cycling permited: yes/no {{ form.is_usac_permitted }} Permit number if
+                    known {{ form.permit_no }}</li>
+                <li>Website: {{ form.website }}</li>
+                <li>City: {{ form.city }}</li>
+                <li>State: {{ form.state }}</li>
+                <li>Country: {{ form.country }}</li>
+                <li>Event Type: {{ form.tags }}</li>
+                <li>Short event description:<br> {{ form.description }}</li>
+            </ui>
+            <br>
+            <h3>Please sign in to for more event options such as...</h3>
+            {% if user.is_authenticated %}
+                <ui>
+                    <li>Logo: {{ form.logo }}</li>
+                    <li>Registration Website: {{ form.registration_website }}</li>
+                    <li>Purchase Featured event package from Bicycle Colorado LINK TO DETAIL
+                        HERE: {{ form.featured }}</li>
+                </ui>
+                <br><h3>To get all the features, please contact </h3>
+                {% if OrgsAdmin %}
+                    <ui>
+                        {#                TODO: ADD ORG ADMIN SELECT OPTION HERE#}
+                        <li>Link to Club, or Promoter: {{ form.organization }}</li>
+                        <li>Sharing options NEED EXPLAINER: {{ form.publish_type }}</li>
+                        <li>Add banner image</li>
+                    </ui>
+                {% endif %}
+            {% endif %}
+
 
             <button class="btn btn-primary my-4" type="submit">Submit</button>
         </form>

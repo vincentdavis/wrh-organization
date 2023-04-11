@@ -13,9 +13,9 @@ class UploadValidateFile(forms.Form):
 class EventEditForm(ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'description']
-        # fields = ['name', 'description', 'start_date', 'end_date', 'organizer_email', 'country', 'city', 'state', 
-        #           'website', 'registration_website', 'logo', 'tags', 'more_data', 'organization', 'create_by', 'permit_no', 'is_usac_permitted']
+        fields = ['name', 'description', 'start_date', 'end_date', 'organizer_email', 'country', 'city', 'state',
+                  'website', 'registration_website', 'logo', 'tags', 'more_data', 'organization', 'permit_no',
+                  'is_usac_permitted', 'organization', 'publish_type']
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -93,13 +93,13 @@ class SignupForm(forms.Form):
     #
     #     if password != confirm_password:
     #         self.add_error("confirm_password", "Passwords do not match")
-    
-    
+
+
 class EditClub(ModelForm):
     class Meta:
         model = Organization
         fields = ['name', 'type']
-        
+
         widgets = {'type': forms.HiddenInput()}
         labels = {
             'name': 'Club Name',
@@ -109,5 +109,3 @@ class EditClub(ModelForm):
             'name': 'Enter the name of the club.',
             'type': 'Choose a Organization type',
         }
-    
-    
