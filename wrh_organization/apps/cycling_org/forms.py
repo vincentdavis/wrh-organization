@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import RegexValidator
 from django.forms import ModelForm, DateInput
 
-from .models import Event, OrganizationMember
+from .models import Event, OrganizationMember, Organization
 
 
 class UploadValidateFile(forms.Form):
@@ -93,3 +93,19 @@ class SignupForm(forms.Form):
     #
     #     if password != confirm_password:
     #         self.add_error("confirm_password", "Passwords do not match")
+    
+    
+class EditClub(ModelForm):
+    class Meta:
+        model = Organization
+        fields = ['name', 'type']
+        labels = {
+            'name': 'Club Name',
+            'type': 'Club, Promoter',
+        }
+        help_texts = {
+            'name': 'Enter the name of the club.',
+            'type': 'Choose a Organization type',
+        }
+    
+    

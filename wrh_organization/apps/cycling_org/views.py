@@ -8,13 +8,11 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-from django.core.mail import send_mail
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -27,7 +25,7 @@ from dynamic_preferences.registries import global_preferences_registry
 from apps.cycling_org.models import User
 from wrh_organization.helpers.utils import get_random_upload_path
 from .forms import UploadValidateFile, EventEditForm, SignInForm, SignupForm
-from .models import Organization, OrganizationMember, Event, Member, RaceSeries
+from .models import Event, Member, RaceSeries
 from .validators import usac_license_on_record, valid_usac_licenses, wrh_club_match, wrh_bc_member, \
     wrh_club_memberships, wrh_email_match, wrh_local_association, wrh_usac_clubs, usac_club_match, bc_race_ready, \
     bc_individual_cup_ready, bc_team_cup_ready
@@ -35,14 +33,6 @@ from .views_results import races, race_results
 from ..usacycling.models import USACRiderLicense
 
 global_pref = global_preferences_registry.manager()
-
-
-def is_org_admin(org: Organization, user) -> bool:
-    try:
-        return user.is_staff or org.organizationmember_set.filter(
-            Q(member=user) & (Q(is_admin=True) | Q(is_master_admin=True))).exists()
-    except:
-        return None
 
 
 @require_http_methods(["POST"])
@@ -193,73 +183,6 @@ def event_edit(request, id=None):
     return render(request, 'BCforms/EventForm.html', {'form': form})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class Clubs(TemplateView):
-    template_name = 'BC/Clubs.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['Org'] = Organization.objects.all()
-        # TODO: make this faster
-        club_counts = USACRiderLicense.objects.values('data__club').annotate(count=Count('id'))
-        context['USACclub'] = {row['data__club']: row['count'] for row in club_counts if row['data__club']}
-        # context['USACclub'] = dict()
-        # for u in USACRiderLicense.objects.all():
-        #     if u.data['club']:
-        #         if u.data['club'] in context['USACclub'].keys():
-        #             context['USACclub'][u.data['club']] += 1
-        #         else:
-        #             context['USACclub'][u.data['club']] = 1
-        return context
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        context['Org'] = Organization.objects.filter(name__icontains=request.POST.get('org'))
-        return self.render_to_response(context)
-
-
-class ClubDetails(DetailView):
-    template_name = 'BC/ClubDetails.html'
-    model = Organization
-
-    def get_context_data(self, **kwargs):
-        context = super(ClubDetails, self).get_context_data(**kwargs)
-        usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
-        context['USACrider'] = usacriders
-        context['USACcount'] = usacriders.count()
-        context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
-        return context
-
-
-class ClubReport(DetailView):
-    template_name = 'BC/ClubReport.html'
-    model = Organization
-
-    def get_context_data(self, **kwargs):
-        context = super(ClubReport, self).get_context_data(**kwargs)
-        member_usac = context['object'].members.all().order_by('usac_license_number').filter(
-            Q(usac_license_number_verified=True) | Q(usac_license_number__isnull=False)).values_list(
-            'usac_license_number', flat=True)
-        usacriders = USACRiderLicense.objects.filter(data__club=context['object'].name)
-        matching = set(member_usac).intersection(set(usacriders.values_list('license_number', flat=True)))
-        context['member_no_match'] = member_usac.exclude(usac_license_number__in=matching)
-        context['usac_no_match'] = usacriders.exclude(license_number__in=matching)
-        context['member_no_license'] = context['object'].members.all().order_by('usac_license_number').filter(
-            Q(usac_license_number_verified=False) | Q(usac_license_number__isnull=True))
-        context['member_not_verified'] = context['object'].members.all().order_by('usac_license_number').filter(
-            Q(usac_license_number_verified=False) & Q(usac_license_number__isnull=False))
-        context['USACrider'] = usacriders
-        context['USACcount'] = usacriders.count()
-        context['ClubAdmins'] = OrganizationMember.objects.all().filter(
-            Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True)))
-        # print(context['ClubAdmins'])
-        # TODO: this is not the right way to do this.
-        # context['ClubAdminsId'] = OrganizationMember.objects.filter(
-        #     Q(organization=context['object']) & (Q(is_admin=True) | Q(is_master_admin=True))).values_list('member', flat=True)
-        context['ClubAdmin'] = is_org_admin(context['object'], self.request.user)
-        return context
-
-
 class RaceSeriesList(TemplateView):
     template_name = 'BC/RaceSeries.html'
 
@@ -281,18 +204,6 @@ class ProfileDetail(DetailView):
         else:
             context['USACData'] = None
         return context
-
-
-def member_joined_org_email(user, org):
-    subject = 'New Member Notification'
-    message = render_to_string('cycling_org/email/member_joined_org_email.html', {
-        'user': user,
-        'org': org,
-        'host': settings.HOSTNAME
-    })
-    # TODO: Fix the to address, send to all org admins plus developer@bicyclecolorado.org
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, ["developer@bicyclecolorado.org"], html_message=message,
-              fail_silently=False)
 
 
 class SignInView(TemplateView):

@@ -20,10 +20,11 @@ from django.views.static import serve
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
-from apps.cycling_org.views import ckeditor_upload_file, validate, Clubs, ClubDetails, ClubReport, Events, EventDetails, \
+from apps.cycling_org.views import ckeditor_upload_file, validate, Events, EventDetails, \
     RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView, event_edit, SignupView
+from apps.cycling_org.views_clubs import Clubs, ClubDetails, ClubReport
+from apps.cycling_org.views_clubs import join_club, edit_club
 from apps.cycling_org.views_results import RaceResults
-from apps.cycling_org.views_clubs import join_club
 
 # login url https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome
 # logout url https://events.bicyclecolorado.org/static/vue/index.html#/logout
@@ -54,16 +55,17 @@ urlpatterns = [
     # Django View - BC
     path('validator/', validate, name='validate'),
     path('bcsignin/', BCsignin.as_view(), name='bcsignin-dv'),
-    path('events/', Events.as_view(), name='events-dv'),
-    path('event/<int:pk>/', EventDetails.as_view(), name='events-details-dv'),
-    path('EventForm/', event_edit, name='event_edit-dv'),
-    path('EventForm/<int:id>/', event_edit, name='event_edit_id-dv'),
-    path('clubs/', Clubs.as_view(), name='clubs-dv'),
-    path('club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
-    path('Club/JoinClub/<int:pk>/', join_club, name='join-club-dv'),
-    path('ClubReport/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
+    path('Events/', Events.as_view(), name='events-dv'),
+    path('Event/<int:pk>/', EventDetails.as_view(), name='events-details-dv'),
+    path('Event/Form/', event_edit, name='event_edit-dv'),
+    path('Event/Form/<int:id>/', event_edit, name='event_edit_id-dv'),
+    path('Clubs/', Clubs.as_view(), name='clubs-dv'),
+    path('Club/<int:pk>/', ClubDetails.as_view(), name='club-details-dv'),
+    path('Club/Join/<int:pk>/', join_club, name='join-club-dv'),
+    path('Club/Edit/<int:pk>/', edit_club, name='Edit-club-dv'),
+    path('Club/Report/<int:pk>/', ClubReport.as_view(), name='club-report-dv'),
     path('RaceResults/', RaceResults.as_view(), name='raceresults-dv'),
-    path('raceseries/', RaceSeriesList.as_view(), name='raceseries-dv'),
+    path('RaceSeries/', RaceSeriesList.as_view(), name='raceseries-dv'),
     path('ProfileDetail/<int:pk>/', ProfileDetail.as_view(), name='profile-detail-dv'),
     # BC - Authentication
     path('signin/', SignInView.as_view(), name='sign-in'),
