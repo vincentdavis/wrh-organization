@@ -99,6 +99,8 @@ class EditClub(ModelForm):
     class Meta:
         model = Organization
         fields = ['name', 'type']
+        
+        widgets = {'type': forms.HiddenInput()}
         labels = {
             'name': 'Club Name',
             'type': 'Club, Promoter',
