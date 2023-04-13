@@ -5,7 +5,7 @@ from datetime import date
 from django.db.models import Exists, OuterRef, Q
 from django.views.generic import TemplateView
 
-from .models import Race, Event, RaceResult
+from .models import Race, Event, RaceResult, RaceSeries
 
 
 def events_with_race(request=None):
@@ -61,3 +61,12 @@ class RaceResults(TemplateView):
         context = self.get_context_data(**kwargs)
         context['EventsWith'] = events_with_race(request=request)
         return self.render_to_response(context)
+
+
+class RaceSeriesList(TemplateView):
+    template_name = 'BC/RaceSeries.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['RaceSeries'] = RaceSeries.objects.all().order_by('name')
+        return context

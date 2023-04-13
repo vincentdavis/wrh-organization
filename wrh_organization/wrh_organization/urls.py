@@ -21,9 +21,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.cycling_org.ical_feed import WRHEventsIcalFeed
 from apps.cycling_org.views import ckeditor_upload_file, validate, Events, EventDetails, \
-    RaceSeriesList, ProfileDetail, BCsignin, Index, SignInView, event_edit, SignupView
+    ProfileDetail, BCsignin, Index, SignInView, event_edit, SignupView
 from apps.cycling_org.views_clubs import Clubs, ClubDetails, ClubReport, join_club, edit_club
-from apps.cycling_org.views_results import RaceResults
+from apps.cycling_org.views_results import RaceResults, RaceSeriesList
 
 # login url https://events.bicyclecolorado.org/static/vue/index.html#/auth?next=%2Fhome
 # logout url https://events.bicyclecolorado.org/static/vue/index.html#/logout

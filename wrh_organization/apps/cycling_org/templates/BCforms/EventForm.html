@@ -41,13 +41,15 @@
                     <li>Purchase Featured event package from Bicycle Colorado LINK TO DETAIL
                         HERE: {{ form.featured }}</li>
                 </ui>
-                <br><h3>To get all the features, please contact </h3>
+                <br><h3>To get all the features, please contact Bicycle Colorado to greate your Club or Promoter profile</h3>
                 {% if OrgsAdmin %}
                     <ui>
-                        {#                TODO: ADD ORG ADMIN SELECT OPTION HERE#}
+                        {# TODO: User can only select Org they are a member of#}
+                        {# TODO: If user selects "public" then this is "on hold and owned by BC (org 1)" and shared with Selecteded org. #}
                         <li>Link to Club, or Promoter: {{ form.organization }}</li>
-                        <li>Sharing options NEED EXPLAINER: {{ form.publish_type }}</li>
-                        <li>Add banner image</li>
+                        <li>Sharing options: NEEDS AN EXPLAINER: {{ form.publish_type }}</li>
+                        {# TODO: Add a baner image field, to the model, replace the json field. #}
+                        <li>Add banner image (selector)</li>
                     </ui>
                 {% endif %}
             {% endif %}
